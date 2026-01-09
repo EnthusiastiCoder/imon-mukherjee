@@ -59,7 +59,7 @@ const Index = () => {
 			funding: "MeitY, Govt. of India",
 			duration: "March, 2020 to March, 2023",
 			amount: "₹16.18 Lakhs",
-			role: "Co-PI"
+			role: "PI"
 		},
 		{
 			title: "Implementation of Security in eGovernance through Steganography",
