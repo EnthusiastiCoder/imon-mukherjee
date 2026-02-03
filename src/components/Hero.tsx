@@ -4,10 +4,26 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Link } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "lucide-react";
-import { scholarMetrics } from "@/data/scholarMetrics";
 
-// Calculate max citations for scaling the bars
-const maxCitations = Math.max(...scholarMetrics.citationsByYear.map(item => item.count));
+interface ScholarMetrics {
+	citations: {
+		total: number;
+		since2020: number;
+	};
+	hIndex: {
+		total: number;
+		since2020: number;
+	};
+	i10Index: {
+		total: number;
+		since2020: number;
+	};
+	citationsByYear: Array<{
+		year: number;
+		count: number;
+	}>;
+	profileUrl: string;
+}
 
 const carouselImages = [
 	{
@@ -41,12 +57,34 @@ export default function Hero() {
 	const [displayText, setDisplayText] = useState("");
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [currentSlide, setCurrentSlide] = useState(0);
+	const [scholarMetrics, setScholarMetrics] = useState<ScholarMetrics | null>(null);
+	const [loading, setLoading] = useState(true);
 	
 	const titles = [
 		"Assistant Professor (Grade I) | Computer Science and Engineering",
 		"IIIT Kalyani | An Institute of National Importance under Govt. of India",
 		"Researcher | Steganography, Steganalysis & Quantum Computing"		
 	];
+
+	const maxCitations = useMemo(() => {
+		if (!scholarMetrics?.citationsByYear?.length) return 1;
+		return Math.max(...scholarMetrics.citationsByYear.map(item => item.count));
+	}, [scholarMetrics]);
+
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const response = await fetch('/api/scholar');
+				const data = await response.json();
+				setScholarMetrics(data);
+			} catch (error) {
+				console.error('Error fetching scholar data:', error);
+			} finally {
+				setLoading(false);
+			}
+		}
+		fetchData();
+	}, []);
 
 	// Auto-play carousel
 	useEffect(() => {
@@ -128,58 +166,6 @@ export default function Hero() {
 								</span>
 								<span className="animate-pulse text-purple-600 font-bold">|</span>
 							</div>
-							{/* Google Scholar card fixed on the right */}
-							<div className="hidden lg:block lg:absolute lg:top-0 lg:-right-20">
-								<div className="p-4 bg-white/90 border border-slate-200 rounded-2xl shadow-lg w-[340px]">
-									<div className="flex items-center gap-3 mb-4">
-										<img src="https://scholar.google.com/favicon.ico" alt="GS" className="w-5 h-5" />
-										<div className="flex-1">
-											<div className="text-sm font-medium text-slate-700">Google Scholar</div>
-											<a href={scholarMetrics.profileUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View profile</a>
-										</div>
-										<div className="text-right">
-											<div className="text-sm text-slate-500">Citations</div>
-											<div className="text-lg font-semibold text-slate-800">{scholarMetrics.citations.total}</div>
-										</div>
-									</div>
-									
-									<div className="mb-4">
-										<div className="flex justify-between text-sm mb-2">
-											<span className="text-slate-600">Since 2020</span>
-											<div className="space-x-4">
-												<span className="text-slate-600">h-index: <span className="font-semibold text-slate-800">{scholarMetrics.hIndex.total}</span></span>
-												<span className="text-slate-600">i10-index: <span className="font-semibold text-slate-800">{scholarMetrics.i10Index.total}</span></span>
-											</div>
-										</div>
-									</div>
-
-									<div className="relative h-[120px] w-full">
-										<div className="absolute bottom-0 left-0 right-0 flex items-end justify-between h-[100px] gap-1">
-											{scholarMetrics.citationsByYear.map((item, index) => {
-												const blueShades = [
-													'bg-blue-100 hover:bg-blue-200',
-													'bg-blue-200 hover:bg-blue-300',
-													'bg-blue-300 hover:bg-blue-400',
-													'bg-blue-400 hover:bg-blue-500',
-													'bg-blue-500 hover:bg-blue-600',
-													'bg-blue-600 hover:bg-blue-700',
-													'bg-blue-700 hover:bg-blue-800',
-													'bg-blue-800 hover:bg-blue-900'
-												];
-												return (
-													<div 
-														key={item.year} 
-														className={`flex-1 ${blueShades[index]} transition-colors rounded-t`}
-														style={{ height: `${(item.count / maxCitations) * 100}%` }}
-													>
-														<div className="text-xs text-slate-600 text-center mt-0">{item.year}</div>
-													</div>
-												);
-											})}
-										</div>
-									</div>
-								</div>
-							</div>
 							<p className="text-lg text-slate-700 mb-8 max-w-2xl mx-auto lg:mx-0">
 								Honesty, Eternity and Love.
 							</p>
@@ -201,9 +187,83 @@ export default function Hero() {
 							</Link>
 						</div>
 					</div>
+
+					{loading && (
+						<div className="hidden lg:block lg:absolute lg:top-0 lg:-right-20">
+							<div className="p-4 bg-white/90 border border-slate-200 rounded-2xl shadow-lg w-[340px] h-[280px] flex items-center justify-center">
+								<div className="text-slate-500">Loading scholar data...</div>
+							</div>
+						</div>
+					)}
+
+					{scholarMetrics && (
+						
+						<div className="hidden lg:block lg:absolute lg:top-0 lg:-right-20">
+							<div className="p-4 bg-white/90 border border-slate-200 rounded-2xl shadow-lg w-[340px]">
+								<div className="flex items-center gap-3 mb-4">
+									<img src="https://scholar.google.com/favicon.ico" alt="GS" className="w-5 h-5" />
+									<div className="flex-1">
+										<div className="text-sm font-medium text-slate-700">Google Scholar</div>
+										<a href={scholarMetrics.profileUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View profile</a>
+									</div>
+									<div className="text-right">
+										<div className="text-sm text-slate-500">Citations</div>
+										<div className="text-lg font-semibold text-slate-800">{scholarMetrics.citations.total}</div>
+									</div>
+								</div>
+								
+								<div className="mb-4">
+									<div className="flex justify-between text-sm mb-2">
+										<div className="space-x-4">
+											<span className="text-slate-600">h-index: <span className="font-semibold text-slate-800">{scholarMetrics.hIndex.total}</span></span>
+											<span className="text-slate-600">i10-index: <span className="font-semibold text-slate-800">{scholarMetrics.i10Index.total}</span></span>
+										</div>
+									</div>
+								</div>
+
+								<div className="relative h-[140px] w-full flex">
+									<div className="w-10 flex flex-col-reverse justify-between text-xs text-slate-500 pr-2">
+										<span>0</span>
+										<span>100</span>
+										<span>200</span>
+										<span>300</span>
+									</div>
+									<div className="flex-1 relative">
+										<div className="absolute bottom-0 left-0 right-0 flex justify-between gap-1">
+										{scholarMetrics.citationsByYear.map((item, index) => {
+											const blueShades = [
+												'bg-blue-100 hover:bg-blue-200',
+												'bg-blue-200 hover:bg-blue-300',
+												'bg-blue-300 hover:bg-blue-400',
+												'bg-blue-400 hover:bg-blue-500',
+												'bg-blue-500 hover:bg-blue-600',
+												'bg-blue-600 hover:bg-blue-700',
+												'bg-blue-700 hover:bg-blue-800',
+												'bg-blue-800 hover:bg-blue-900'
+											];
+											return (
+												<div key={item.year} className="flex-1 flex flex-col-reverse items-center" style={{ height: '120px' }}>
+													<div className="text-xs text-slate-600 text-center mb-1">{item.year}</div>
+													<div 
+														className={`w-full ${blueShades[index % blueShades.length]} transition-colors rounded-t cursor-pointer relative group`}
+														style={{ height: `${Math.min((item.count / 300) * 100, 100)}%` }}
+														title={`${item.count} citations`}
+													>
+														<div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+															{item.count}
+														</div>
+													</div>
+												</div>
+											);
+										})}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
 				</div>
 
-				{/* Bottom: Auto-playing Carousel */}
 				<div className="mt-12">
 					<div className="w-full max-w-6xl mx-auto">
 						<div className="relative">
@@ -235,8 +295,6 @@ export default function Hero() {
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		</section>
 	);
