@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, DollarSign, Users, Building, ExternalLink, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const FundedProjects = () => {
+  const [selectedProject, setSelectedProject] = useState<typeof fundedProjects[0] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const fundedProjects = [
     {
       title: "Study of Quantum Attacks on Stream Ciphers and Its Counter-Measures",
@@ -216,7 +221,15 @@ const FundedProjects = () => {
                         </div>
                         
                         <div className="flex justify-end pt-2">
-                          <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="hover:bg-blue-50"
+                            onClick={() => {
+                              setSelectedProject(project);
+                              setIsModalOpen(true);
+                            }}
+                          >
                             <ExternalLink size={16} />
                             View Details
                           </Button>

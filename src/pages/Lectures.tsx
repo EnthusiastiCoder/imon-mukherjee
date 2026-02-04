@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, BookOpen, Video, FileText, Users, Clock, Star, Download, Play, Calendar, Award } from "lucide-react";
@@ -151,6 +152,9 @@ const courses = [
 
 const Lectures = () => {
 	const [activeCourse, setActiveCourse] = useState(courses[0].id);
+	const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+	const [isLectureModalOpen, setIsLectureModalOpen] = useState(false);
+	const [selectedLecture, setSelectedLecture] = useState<{title: string, type: string} | null>(null);
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
@@ -272,7 +276,11 @@ const Lectures = () => {
 													{course.materials.map((material, index) => (
 														<div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
 															<span className="text-sm text-slate-700">{material}</span>
-															<Button size="sm" variant="ghost">
+															<Button 
+																size="sm" 
+																variant="ghost"
+																	onClick={() => setIsDownloadModalOpen(true)}
+															>
 																<Download size={16} />
 															</Button>
 														</div>
@@ -322,7 +330,14 @@ const Lectures = () => {
 																</div>
 															</div>
 														</div>
-														<Button variant="outline" size="sm">
+															<Button 
+																variant="outline" 
+																size="sm"
+																onClick={() => {
+																	setSelectedLecture({title: lecture.title, type: lecture.type});
+																	setIsLectureModalOpen(true);
+																}}
+															>
 															{lecture.type === 'video' ? 'Watch' : 'Access'}
 														</Button>
 													</motion.div>
@@ -353,6 +368,56 @@ const Lectures = () => {
 					</Link>
 				</motion.div>
 			</div>
+
+			{/* Download Modal */}
+			<Dialog open={isDownloadModalOpen} onOpenChange={setIsDownloadModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Course Materials Access</DialogTitle>
+						<DialogDescription className="space-y-4 pt-4">
+							<p className="text-slate-600">
+								Course materials and downloads are available exclusively to enrolled students.
+							</p>
+							<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+								<p className="text-blue-800 font-medium mb-2">How to Access:</p>
+								<ul className="list-disc list-inside text-blue-700 space-y-1 text-sm">
+									<li>Log in to the Learning Management System</li>
+									<li>Navigate to your enrolled course</li>
+									<li>Or contact the department for assistance</li>
+								</ul>
+							</div>
+						</DialogDescription>
+					</DialogHeader>
+				</DialogContent>
+			</Dialog>
+
+			{/* Lecture Access Modal */}
+			<Dialog open={isLectureModalOpen} onOpenChange={setIsLectureModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Lecture Access Restricted</DialogTitle>
+						<DialogDescription className="space-y-4 pt-4">
+							<div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+								<p className="text-purple-800 font-medium mb-2">{selectedLecture?.title}</p>
+								<p className="text-purple-700 text-sm">
+									Type: {selectedLecture?.type === 'video' ? 'Video Lecture' : 'Lab Session'}
+								</p>
+							</div>
+							<p className="text-slate-600">
+								Access to lectures is restricted to enrolled students only.
+							</p>
+							<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+								<p className="text-blue-800 font-medium mb-2">To Access This Lecture:</p>
+								<ul className="list-disc list-inside text-blue-700 space-y-1 text-sm">
+									<li>Log in to the Learning Management System with your credentials</li>
+									<li>Ensure you are enrolled in this course</li>
+									<li>Contact the department if you need enrollment assistance</li>
+								</ul>
+							</div>
+						</DialogDescription>
+					</DialogHeader>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };

@@ -918,9 +918,17 @@ const Publications = () => {
                           </p>
                         )}
                       </div>
-                      <Button variant="ghost" size="sm" className="hover:bg-blue-50">
-                        <ExternalLink size={16} />
-                      </Button>
+                      {pub.doi && (
+                        <a 
+                          href={pub.doi.startsWith('http') ? pub.doi : `https://doi.org/${pub.doi}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                            <ExternalLink size={16} />
+                          </Button>
+                        </a>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -957,9 +965,17 @@ const Publications = () => {
                           </p>
                         )}
                       </div>
-                      <Button variant="ghost" size="sm" className="hover:bg-blue-50">
-                        <ExternalLink size={16} />
-                      </Button>
+                      {pub.doi && (
+                        <a 
+                          href={pub.doi.startsWith('http') ? pub.doi : `https://doi.org/${pub.doi}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                            <ExternalLink size={16} />
+                          </Button>
+                        </a>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -986,9 +1002,6 @@ const Publications = () => {
                           </Badge>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm" className="hover:bg-blue-50">
-                        <ExternalLink size={16} />
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1013,9 +1026,6 @@ const Publications = () => {
                           </Badge>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm" className="hover:bg-blue-50">
-                        <ExternalLink size={16} />
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
