@@ -1002,6 +1002,15 @@ const Publications = () => {
                           </Badge>
                         </div>
                       </div>
+                      <a 
+                        href={`https://www.google.com/search?q=${encodeURIComponent(chapter.isbn)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                          <ExternalLink size={16} />
+                        </Button>
+                      </a>
                     </div>
                   </CardContent>
                 </Card>
