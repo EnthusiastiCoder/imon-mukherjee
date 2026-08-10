@@ -12,12 +12,29 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			// Was a flat 2rem, which every page then overrode with a hard-coded
+			// px-6. Scaling the gutter here lets the pages drop that override and
+			// stops 32px of padding eating a 360px screen.
+			padding: {
+				DEFAULT: '1rem',
+				sm: '1.5rem',
+				lg: '2rem'
+			},
 			screens: {
 				'2xl': '1400px'
 			}
 		},
 		extend: {
+			// Fluid display scale. Section headings were hard-coded text-4xl/5xl
+			// with no responsive prefix, so a 48px heading stayed 48px on a 360px
+			// phone. These interpolate with the viewport and clamp at both ends,
+			// which fixes every heading by construction rather than per call site.
+			fontSize: {
+				'display-sm': ['clamp(1.25rem, 1.05rem + 0.9vw, 1.5rem)', { lineHeight: '1.3' }],
+				'display-md': ['clamp(1.5rem, 1.15rem + 1.6vw, 2.25rem)', { lineHeight: '1.2' }],
+				'display-lg': ['clamp(1.875rem, 1.35rem + 2.4vw, 3rem)', { lineHeight: '1.15' }],
+				'display-xl': ['clamp(2.25rem, 1.5rem + 3.5vw, 3.75rem)', { lineHeight: '1.1' }]
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
