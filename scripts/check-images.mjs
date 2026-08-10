@@ -22,7 +22,7 @@ const TARGET_DPR = 2;
 // Keep in sync when a layout changes the display size of an image.
 const RENDERED_AT = {
   'profile_image.jpg': 288, // Hero avatar, lg:w-72
-  'quantum-computer.webp': 1152, // Hero carousel, max-w-6xl
+  'quantum-computer.jpg': 1152, // Hero carousel, max-w-6xl
   'cryptography.jpg': 1152,
   'QML.jpg': 1152,
   'steganography.jpg': 1152,

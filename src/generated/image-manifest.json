@@ -35,9 +35,9 @@
   },
   "QML.jpg": {
     "name": "QML",
-    "width": 2048,
-    "height": 1152,
-    "aspectRatio": 1.7778,
+    "width": 2400,
+    "height": 1600,
+    "aspectRatio": 1.5,
     "widths": [
       400,
       800,
@@ -47,12 +47,14 @@
   },
   "cryptography.jpg": {
     "name": "cryptography",
-    "width": 800,
-    "height": 400,
-    "aspectRatio": 2,
+    "width": 2400,
+    "height": 1601,
+    "aspectRatio": 1.4991,
     "widths": [
       400,
-      800
+      800,
+      1200,
+      1600
     ]
   },
   "image1.jpg": {
@@ -125,26 +127,28 @@
       1600
     ]
   },
-  "quantum-computer.webp": {
+  "quantum-computer.jpg": {
     "name": "quantum-computer",
-    "width": 1200,
-    "height": 675,
-    "aspectRatio": 1.7778,
+    "width": 2400,
+    "height": 1600,
+    "aspectRatio": 1.5,
     "widths": [
       400,
       800,
-      1200
+      1200,
+      1600
     ]
   },
   "steganography.jpg": {
     "name": "steganography",
-    "width": 1200,
-    "height": 563,
-    "aspectRatio": 2.1314,
+    "width": 2400,
+    "height": 1602,
+    "aspectRatio": 1.4981,
     "widths": [
       400,
       800,
-      1200
+      1200,
+      1600
     ]
   }
 }

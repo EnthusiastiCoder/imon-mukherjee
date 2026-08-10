@@ -26,23 +26,23 @@ interface ScholarMetrics {
 
 const carouselImages = [
 	{
-		url: "images/quantum-computer.webp",
-		alt: "Abstract rendering of a quantum computing circuit",
+		url: "images/quantum-computer.jpg",
+		alt: "Handwritten physics and mathematics equations on a blackboard",
 		title: "Quantum Computing Research",
 	},
 	{
 		url: "images/cryptography.jpg",
-		alt: "Abstract digital network representing encrypted communication",
+		alt: "A padlock resting on a backlit keyboard",
 		title: "Advanced Cryptography",
 	},
 	{
 		url: "images/QML.jpg",
-		alt: "Source code representing a machine learning model",
+		alt: "Syntax-highlighted source code on a display",
 		title: "Quantum Machine Learning",
 	},
 	{
 		url: "images/steganography.jpg",
-		alt: "Computer hardware representing data hiding techniques",
+		alt: "An illuminated circuit board schematic",
 		title: "Steganography and Steganalysis",
 	},
 ];
