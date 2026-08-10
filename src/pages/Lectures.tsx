@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, BookOpen, Video, FileText, Users, Clock, Star, Download, Play, Calendar, Award } from "lucide-react";
+import { BookOpen, Video, FileText, Users, Clock, Star, Download, Play, Calendar, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 import { useState } from "react";
 
 const courses = [
@@ -158,35 +160,20 @@ const Lectures = () => {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-			{/* Header */}
-			<div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-				<div className="container mx-auto px-6 py-4">
-					<div className="flex justify-between items-center">
-						<Link to="/">
-							<Button variant="ghost" className="flex items-center gap-2">
-								<ArrowLeft size={16} />
-								Back to Home
-							</Button>
-						</Link>
-						<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-							Dr. Imon Mukherjee
-						</h1>
-					</div>
-				</div>
-			</div>
+			<PageHeader title="Lectures" />
 
 			{/* Content */}
-			<div className="container mx-auto px-6 py-16">
+			<div className="container pt-24 pb-16">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
 					className="text-center mb-12"
 				>
-					<h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-4">
+					<h2 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-4">
 						Academic Lectures
 					</h2>
-					<p className="text-xl text-slate-600 max-w-4xl mx-auto">
+					<p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-4xl mx-auto">
 						Explore comprehensive lecture series on quantum computing, cryptography, and information security. 
 						Interactive learning materials, hands-on labs, and cutting-edge research insights.
 					</p>
@@ -195,13 +182,13 @@ const Lectures = () => {
 				{/* Course Selection */}
 				<div className="flex justify-center mb-8">
 					<Tabs value={activeCourse} onValueChange={setActiveCourse} className="w-full max-w-4xl">
-						<TabsList className="grid w-full grid-cols-3">
+						<ScrollableTabsList cols="md:grid-cols-3">
 							{courses.map((course) => (
-								<TabsTrigger key={course.id} value={course.id} className="text-sm">
+								<TabsTrigger key={course.id} value={course.id} className="shrink-0 text-sm min-h-[40px]">
 									{course.code}
 								</TabsTrigger>
 							))}
-						</TabsList>
+						</ScrollableTabsList>
 
 						{courses.map((course) => (
 							<TabsContent key={course.id} value={course.id} className="mt-8">
@@ -213,9 +200,9 @@ const Lectures = () => {
 									{/* Course Header */}
 									<Card className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
 										<CardHeader>
-											<div className="flex justify-between items-start">
-												<div>
-													<CardTitle className="text-2xl text-slate-800 mb-2">{course.title}</CardTitle>
+											<div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
+												<div className="min-w-0">
+													<CardTitle className="text-display-sm text-slate-800 mb-2">{course.title}</CardTitle>
 													<p className="text-slate-600 mb-4">{course.description}</p>
 													<div className="flex flex-wrap gap-4">
 														<div className="flex items-center gap-2">
@@ -232,11 +219,11 @@ const Lectures = () => {
 														</div>
 													</div>
 												</div>
-												<div className="text-right">
+												<div className="shrink-0 sm:text-right">
 													<Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white mb-2">
 														{course.progress}% Complete
 													</Badge>
-													<Progress value={course.progress} className="w-32" />
+													<Progress value={course.progress} className="w-full sm:w-32" />
 												</div>
 											</div>
 										</CardHeader>
@@ -361,11 +348,9 @@ const Lectures = () => {
 					<p className="text-slate-600 mb-4">
 						Interactive learning experience with hands-on labs and real-world applications
 					</p>
-					<Link to="/">
-						<Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-							Return to Homepage
-						</Button>
-					</Link>
+					<Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white min-h-[44px]">
+						<Link to="/">Return to Homepage</Link>
+					</Button>
 				</motion.div>
 			</div>
 
