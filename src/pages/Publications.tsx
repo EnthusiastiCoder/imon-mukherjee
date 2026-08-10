@@ -102,7 +102,6 @@ const Publications = () => {
     //   impactFactor: "3.3",
     //   indexed: "SCI/SCI(E)"
     // }
-    ,
     {
       title: "Quantized Contour based Intelligent Stego-malware Sterilizer for Smart Consumer Electronics Network",
       authors: "Sreeparna Ganguly, Abhisek Banerjee, Arpan Bairagi and Imon Mukherjee",
@@ -403,7 +402,6 @@ const Publications = () => {
     //   publisher: "ACM",
     //   doi: "10.1145/3632754.3632772"
     // }
-    ,
     {
       title: "Information Hiding Framework for Secure Communication of Consumer Data in Smartgrids",
       authors: "Sreeparna Ganguly, Abhisek Banerjee, and Imon Mukherjee",
