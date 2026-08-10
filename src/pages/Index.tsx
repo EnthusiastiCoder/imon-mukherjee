@@ -16,27 +16,33 @@ import { motion } from "framer-motion";
 const Index = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
 
+	/**
+	 * Research interests.
+	 *
+	 * The `logo` field previously hotlinked two Wikimedia PNGs. Both returned
+	 * ERR_BLOCKED_BY_ORB in the browser, so all three cards rendered a broken
+	 * image — Wikimedia blocks cross-origin hotlinking of thumbnails. They are
+	 * gone; the lucide icons already bundled with the app carry the same job with
+	 * no network request and no third-party dependency.
+	 *
+	 * The icons were also all `Lock`, including on "Data Analytics", so the mark
+	 * said nothing about the content. Each now matches what it labels.
+	 */
 	const researchInterests = [
-		{ 
-			name: "Steganography", 
+		{
+			name: "Steganography & Steganalysis",
 			description: "Advanced data hiding, secure communication, and image sterilization",
 			icon: Lock,
-			color: "bg-purple-100 text-purple-800 border-purple-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Steganography_logo.svg/64px-Steganography_logo.svg.png"
 		},
-		{ 
-			name: "Quantum Cryptography", 
+		{
+			name: "Quantum Cryptography",
 			description: "Quantum cryptographic protocols and network security",
-			icon: Lock,
-			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/64px-Cryptography_logo.svg.png"
+			icon: Atom,
 		},
-		{ 
-			name: "Data Analytics and Natural Language Processing", 
+		{
+			name: "Data Analytics & Natural Language Processing",
 			description: "AI applications in agriculture, computer vision",
-			icon: Lock,
-			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/64px-Cryptography_logo.svg.png"
+			icon: Brain,
 		}
 	];
 
@@ -322,43 +328,43 @@ const Index = () => {
 		: publications.filter(pub => pub.type === activeFilter);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+		<div className="min-h-screen bg-surface-0">
 			<SiteNav />
 
 			<Hero />
 
 			{/* About Section */}
-			<section id="about" className="py-12 sm:py-16 bg-white">
+			<section id="about" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">About</h2>
+					<h2 className="ds-display text-display-md mb-[var(--space-block)]">About</h2>
 					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-4">Academic Background</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-4">Academic Background</h3>
 							<div className="space-y-4">
-								<div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-									<h4 className="font-semibold text-slate-700">Current Position</h4>
-									<p className="text-slate-600">Assistant Professor (Grade I), Department of Computer Science & Engineering</p>
-									<p className="text-slate-600">Indian Institute of Information Technology (IIIT) Kalyani</p>
+								<div className="ds-inset p-4">
+									<h4 className="font-semibold text-ink-1">Current Position</h4>
+									<p className="text-ink-2">Assistant Professor (Grade I), Department of Computer Science & Engineering</p>
+									<p className="text-ink-2">Indian Institute of Information Technology (IIIT) Kalyani</p>
 								</div>
-								<div className="p-4 bg-gradient-to-r from-purple-50 to-teal-50 rounded-lg">
-									<h4 className="font-semibold text-slate-700">Education</h4>
-									<p className="text-slate-600">Ph.D. in Computer Science and Engineering from Jadavpur University (JU)</p>
-									<p className="text-slate-600">Specialization: Steganography</p>
+								<div className="ds-inset p-4">
+									<h4 className="font-semibold text-ink-1">Education</h4>
+									<p className="text-ink-2">Ph.D. in Computer Science and Engineering from Jadavpur University (JU)</p>
+									<p className="text-ink-2">Specialization: Steganography</p>
 								</div>
 							</div>
 						</div>
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-4">Contact Information</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-4">Contact Information</h3>
 							<div className="space-y-3">
-								<div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-									<Mail size={20} className="text-blue-600" />
-									<span className="text-slate-600">imon@iiitkalyani.ac.in</span>
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<Mail size={20} className="text-signal" />
+									<span className="text-ink-2">imon@iiitkalyani.ac.in</span>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-									<MapPin size={20} className="text-purple-600" />
-									<span className="text-slate-600">IIIT Kalyani, West Bengal, India</span>
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<MapPin size={20} className="text-signal" />
+									<span className="text-ink-2">IIIT Kalyani, West Bengal, India</span>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+								<div className="flex items-center gap-3 ds-inset p-3">
 									<img
 										src="https://scholar.google.com/favicon.ico"
 										alt=""
@@ -368,11 +374,11 @@ const Index = () => {
 										decoding="async"
 										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-green-600">
+									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="text-ink-2 hover:text-status-good">
 										Google Scholar Profile
 									</a>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+								<div className="flex items-center gap-3 ds-inset p-3">
 									<img
 										src="https://orcid.org/sites/default/files/images/orcid_16x16.png"
 										alt=""
@@ -382,7 +388,7 @@ const Index = () => {
 										decoding="async"
 										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-orange-600">
+									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="text-ink-2 hover:text-signal">
 										ORCID Profile
 									</a>
 								</div>
@@ -393,75 +399,29 @@ const Index = () => {
 			</section>
 
 			{/* Research Interests */}
-			{/* <section id="research" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
-				<div className="container">
-					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Research Interests</h2>
-					<div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
-						{researchInterests.map((interest, index) => {
-							const IconComponent = interest.icon;
-							return (
-								<Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm">
-									<CardContent className="p-6">
-										<div className="flex items-center gap-3 mb-4">
-											<div className={`w-12 h-12 rounded-full ${interest.color} flex items-center justify-center`}>
-												<IconComponent size={24} />
-											</div>
-											<img 
-												src={interest.logo} 
-												alt={`${interest.name} logo`}
-												className="w-8 h-8 object-contain"
-												onError={(e) => {
-													e.currentTarget.style.display = 'none';
-												}}
-											/>
-										</div>
-										<h3 className="font-semibold text-slate-800 mb-2">{interest.name}</h3>
-										<p className="text-sm text-slate-600">{interest.description}</p>
-									</CardContent>
-								</Card>
-							);
-						})}
-					</div>
-				</div>
-			</section> */}
 
 			{/* Research Interests */}
-			<section id="research" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+			<section id="research" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 			  <div className="container">
-			    <h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">
+			    <h2 className="ds-display text-display-md mb-[var(--space-block)]">
 			      Research Interests
 			    </h2>
 			
-			    <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-				  {researchInterests.map((interest, index) => {
+			    {/* A flush grid rather than centred floating cards with a coloured
+			        left rail — that rail on a translucent rounded card is the exact
+			        template look this redesign is replacing. The 2px gap lets the
+			        page ground read as a hairline between planes. */}
+			    <div className="grid gap-[2px] sm:grid-cols-3">
+				  {researchInterests.map((interest) => {
 				    const IconComponent = interest.icon;
 				    return (
-				      <Card
-				        key={index}
-				        className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm w-full max-w-xs sm:w-72"
-				      >
-				        <CardContent className="p-6">
-				          <div className="flex items-center gap-3 mb-4">
-				            <div className={`w-12 h-12 rounded-full ${interest.color} flex items-center justify-center`}>
-				              <IconComponent size={24} />
-				            </div>
-				            <img
-				              src={interest.logo}
-				              alt={`${interest.name} logo`}
-				              width={32}
-			              height={32}
-			              loading="lazy"
-			              decoding="async"
-			              className="w-8 h-8 object-contain"
-				              onError={(e) => {
-				                e.currentTarget.style.display = 'none';
-				              }}
-				            />
-				          </div>
-				          <h3 className="font-semibold text-slate-800 mb-2">{interest.name}</h3>
-				          <p className="text-sm text-slate-600">{interest.description}</p>
-				        </CardContent>
-				      </Card>
+				      <article key={interest.name} className="ds-plane p-6">
+				        <IconComponent size={20} className="text-signal" aria-hidden="true" />
+				        <h3 className="ds-display mt-4 text-lg">{interest.name}</h3>
+				        <p className="mt-2 text-sm leading-relaxed text-ink-2">
+				          {interest.description}
+				        </p>
+				      </article>
 				    );
 				  })}
 				</div>
@@ -470,11 +430,11 @@ const Index = () => {
 
 
 			{/* Funded Projects */}
-			<section id="projects" className="py-12 sm:py-16 bg-white">
+			<section id="projects" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
 					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Funded Projects</h2>
-						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+						<h2 className="ds-display text-display-md">Funded Projects</h2>
+						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/funded-projects">
 								View All Projects
 								<ExternalLink size={16} className="ml-2" />
@@ -483,27 +443,27 @@ const Index = () => {
 					</div>
 					<div className="grid md:grid-cols-2 gap-6 md:gap-8">
 						{fundedProjects.slice(0, 4).map((project, index) => (
-							<Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-blue-50/50">
+							<Card key={index} className="ds-plane transition-colors">
 								<CardHeader>
-									<CardTitle className="text-slate-800 text-lg">{project.title}</CardTitle>
+									<CardTitle className="text-ink-1 text-lg">{project.title}</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3">
 										<div className="flex items-center gap-2">
-											<Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+											<Badge className="bg-cat-1 text-white">
 												{project.funding}
 											</Badge>
-											<Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
+											<Badge className="bg-cat-3 text-white">
 												{project.role}
 											</Badge>
 										</div>
-										<div className="flex items-center gap-2 text-slate-600">
+										<div className="flex items-center gap-2 text-ink-2">
 											<Calendar size={16} />
 											<span>{project.duration}</span>
 										</div>
-										<div className="flex items-center gap-2 text-slate-600">
+										<div className="flex items-center gap-2 text-ink-2">
 											<DollarSign size={16} />
-											<span className="font-semibold text-green-600">{project.amount}</span>
+											<span className="font-semibold text-status-good">{project.amount}</span>
 										</div>
 									</div>
 								</CardContent>
@@ -514,11 +474,11 @@ const Index = () => {
 			</section>
 
 			{/* Publications */}
-			<section id="publications" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-purple-50">
+			<section id="publications" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 				<div className="container">
 					<div className="flex justify-between items-center mb-8">
-						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Publications</h2>
-						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+						<h2 className="ds-display text-display-md">Publications</h2>
+						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/publications">
 								View All Publications
 								<ExternalLink size={16} className="ml-2" />
@@ -531,21 +491,21 @@ const Index = () => {
 						<Button 
 							onClick={() => setActiveFilter("all")}
 							variant={activeFilter === "all" ? "default" : "outline"}
-							className={activeFilter === "all" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "all" ? "bg-signal text-signal-ink" : ""}
 						>
 							All
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("journal")}
 							variant={activeFilter === "journal" ? "default" : "outline"}
-							className={activeFilter === "journal" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "journal" ? "bg-signal text-signal-ink" : ""}
 						>
 							Journals
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("conference")}
 							variant={activeFilter === "conference" ? "default" : "outline"}
-							className={activeFilter === "conference" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "conference" ? "bg-signal text-signal-ink" : ""}
 						>
 							Conferences
 						</Button>
@@ -553,27 +513,27 @@ const Index = () => {
 
 					<div className="space-y-6">
 						{filteredPublications.slice(0, 4).map((pub, index) => (
-							<Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+							<Card key={index} className="ds-plane transition-colors">
 								<CardContent className="p-6">
 									<div className="flex justify-between items-start gap-4">
 										<div className="flex-1">
-											<h3 className="font-semibold text-slate-800 mb-2">{pub.title}</h3>
-											<p className="text-slate-600 mb-2">{pub.journal}</p>
+											<h3 className="font-semibold text-ink-1 mb-2">{pub.title}</h3>
+											<p className="text-ink-2 mb-2">{pub.journal}</p>
 											<div className="flex items-center gap-3">
-												<Badge variant="outline" className="bg-slate-50">
+												<Badge variant="outline" className="border-rule bg-surface-2 text-ink-2">
 													{pub.year}
 												</Badge>
-												<Badge className={pub.type === "journal" ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white" : "bg-gradient-to-r from-green-500 to-teal-500 text-white"}>
+												<Badge className={pub.type === "journal" ? "bg-cat-1 text-white" : "bg-cat-3 text-white"}>
 													{pub.type === "journal" ? "Journal" : "Conference"}
 												</Badge>
 												{pub.impactFactor && (
-													<Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+													<Badge className="bg-cat-4 text-white">
 														IF: {pub.impactFactor}
 													</Badge>
 												)}
 											</div>
 										</div>
-										<Button variant="ghost" size="sm" className="hover:bg-blue-50">
+										<Button variant="ghost" size="sm" className="hover:bg-surface-2">
 											<ExternalLink size={16} />
 										</Button>
 									</div>
@@ -585,11 +545,11 @@ const Index = () => {
 			</section>
 
 			{/* Ph.D. Supervision */}
-			<section id="supervision" className="py-12 sm:py-16 bg-white">
+			<section id="supervision" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
 					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ph.D. Supervision</h2>
-						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+						<h2 className="ds-display text-display-md">Ph.D. Supervision</h2>
+						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/academic-supervision">
 								View All Supervision
 								<ExternalLink size={16} className="ml-2" />
@@ -600,19 +560,19 @@ const Index = () => {
 					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
 						{/* Awarded */}
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
-								<Award className="text-green-600" size={24} />
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
+								<Award className="text-status-good" size={24} />
 								Awarded ({phdSupervision.awarded.length})
 							</h3>
 							<div className="space-y-4">
 								{phdSupervision.awarded.slice(0, 2).map((student, index) => (
-									<Card key={index} className="bg-gradient-to-r from-green-50 to-teal-50">
+									<Card key={index} className="ds-plane">
 										<CardContent className="p-6">
-											<h4 className="font-semibold text-slate-800">{student.name}</h4>
-											<p className="text-slate-600 text-sm mb-2">{student.thesis}</p>
+											<h4 className="font-semibold text-ink-1">{student.name}</h4>
+											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
 											<div className="flex items-center justify-between text-sm">
-												<span className="text-green-600 font-medium">{student.year}</span>
-												<span className="text-slate-500">{student.position}</span>
+												<span className="text-status-good font-medium">{student.year}</span>
+												<span className="text-ink-3">{student.position}</span>
 											</div>
 										</CardContent>
 									</Card>
@@ -622,17 +582,17 @@ const Index = () => {
 
 						{/* Ongoing */}
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
-								<BookOpen className="text-blue-600" size={24} />
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
+								<BookOpen className="text-signal" size={24} />
 								Ongoing ({phdSupervision.ongoing.length})
 							</h3>
 							<div className="space-y-4">
 								{phdSupervision.ongoing.slice(0, 2).map((student, index) => (
-									<Card key={index} className="bg-gradient-to-r from-blue-50 to-purple-50">
+									<Card key={index} className="ds-plane">
 										<CardContent className="p-6">
-											<h4 className="font-semibold text-slate-800">{student.name}</h4>
-											<p className="text-slate-600 text-sm mb-2">{student.thesis}</p>
-											<span className="text-blue-600 font-medium text-sm">Started: {student.startYear}</span>
+											<h4 className="font-semibold text-ink-1">{student.name}</h4>
+											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
+											<span className="text-signal font-medium text-sm">Started: {student.startYear}</span>
 										</CardContent>
 									</Card>
 								))}
@@ -643,22 +603,27 @@ const Index = () => {
 			</section>
 
 			{/* Talks & Outreach */}
-			<section id="talks" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+			<section id="talks" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 				<div className="container">
-					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Recent Invited Talks</h2>
+					<h2 className="ds-display text-display-md mb-[var(--space-block)]">Recent Invited Talks</h2>
 					<div className="max-w-4xl mx-auto">
 						<div className="space-y-6">
 							{talks.map((talk, index) => (
-								<Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+								<Card key={index} className="ds-plane transition-colors">
 									<CardContent className="p-6">
 										<div className="flex items-start justify-between gap-4">
 											<div className="flex-1">
-												<h3 className="font-semibold text-slate-800 mb-2">{talk.title}</h3>
-												<p className="text-slate-600">{talk.venue}</p>
+												<h3 className="font-semibold text-ink-1 mb-2">{talk.title}</h3>
+												<p className="text-ink-2">{talk.venue}</p>
 											</div>
-											<Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+											{/* A date is not categorical data, so it does not get a
+											    categorical colour. Eleven identical blue pills down
+											    the page were reading as eleven emphases and drowning
+											    the titles they sat beside. Mono, muted, right-aligned:
+											    scannable as a column of dates. */}
+											<time className="ds-data shrink-0 whitespace-nowrap text-xs text-ink-3">
 												{talk.date}
-											</Badge>
+											</time>
 										</div>
 									</CardContent>
 								</Card>
@@ -669,11 +634,11 @@ const Index = () => {
 			</section>
 
 			{/* Gallery Section */}
-			<section id="gallery" className="py-12 sm:py-16 bg-white">
+			<section id="gallery" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
 					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Gallery</h2>
-						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+						<h2 className="ds-display text-display-md">Gallery</h2>
+						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/gallery">
 								View All Images
 								<ExternalLink size={16} className="ml-2" />
@@ -709,7 +674,7 @@ const Index = () => {
 						].map((image, index) => (
 							<motion.div
 								key={index}
-								className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 md:hover:-translate-y-2"
+								className="group relative overflow-hidden transition-colors"
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -730,32 +695,32 @@ const Index = () => {
 			</section>
 
 			{/* Contact Section */}
-			<section id="contact" className="py-12 sm:py-16 bg-white">
+			<section id="contact" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Contact</h2>
+					<h2 className="ds-display text-display-md mb-[var(--space-block)]">Contact</h2>
 					<div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-6">Get in Touch</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6">Get in Touch</h3>
 							<div className="space-y-4 mb-8">
-								<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-									<Mail size={20} className="text-blue-600" />
-									<span className="text-slate-600">imon@iiitkalyani.ac.in</span>
+								<div className="flex items-center gap-3 ds-inset p-4">
+									<Mail size={20} className="text-signal" />
+									<span className="text-ink-2">imon@iiitkalyani.ac.in</span>
 								</div>
-								<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-teal-50 rounded-lg">
-									<MapPin size={20} className="text-purple-600" />
-									<span className="text-slate-600">IIIT Kalyani, West Bengal, India</span>
+								<div className="flex items-center gap-3 ds-inset p-4">
+									<MapPin size={20} className="text-signal" />
+									<span className="text-ink-2">IIIT Kalyani, West Bengal, India</span>
 								</div>
 							</div>
 							
-							<div className="bg-gradient-to-r from-slate-100 to-blue-100 p-6 rounded-lg">
-								<h4 className="font-semibold text-slate-800 mb-2">Office Hours</h4>
-								<p className="text-slate-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
-								<p className="text-slate-600">Or by appointment</p>
+							<div className="ds-inset p-6">
+								<h4 className="font-semibold text-ink-1 mb-2">Office Hours</h4>
+								<p className="text-ink-2">Monday - Friday: 9:00 AM - 5:00 PM</p>
+								<p className="text-ink-2">Or by appointment</p>
 							</div>
 						</div>
 						
 						<div>
-							<h3 className="text-display-sm font-semibold text-slate-800 mb-6">Send a Message</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6">Send a Message</h3>
 							<form className="space-y-4">
 								<div>
 									<Input placeholder="Your Name" aria-label="Your name" autoComplete="name" className="w-full min-h-[44px]" />
@@ -766,7 +731,7 @@ const Index = () => {
 								<div>
 									<Textarea placeholder="Your Message" aria-label="Your message" rows={5} className="w-full" />
 								</div>
-								<Button className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
+								<Button className="w-full min-h-[44px] bg-signal text-signal-ink hover:opacity-90">
 									<MessageSquare size={16} className="mr-2" />
 									Send Message
 								</Button>
@@ -777,12 +742,12 @@ const Index = () => {
 			</section>
 
 			{/* Footer */}
-			<footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+			<footer className="bg-surface-2 text-ink-2 border-t border-rule py-10">
 				<div className="container text-center">
-					<p className="text-slate-300">
+					<p className="text-ink-3">
 						© 2025 Dr. Imon Mukherjee. All rights reserved.
 					</p>
-					<p className="text-slate-400 text-sm mt-2">
+					<p className="text-ink-3 text-sm mt-2">
 						Assistant Professor (Grade I), Department of CSE, IIIT Kalyani
 					</p>
 				</div>
