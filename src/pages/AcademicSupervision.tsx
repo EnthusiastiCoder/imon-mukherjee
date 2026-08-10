@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { Award, BookOpen, GraduationCap, Users, ExternalLink, MapPin, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 
 const AcademicSupervision = () => {
   const phdAwarded = [
@@ -346,70 +347,60 @@ const AcademicSupervision = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-              ← Back to Portfolio
-            </Link>
-            <h1 className="text-xl font-bold text-slate-800">Academic Supervision</h1>
-          </div>
-        </div>
-      </nav>
+      <PageHeader title="Academic Supervision" />
 
       {/* Header */}
-      <section className="pt-24 pb-16 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+      <section className="pt-24 pb-10 sm:pb-16">
+        <div className="container text-center">
+          <h1 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
             Academic Supervision
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Comprehensive record of Dr. Imon Mukherjee's academic supervision across 
+          <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
+            Comprehensive record of Dr. Imon Mukherjee's academic supervision across
             Ph.D., M.Tech., MS/M.Sc., and B.Tech. levels
           </p>
         </div>
       </section>
 
       {/* Supervision Tabs */}
-      <section className="px-6 pb-16">
-        <div className="container mx-auto">
+      <section className="pb-16">
+        <div className="container">
           <Tabs defaultValue="phd" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
-              <TabsTrigger value="phd" className="flex items-center gap-2">
-                <GraduationCap size={16} />
+            <ScrollableTabsList cols="md:grid-cols-5" className="mb-8">
+              <TabsTrigger value="phd" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <GraduationCap size={16} className="shrink-0" />
                 Ph.D. ({phdAwarded.length + phdOngoing.length})
               </TabsTrigger>
-              <TabsTrigger value="mtech" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="mtech" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 M.Tech. ({mtechStudents.length})
               </TabsTrigger>
-              <TabsTrigger value="msc" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="msc" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 MS/M.Sc. ({mscStudents.length})
               </TabsTrigger>
-              <TabsTrigger value="btech" className="flex items-center gap-2">
-                <Users size={16} />
+              <TabsTrigger value="btech" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Users size={16} className="shrink-0" />
                 B.Tech. ({btechProjects.length})
               </TabsTrigger>
-              <TabsTrigger value="other" className="flex items-center gap-2">
-                <Users size={16} />
+              <TabsTrigger value="other" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Users size={16} className="shrink-0" />
                 Other ({otherInstitutions.length})
               </TabsTrigger>
-            </TabsList>
+            </ScrollableTabsList>
 
             {/* Ph.D. Tab */}
             <TabsContent value="phd" className="space-y-8">
               {/* Awarded Ph.D.s */}
               <div>
-                <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                <h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
                   <Award className="text-green-600" size={24} />
                   Awarded Ph.D.s ({phdAwarded.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   {phdAwarded.map((student, index) => (
                     <Card key={index} className="bg-gradient-to-r from-green-50 to-teal-50 hover:shadow-lg transition-shadow duration-300">
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <h4 className="font-semibold text-slate-800 text-lg mb-2">{student.name}</h4>
                         <p className="text-slate-600 text-sm mb-3 italic">{student.thesis}</p>
                         <div className="flex items-center gap-2 mb-3">
@@ -433,14 +424,14 @@ const AcademicSupervision = () => {
 
               {/* Ongoing Ph.D.s */}
               <div>
-                <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                <h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
                   <BookOpen className="text-blue-600" size={24} />
                   Ongoing Ph.D.s ({phdOngoing.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   {phdOngoing.map((student, index) => (
                     <Card key={index} className="bg-gradient-to-r from-blue-50 to-purple-50 hover:shadow-lg transition-shadow duration-300">
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <h4 className="font-semibold text-slate-800 text-lg mb-2">{student.name}</h4>
                         <div className="space-y-2 mb-3">
                           <div className="flex items-center gap-2">
@@ -477,7 +468,7 @@ const AcademicSupervision = () => {
             <TabsContent value="mtech" className="space-y-6">
               {mtechStudents.map((student, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <h3 className="font-semibold text-slate-800 text-lg mb-3">{student.name}</h3>
                     <p className="text-slate-600 mb-3 italic">{student.thesis}</p>
                     <div className="flex items-center gap-2 mb-2">
@@ -497,7 +488,7 @@ const AcademicSupervision = () => {
             <TabsContent value="msc" className="space-y-6">
               {mscStudents.map((student, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <h3 className="font-semibold text-slate-800 text-lg mb-3">{student.name}</h3>
                     <p className="text-slate-600 mb-3 italic">{student.thesis}</p>
                     <div className="flex items-center gap-2 mb-2">
@@ -518,7 +509,7 @@ const AcademicSupervision = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {btechProjects.map((project, index) => (
                   <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <h3 className="font-semibold text-slate-800 text-lg mb-3">{project.title}</h3>
                       <div className="mb-3">
                         <p className="text-slate-600 text-sm font-medium mb-1">Students:</p>
@@ -549,7 +540,7 @@ const AcademicSupervision = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {otherInstitutions.map((project, index) => (
                   <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <h3 className="font-semibold text-slate-800 text-lg mb-3">{project.title}</h3>
                       <div className="mb-3">
                         <p className="text-slate-600 text-sm font-medium mb-1">Students:</p>
@@ -584,8 +575,8 @@ const AcademicSupervision = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
+      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+        <div className="container text-center">
           <p className="text-slate-300">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
