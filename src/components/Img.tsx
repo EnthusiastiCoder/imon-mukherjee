@@ -103,8 +103,12 @@ export function Img({
         width={entry.width}
         height={entry.height}
         loading={priority ? "eager" : "lazy"}
-        // fetchPriority nudges the preload scanner; harmless where unsupported.
-        fetchPriority={priority ? "high" : undefined}
+        // Lowercase `fetchpriority`, spread rather than written as a JSX prop:
+        // React 18 does not recognise the camelCase `fetchPriority` and logs
+        // "React does not recognize the fetchPriority prop on a DOM element" for
+        // every instance. React 19 accepts the camelCase form, so this can be
+        // simplified after that upgrade.
+        {...(priority ? { fetchpriority: "high" } : {})}
         decoding="async"
         className={cn(className)}
         {...rest}
