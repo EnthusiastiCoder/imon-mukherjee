@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { ExternalLink, BookOpen, FileText, Award, Search } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 
 const Publications = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -826,76 +827,67 @@ const Publications = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-              ← Back to Portfolio
-            </Link>
-            <h1 className="text-xl font-bold text-slate-800">Publications</h1>
-          </div>
-        </div>
-      </nav>
+      <PageHeader title="Publications" />
 
       {/* Header */}
-      <section className="pt-24 pb-16 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+      <section className="pt-24 pb-10 sm:pb-16">
+        <div className="container text-center">
+          <h1 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
             Publications
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Comprehensive collection of Dr. Imon Mukherjee's research contributions in 
+          <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
+            Comprehensive collection of Dr. Imon Mukherjee's research contributions in
             Quantum Computing, Steganography, and Information Security
           </p>
         </div>
       </section>
 
       {/* Search */}
-      <section className="px-6 pb-8">
-        <div className="container mx-auto max-w-2xl">
+      <section className="pb-8">
+        <div className="container max-w-2xl">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
             <Input
-              placeholder="Search publications by title, authors, or journal..."
+              placeholder="Search publications…"
+              aria-label="Search publications by title, authors, or journal"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-3 text-lg"
+              className="pl-10 pr-4 py-3 text-base sm:text-lg min-h-[44px]"
             />
           </div>
         </div>
       </section>
 
       {/* Publications Tabs */}
-      <section className="px-6 pb-16">
-        <div className="container mx-auto">
+      <section className="pb-16">
+        <div className="container">
           <Tabs defaultValue="journals" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
-              <TabsTrigger value="journals" className="flex items-center gap-2">
-                <FileText size={16} />
+            <ScrollableTabsList cols="md:grid-cols-4" className="mb-8">
+              <TabsTrigger value="journals" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <FileText size={16} className="shrink-0" />
                 Journals ({filteredJournals.length})
               </TabsTrigger>
-              <TabsTrigger value="conferences" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="conferences" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 Conferences ({filteredConferences.length})
               </TabsTrigger>
-              <TabsTrigger value="chapters" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="chapters" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 Book Chapters ({bookChapters.length})
               </TabsTrigger>
-              <TabsTrigger value="patents" className="flex items-center gap-2">
-                <Award size={16} />
+              <TabsTrigger value="patents" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Award size={16} className="shrink-0" />
                 Patents ({patents.length})
               </TabsTrigger>
-            </TabsList>
+            </ScrollableTabsList>
 
             {/* Journals Tab */}
             <TabsContent value="journals" className="space-y-6">
               {filteredJournals.map((pub, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1 break-words">
                         <h3 className="font-semibold text-slate-800 mb-3 text-lg">{pub.title}</h3>
                         <p className="text-slate-600 mb-2 italic">{pub.authors}</p>
                         <p className="text-slate-700 mb-3 font-medium">{pub.journal}</p>
@@ -914,7 +906,7 @@ const Publications = () => {
                         </div>
                         {pub.doi && (
                           <p className="text-sm text-slate-500 mt-2">
-                            DOI: <span className="font-mono">{pub.doi}</span>
+                            DOI: <span className="font-mono break-all">{pub.doi}</span>
                           </p>
                         )}
                       </div>
@@ -939,9 +931,9 @@ const Publications = () => {
             <TabsContent value="conferences" className="space-y-6">
               {filteredConferences.map((pub, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1 break-words">
                         <h3 className="font-semibold text-slate-800 mb-3 text-lg">{pub.title}</h3>
                         <p className="text-slate-600 mb-2 italic">{pub.authors}</p>
                         <p className="text-slate-700 mb-2 font-medium">{pub.conference}</p>
@@ -961,7 +953,7 @@ const Publications = () => {
                         </div>
                         {pub.doi && (
                           <p className="text-sm text-slate-500 mt-2">
-                            DOI: <span className="font-mono">{pub.doi}</span>
+                            DOI: <span className="font-mono break-all">{pub.doi}</span>
                           </p>
                         )}
                       </div>
@@ -986,9 +978,9 @@ const Publications = () => {
             <TabsContent value="chapters" className="space-y-6">
               {bookChapters.map((chapter, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1 break-words">
                         <h3 className="font-semibold text-slate-800 mb-3 text-lg">{chapter.title}</h3>
                         <p className="text-slate-600 mb-2 italic">{chapter.authors}</p>
                         <p className="text-slate-700 mb-2 font-medium">{chapter.book}</p>
@@ -1021,9 +1013,9 @@ const Publications = () => {
             <TabsContent value="patents" className="space-y-6">
               {patents.map((patent, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1 break-words">
                         <h3 className="font-semibold text-slate-800 mb-3 text-lg">{patent.title}</h3>
                         <p className="text-slate-600 mb-2 italic">{patent.inventors}</p>
                         <div className="flex items-center gap-3 flex-wrap">
@@ -1045,8 +1037,8 @@ const Publications = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
+      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+        <div className="container text-center">
           <p className="text-slate-300">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
