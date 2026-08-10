@@ -5,11 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 // removed: import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, ChevronDown, Cpu, Lock, Brain, Atom, GraduationCap, Users, FileText } from "lucide-react";
+import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, Cpu, Lock, Brain, Atom, GraduationCap, Users, FileText } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
+import SiteNav from "@/components/SiteNav";
 import { motion } from "framer-motion";
 
 const Index = () => {
@@ -320,63 +320,9 @@ const Index = () => {
 		? publications 
 		: publications.filter(pub => pub.type === activeFilter);
 
-	const scrollToSection = (sectionId: string) => {
-		const element = document.getElementById(sectionId);
-		element?.scrollIntoView({ behavior: 'smooth' });
-	};
-
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-			{/* Navigation with Dropdowns */}
-			<nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-				<div className="container mx-auto px-6 py-4">
-					<div className="flex justify-between items-center">
-						<h1 className="text-xl font-bold text-slate-800"></h1>
-						<div className="hidden md:flex space-x-6">
-							<button onClick={() => scrollToSection('home')} className="text-slate-600 hover:text-blue-600 transition-colors">Home</button>
-							<button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-blue-600 transition-colors">About</button>
-							
-							{/* Research Dropdown */}
-							<DropdownMenu>
-								<DropdownMenuTrigger className="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1">
-									Research <ChevronDown size={16} />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="bg-white border shadow-lg">
-									<DropdownMenuItem onClick={() => scrollToSection('research')}>Research Interests</DropdownMenuItem>
-									<Link to="/funded-projects">
-										<DropdownMenuItem>Funded Projects</DropdownMenuItem>
-									</Link>
-									<Link to="/publications">
-										<DropdownMenuItem>Publications</DropdownMenuItem>
-									</Link>
-								</DropdownMenuContent>
-							</DropdownMenu>
-							
-							{/* Academic Dropdown */}
-							<DropdownMenu>
-								<DropdownMenuTrigger className="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1">
-									Academic <ChevronDown size={16} />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="bg-white border shadow-lg">
-									<Link to="/academic-supervision">
-										<DropdownMenuItem>Academic Supervision</DropdownMenuItem>
-									</Link>
-									<Link to="/lectures">
-										<DropdownMenuItem>Lectures</DropdownMenuItem>
-									</Link>
-									<DropdownMenuItem onClick={() => scrollToSection('talks')}>Talks & Conferences</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-							
-							<Link to="/gallery">
-								<button className="text-slate-600 hover:text-blue-600 transition-colors">Gallery</button>
-							</Link>
-
-							<button onClick={() => scrollToSection('contact')} className="text-slate-600 hover:text-blue-600 transition-colors">Contact</button>
-						</div>
-					</div>
-				</div>
-			</nav>
+			<SiteNav />
 
 			<Hero />
 
