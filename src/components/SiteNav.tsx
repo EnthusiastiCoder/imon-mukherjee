@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, Monitor, Moon, Sun } from "lucide-react";
+import { resolveTheme, setTheme, type Theme } from "@/lib/appearance";
 
 import {
   DropdownMenu,
@@ -67,30 +68,33 @@ export default function SiteNav() {
   const [open, setOpen] = useState(false);
 
   const linkClass =
-    "text-slate-600 hover:text-blue-600 transition-colors rounded-md px-2 py-1";
+    "text-sm text-ink-2 hover:text-signal transition-colors px-2 py-1";
 
   return (
-    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
+    // Solid rather than the previous translucent white with a blur and a shadow:
+    // a hairline rule against a token surface holds its edge in both themes,
+    // where a white/95 bar inverts into a bright band on a dark ground.
+    <nav className="fixed top-0 z-50 w-full border-b border-rule bg-surface-0">
       <div className="container flex items-center justify-between gap-4 py-3 sm:py-4">
         {/* The markup previously had an empty <h1> here. The page's real h1 is
             the name in the hero, so this is a plain link rather than a second
             top-level heading. */}
         <Link
           to="/"
-          className="font-bold text-slate-800 text-base sm:text-lg whitespace-nowrap"
+          className="ds-display whitespace-nowrap text-base sm:text-lg"
         >
-          Dr. Imon Mukherjee
+          Imon Mukherjee
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-4">
+        <div className="hidden items-center gap-1 md:flex lg:gap-3">
           {NAV.map((item) =>
             item.kind === "group" ? (
               <DropdownMenu key={item.label}>
                 <DropdownMenuTrigger className={`${linkClass} flex items-center gap-1`}>
                   {item.label} <ChevronDown size={16} />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white border shadow-lg">
+                <DropdownMenuContent className="border-rule bg-surface-1 text-ink-1">
                   {item.items.map((sub) =>
                     sub.kind === "route" ? (
                       <DropdownMenuItem key={sub.label} asChild>
@@ -121,30 +125,38 @@ export default function SiteNav() {
               </button>
             )
           )}
+          <ThemeToggle />
         </div>
 
-        {/* Mobile */}
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden h-11 w-11"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto">
+        {/* Mobile. The theme toggle sits beside the menu button rather than
+            inside the drawer, so switching theme does not require opening
+            navigation first. */}
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-11 w-11 text-ink-1"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-[85vw] max-w-sm overflow-y-auto border-rule bg-surface-0 text-ink-1"
+          >
             <SheetHeader className="text-left">
-              <SheetTitle>Navigation</SheetTitle>
+              <SheetTitle className="ds-display text-ink-1">Navigation</SheetTitle>
             </SheetHeader>
 
             <div className="mt-6 flex flex-col">
               {NAV.map((item) =>
                 item.kind === "group" ? (
                   <div key={item.label} className="mt-4 first:mt-0">
-                    <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="ds-label px-3 pb-1">
                       {item.label}
                     </p>
                     {item.items.map((sub) => (
@@ -155,18 +167,52 @@ export default function SiteNav() {
                   <MobileLink key={item.label} link={item} onNavigate={() => setOpen(false)} />
                 )
               )}
-            </div>
-          </SheetContent>
-        </Sheet>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </nav>
+  );
+}
+
+/**
+ * Light/dark toggle.
+ *
+ * Three states, cycled in that order: follow the OS, force light, force dark.
+ * "System" is a real state and the default — writing an explicit value on first
+ * load is what leaves dark-mode visitors staring at a bright page.
+ */
+function ThemeToggle() {
+  const [theme, setThemeState] = useState<Theme>(resolveTheme);
+
+  const next: Record<Theme, Theme> = { system: 'light', light: 'dark', dark: 'system' };
+  const icon: Record<Theme, typeof Sun> = { system: Monitor, light: Sun, dark: Moon };
+  const Icon = icon[theme];
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const t = next[theme];
+        setThemeState(t);
+        setTheme(t);
+      }}
+      className="ml-1 flex h-9 w-9 items-center justify-center text-ink-2 transition-colors hover:text-signal"
+      // The label states the current mode rather than the next one, so a screen
+      // reader user knows where they are, not just what will happen.
+      aria-label={`Colour theme: ${theme}. Activate to switch.`}
+      title={`Theme: ${theme}`}
+    >
+      <Icon size={17} aria-hidden="true" />
+    </button>
   );
 }
 
 /** A drawer row. 44px min height keeps it a comfortable tap target. */
 function MobileLink({ link, onNavigate }: { link: NavLink; onNavigate: () => void }) {
   const className =
-    "flex min-h-[44px] w-full items-center rounded-md px-3 text-base text-slate-700 hover:bg-slate-100 hover:text-blue-600 transition-colors";
+    "flex min-h-[44px] w-full items-center px-3 text-base text-ink-2 transition-colors hover:bg-surface-2 hover:text-signal";
 
   if (link.kind === "route") {
     return (
