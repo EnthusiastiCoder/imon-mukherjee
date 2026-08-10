@@ -198,7 +198,9 @@ function ThemeToggle() {
         setThemeState(t);
         setTheme(t);
       }}
-      className="ml-1 flex h-9 w-9 items-center justify-center text-ink-2 transition-colors hover:text-signal"
+      // 44px, not the 36px this started as: it is a real control and needs a
+      // real tap target on a phone.
+      className="ml-1 flex h-11 w-11 items-center justify-center text-ink-2 transition-colors hover:text-signal"
       // The label states the current mode rather than the next one, so a screen
       // reader user knows where they are, not just what will happen.
       aria-label={`Colour theme: ${theme}. Activate to switch.`}
