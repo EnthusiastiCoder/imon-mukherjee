@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, DollarSign, Users, Building, ExternalLink, Award } from "lucide-react";
-import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
 import { useState } from "react";
 
 const FundedProjects = () => {
@@ -89,53 +89,43 @@ const FundedProjects = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-              ← Back to Portfolio
-            </Link>
-            <h1 className="text-xl font-bold text-slate-800">Funded Projects</h1>
-          </div>
-        </div>
-      </nav>
+      <PageHeader title="Funded Projects" />
 
       {/* Header */}
-      <section className="pt-24 pb-16 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+      <section className="pt-24 pb-10 sm:pb-16">
+        <div className="container text-center">
+          <h1 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
             Funded Research Projects
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto mb-8">
             Comprehensive portfolio of research projects funded by prestigious government agencies 
             and organizations, demonstrating Dr. Imon Mukherjee's leadership in cutting-edge research
           </p>
           
           {/* Summary Cards */}
-          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
             <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-l-blue-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{fundedProjects.length}</div>
-                <div className="text-slate-600">Total Projects</div>
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">{fundedProjects.length}</div>
+                <div className="text-sm sm:text-base text-slate-600">Total Projects</div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-r from-green-50 to-teal-50 border-l-4 border-l-green-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">₹{totalFunding.toFixed(2)}L</div>
-                <div className="text-slate-600">Total Funding</div>
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">₹{totalFunding.toFixed(2)}L</div>
+                <div className="text-sm sm:text-base text-slate-600">Total Funding</div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-l-purple-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">{fundedProjects.filter(p => p.status === "Ongoing").length}</div>
-                <div className="text-slate-600">Active Projects</div>
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-2">{fundedProjects.filter(p => p.status === "Ongoing").length}</div>
+                <div className="text-sm sm:text-base text-slate-600">Active Projects</div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-l-orange-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-orange-600 mb-2">{fundedProjects.filter(p => p.status === "Completed").length}</div>
-                <div className="text-slate-600">Completed</div>
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-600 mb-2">{fundedProjects.filter(p => p.status === "Completed").length}</div>
+                <div className="text-sm sm:text-base text-slate-600">Completed</div>
               </CardContent>
             </Card>
           </div>
@@ -143,14 +133,14 @@ const FundedProjects = () => {
       </section>
 
       {/* Project Categories */}
-      <section className="px-6 pb-16">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">Projects by Category</h2>
+      <section className="pb-16">
+        <div className="container">
+          <h2 className="text-display-md font-bold text-center text-slate-800 mb-12">Projects by Category</h2>
           
           {Object.entries(projectCategories).map(([category, projects]) => (
             projects.length > 0 && (
               <div key={category} className="mb-12">
-                <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                <h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
                   <Award className="text-blue-600" size={24} />
                   {category}
                 </h3>
@@ -245,12 +235,12 @@ const FundedProjects = () => {
       </section>
 
       {/* Funding Agencies */}
-      <section className="px-6 pb-16 bg-white">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">Funding Agencies</h2>
-          <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+      <section className="pb-16 bg-white">
+        <div className="container">
+          <h2 className="text-display-md font-bold text-center text-slate-800 mb-12">Funding Agencies</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto">
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Building size={32} className="text-blue-600" />
                 </div>
@@ -261,7 +251,7 @@ const FundedProjects = () => {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Award size={32} className="text-green-600" />
                 </div>
@@ -272,7 +262,7 @@ const FundedProjects = () => {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users size={32} className="text-purple-600" />
                 </div>
@@ -283,7 +273,7 @@ const FundedProjects = () => {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Calendar size={32} className="text-orange-600" />
                 </div>
@@ -297,8 +287,8 @@ const FundedProjects = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
+      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+        <div className="container text-center">
           <p className="text-slate-300">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
