@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
 import SiteNav from "@/components/SiteNav";
+import Img from "@/components/Img";
 import { motion } from "framer-motion";
 
 const Index = () => {
@@ -21,21 +22,21 @@ const Index = () => {
 			description: "Advanced data hiding, secure communication, and image sterilization",
 			icon: Lock,
 			color: "bg-purple-100 text-purple-800 border-purple-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Steganography_logo.svg/1200px-Steganography_logo.svg.png"
+			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Steganography_logo.svg/64px-Steganography_logo.svg.png"
 		},
 		{ 
 			name: "Quantum Cryptography", 
 			description: "Quantum cryptographic protocols and network security",
 			icon: Lock,
 			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/1200px-Cryptography_logo.svg.png"
+			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/64px-Cryptography_logo.svg.png"
 		},
 		{ 
 			name: "Data Analytics and Natural Language Processing", 
 			description: "AI applications in agriculture, computer vision",
 			icon: Lock,
 			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/1200px-Cryptography_logo.svg.png"
+			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/64px-Cryptography_logo.svg.png"
 		}
 	];
 
@@ -327,12 +328,12 @@ const Index = () => {
 			<Hero />
 
 			{/* About Section */}
-			<section id="about" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">About</h2>
-					<div className="grid md:grid-cols-2 gap-12">
+			<section id="about" className="py-12 sm:py-16 bg-white">
+				<div className="container">
+					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">About</h2>
+					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-4">Academic Background</h3>
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-4">Academic Background</h3>
 							<div className="space-y-4">
 								<div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
 									<h4 className="font-semibold text-slate-700">Current Position</h4>
@@ -347,7 +348,7 @@ const Index = () => {
 							</div>
 						</div>
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-4">Contact Information</h3>
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-4">Contact Information</h3>
 							<div className="space-y-3">
 								<div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
 									<Mail size={20} className="text-blue-600" />
@@ -358,20 +359,28 @@ const Index = () => {
 									<span className="text-slate-600">IIIT Kalyani, West Bengal, India</span>
 								</div>
 								<div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-									<img 
-										src="https://scholar.google.com/favicon.ico" 
-										alt="Google Scholar" 
-										className="w-5 h-5"
+									<img
+										src="https://scholar.google.com/favicon.ico"
+										alt=""
+										width={20}
+										height={20}
+										loading="lazy"
+										decoding="async"
+										className="w-5 h-5 shrink-0"
 									/>
 									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-green-600">
 										Google Scholar Profile
 									</a>
 								</div>
 								<div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-									<img 
-										src="https://orcid.org/sites/default/files/images/orcid_16x16.png" 
-										alt="ORCID" 
-										className="w-5 h-5"
+									<img
+										src="https://orcid.org/sites/default/files/images/orcid_16x16.png"
+										alt=""
+										width={20}
+										height={20}
+										loading="lazy"
+										decoding="async"
+										className="w-5 h-5 shrink-0"
 									/>
 									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-orange-600">
 										ORCID Profile
@@ -384,9 +393,9 @@ const Index = () => {
 			</section>
 
 			{/* Research Interests */}
-			{/* <section id="research" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Research Interests</h2>
+			{/* <section id="research" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+				<div className="container">
+					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Research Interests</h2>
 					<div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
 						{researchInterests.map((interest, index) => {
 							const IconComponent = interest.icon;
@@ -417,19 +426,19 @@ const Index = () => {
 			</section> */}
 
 			{/* Research Interests */}
-			<section id="research" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-			  <div className="container mx-auto">
-			    <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">
+			<section id="research" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+			  <div className="container">
+			    <h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">
 			      Research Interests
 			    </h2>
 			
-			    <div className="flex flex-wrap justify-center gap-6">
+			    <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
 				  {researchInterests.map((interest, index) => {
 				    const IconComponent = interest.icon;
 				    return (
 				      <Card
 				        key={index}
-				        className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm w-72"
+				        className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm w-full max-w-xs sm:w-72"
 				      >
 				        <CardContent className="p-6">
 				          <div className="flex items-center gap-3 mb-4">
@@ -439,7 +448,11 @@ const Index = () => {
 				            <img
 				              src={interest.logo}
 				              alt={`${interest.name} logo`}
-				              className="w-8 h-8 object-contain"
+				              width={32}
+			              height={32}
+			              loading="lazy"
+			              decoding="async"
+			              className="w-8 h-8 object-contain"
 				              onError={(e) => {
 				                e.currentTarget.style.display = 'none';
 				              }}
@@ -457,18 +470,18 @@ const Index = () => {
 
 
 			{/* Funded Projects */}
-			<section id="projects" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Funded Projects</h2>
-						<Link to="/funded-projects">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+			<section id="projects" className="py-12 sm:py-16 bg-white">
+				<div className="container">
+					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Funded Projects</h2>
+						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+							<Link to="/funded-projects">
 								View All Projects
 								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
-					<div className="grid md:grid-cols-2 gap-8">
+					<div className="grid md:grid-cols-2 gap-6 md:gap-8">
 						{fundedProjects.slice(0, 4).map((project, index) => (
 							<Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-blue-50/50">
 								<CardHeader>
@@ -501,16 +514,16 @@ const Index = () => {
 			</section>
 
 			{/* Publications */}
-			<section id="publications" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-purple-50">
-				<div className="container mx-auto">
+			<section id="publications" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-purple-50">
+				<div className="container">
 					<div className="flex justify-between items-center mb-8">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Publications</h2>
-						<Link to="/publications">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Publications</h2>
+						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+							<Link to="/publications">
 								View All Publications
 								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
 					
 					{/* Filter Buttons */}
@@ -572,22 +585,22 @@ const Index = () => {
 			</section>
 
 			{/* Ph.D. Supervision */}
-			<section id="supervision" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ph.D. Supervision</h2>
-						<Link to="/academic-supervision">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+			<section id="supervision" className="py-12 sm:py-16 bg-white">
+				<div className="container">
+					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ph.D. Supervision</h2>
+						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+							<Link to="/academic-supervision">
 								View All Supervision
 								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
 					
-					<div className="grid md:grid-cols-2 gap-12">
+					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
 						{/* Awarded */}
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
 								<Award className="text-green-600" size={24} />
 								Awarded ({phdSupervision.awarded.length})
 							</h3>
@@ -609,7 +622,7 @@ const Index = () => {
 
 						{/* Ongoing */}
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
 								<BookOpen className="text-blue-600" size={24} />
 								Ongoing ({phdSupervision.ongoing.length})
 							</h3>
@@ -630,9 +643,9 @@ const Index = () => {
 			</section>
 
 			{/* Talks & Outreach */}
-			<section id="talks" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Recent Invited Talks</h2>
+			<section id="talks" className="py-12 sm:py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+				<div className="container">
+					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Recent Invited Talks</h2>
 					<div className="max-w-4xl mx-auto">
 						<div className="space-y-6">
 							{talks.map((talk, index) => (
@@ -656,18 +669,18 @@ const Index = () => {
 			</section>
 
 			{/* Gallery Section */}
-			<section id="gallery" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Gallery</h2>
-						<Link to="/gallery">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+			<section id="gallery" className="py-12 sm:py-16 bg-white">
+				<div className="container">
+					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+						<h2 className="text-display-md font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Gallery</h2>
+						<Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 min-h-[44px]">
+							<Link to="/gallery">
 								View All Images
 								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
 						{[
 							{
 								// url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",
@@ -696,20 +709,19 @@ const Index = () => {
 						].map((image, index) => (
 							<motion.div
 								key={index}
-								className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+								className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 md:hover:-translate-y-2"
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: index * 0.1 }}
 							>
-								<img
+								<Img
 									src={image.url}
 									alt={image.alt}
-									className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+									sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 92vw"
+									className="w-full aspect-[4/3] object-cover transition-transform duration-300 md:group-hover:scale-110"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-									<div className="absolute bottom-0 left-0 right-0 p-4">
-										<h3 className="text-white font-semibold text-sm">{image.title}</h3>
-									</div>
+								<div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+									<h3 className="text-white font-semibold text-sm">{image.title}</h3>
 								</div>
 							</motion.div>
 						))}
@@ -718,12 +730,12 @@ const Index = () => {
 			</section>
 
 			{/* Contact Section */}
-			<section id="contact" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Contact</h2>
-					<div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+			<section id="contact" className="py-12 sm:py-16 bg-white">
+				<div className="container">
+					<h2 className="text-display-md font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 sm:mb-12">Contact</h2>
+					<div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6">Get in Touch</h3>
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-6">Get in Touch</h3>
 							<div className="space-y-4 mb-8">
 								<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
 									<Mail size={20} className="text-blue-600" />
@@ -743,18 +755,18 @@ const Index = () => {
 						</div>
 						
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6">Send a Message</h3>
+							<h3 className="text-display-sm font-semibold text-slate-800 mb-6">Send a Message</h3>
 							<form className="space-y-4">
 								<div>
-									<Input placeholder="Your Name" className="w-full" />
+									<Input placeholder="Your Name" aria-label="Your name" autoComplete="name" className="w-full min-h-[44px]" />
 								</div>
 								<div>
-									<Input type="email" placeholder="Your Email" className="w-full" />
+									<Input type="email" placeholder="Your Email" aria-label="Your email address" autoComplete="email" className="w-full min-h-[44px]" />
 								</div>
 								<div>
-									<Textarea placeholder="Your Message" rows={5} className="w-full" />
+									<Textarea placeholder="Your Message" aria-label="Your message" rows={5} className="w-full" />
 								</div>
-								<Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
+								<Button className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
 									<MessageSquare size={16} className="mr-2" />
 									Send Message
 								</Button>
@@ -765,8 +777,8 @@ const Index = () => {
 			</section>
 
 			{/* Footer */}
-			<footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-				<div className="container mx-auto text-center">
+			<footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+				<div className="container text-center">
 					<p className="text-slate-300">
 						© 2025 Dr. Imon Mukherjee. All rights reserved.
 					</p>
