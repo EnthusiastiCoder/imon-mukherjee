@@ -89,7 +89,10 @@ export function Img({
   const fallbackWidth = entry.widths[entry.widths.length - 1];
 
   return (
-    <picture className={wrapperClassName}>
+    // `block` because <picture> is inline by default, which puts the image on a
+    // text baseline and leaves a few pixels of gap beneath it inside the rounded
+    // gallery and carousel containers.
+    <picture className={cn("block", wrapperClassName)}>
       <source type="image/avif" srcSet={srcSets.avif} sizes={sizes} />
       <source type="image/webp" srcSet={srcSets.webp} sizes={sizes} />
       <img
