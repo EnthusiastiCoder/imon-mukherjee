@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 .vercel
 
+# Generated image derivatives — rebuilt by `npm run images` (prebuild)
+public/images/derived/
+
 # Secrets
 .env
 .env.*
