@@ -1,0 +1,150 @@
+{
+  "5G.jpg": {
+    "name": "5G",
+    "width": 960,
+    "height": 1280,
+    "aspectRatio": 0.75,
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "BCCL.jpg": {
+    "name": "BCCL",
+    "width": 1280,
+    "height": 960,
+    "aspectRatio": 1.3333,
+    "widths": [
+      400,
+      800,
+      1200,
+      1280
+    ]
+  },
+  "Plane.jpg": {
+    "name": "Plane",
+    "width": 960,
+    "height": 1280,
+    "aspectRatio": 0.75,
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "QML.jpg": {
+    "name": "QML",
+    "width": 2048,
+    "height": 1152,
+    "aspectRatio": 1.7778,
+    "widths": [
+      400,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "cryptography.jpg": {
+    "name": "cryptography",
+    "width": 800,
+    "height": 400,
+    "aspectRatio": 2,
+    "widths": [
+      400,
+      800
+    ]
+  },
+  "image1.jpg": {
+    "name": "image1",
+    "width": 200,
+    "height": 200,
+    "aspectRatio": 1,
+    "widths": [
+      200
+    ]
+  },
+  "image2.jpg": {
+    "name": "image2",
+    "width": 768,
+    "height": 1024,
+    "aspectRatio": 0.75,
+    "widths": [
+      400,
+      768
+    ]
+  },
+  "image3.jpg": {
+    "name": "image3",
+    "width": 800,
+    "height": 1422,
+    "aspectRatio": 0.5626,
+    "widths": [
+      400,
+      800
+    ]
+  },
+  "image4.jpg": {
+    "name": "image4",
+    "width": 275,
+    "height": 183,
+    "aspectRatio": 1.5027,
+    "widths": [
+      275
+    ]
+  },
+  "image5.webp": {
+    "name": "image5",
+    "width": 1080,
+    "height": 720,
+    "aspectRatio": 1.5,
+    "widths": [
+      400,
+      800,
+      1080
+    ]
+  },
+  "image6.jpg": {
+    "name": "image6",
+    "width": 213,
+    "height": 237,
+    "aspectRatio": 0.8987,
+    "widths": [
+      213
+    ]
+  },
+  "profile_image.jpg": {
+    "name": "profile_image",
+    "width": 3441,
+    "height": 3440,
+    "aspectRatio": 1.0003,
+    "widths": [
+      400,
+      800,
+      1200,
+      1600
+    ]
+  },
+  "quantum-computer.webp": {
+    "name": "quantum-computer",
+    "width": 1200,
+    "height": 675,
+    "aspectRatio": 1.7778,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "steganography.jpg": {
+    "name": "steganography",
+    "width": 1200,
+    "height": 563,
+    "aspectRatio": 2.1314,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  }
+}

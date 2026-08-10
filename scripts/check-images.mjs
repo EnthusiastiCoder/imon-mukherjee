@@ -15,7 +15,7 @@
  */
 import { readFile } from 'node:fs/promises';
 
-const MANIFEST = 'public/images/derived/manifest.json';
+const MANIFEST = 'src/generated/image-manifest.json';
 const TARGET_DPR = 2;
 
 // Largest CSS pixel width each image is rendered at, across all breakpoints.

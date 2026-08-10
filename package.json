@@ -8,6 +8,7 @@
     "dev:server": "cd server && npm start",
     "images": "node scripts/build-images.mjs",
     "check:images": "node scripts/check-images.mjs",
+    "predev": "npm run images",
     "prebuild": "npm run images",
     "build": "vite build",
     "build:dev": "vite build --mode development",
