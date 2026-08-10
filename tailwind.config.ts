@@ -35,7 +35,54 @@ export default {
 				'display-lg': ['clamp(1.875rem, 1.35rem + 2.4vw, 3rem)', { lineHeight: '1.15' }],
 				'display-xl': ['clamp(2.25rem, 1.5rem + 3.5vw, 3.75rem)', { lineHeight: '1.1' }]
 			},
+			fontFamily: {
+				// Roles, not families — each resolves per design direction.
+				display: 'var(--font-display)',
+				body: 'var(--font-body)',
+				data: 'var(--font-data)'
+			},
 			colors: {
+				// ── Redesign tokens ───────────────────────────────────────────
+				// Plain var() rather than shadcn's `hsl(var(--x))` triplet trick, so
+				// the values stay readable hex in one place. Trade-off: Tailwind's
+				// /opacity modifiers do not work on these. That is deliberate —
+				// translucent ink is a bug source in a two-theme system, so the
+				// palette ships explicit surface and rule steps instead.
+				surface: {
+					0: 'var(--surface-0)',
+					1: 'var(--surface-1)',
+					2: 'var(--surface-2)'
+				},
+				ink: {
+					1: 'var(--ink-1)',
+					2: 'var(--ink-2)',
+					3: 'var(--ink-3)'
+				},
+				// Named --signal, not --accent: shadcn already owns --accent and wraps
+				// it as hsl(var(--accent)), which a hex value turns into invalid
+				// hsl(#a35f00). Same reason --ds-radius is not --radius.
+				signal: {
+					DEFAULT: 'var(--signal)',
+					ink: 'var(--signal-ink)',
+					wash: 'var(--signal-wash)'
+				},
+				rule: {
+					DEFAULT: 'var(--rule)',
+					strong: 'var(--rule-strong)'
+				},
+				cat: {
+					1: 'var(--cat-1)',
+					2: 'var(--cat-2)',
+					3: 'var(--cat-3)',
+					4: 'var(--cat-4)'
+				},
+				status: {
+					good: 'var(--status-good)',
+					warn: 'var(--status-warn)',
+					info: 'var(--status-info)'
+				},
+
+				// ── Original shadcn tokens (src/components/ui/*) ──────────────
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
