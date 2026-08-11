@@ -1,119 +1,170 @@
 /**
- * Appearance state: which design direction is showing, and which theme.
+ * Appearance axes.
  *
- * These are two independent axes, both expressed as attributes on <html>:
+ * The design is explored along several INDEPENDENT axes, each expressed as one
+ * attribute on <html>:
  *
- *   <html data-variant="bitplane" data-theme="dark">
+ *   <html data-variant="bitplane" data-motion="pronounced" data-theme="dark">
  *
- * `data-theme` may be absent, which is the honest third state: "follow the OS".
- * The CSS is written for all three (see src/styles/design-system.css) — an
- * absent attribute is not the same as light, and treating it as light is how
- * pages end up bright on a dark-mode phone.
+ * Axes compose freely: 6 directions x 4 motion levels x 3 themes is 72
+ * combinations from one component tree. This is deliberately a registry rather
+ * than three hard-coded pairs of functions, because more axes are coming — a new
+ * one costs a single entry in AXES plus its CSS, and the switcher, the URL
+ * parameters, the persistence and the pre-paint application all pick it up with
+ * no further changes.
  *
- * The variant axis exists only while Dr. Mukherjee is choosing a direction. Once
- * he picks one, this collapses to a constant and the switcher is deleted.
+ * Resolution order for every axis: URL parameter, then localStorage, then the
+ * axis default. The URL parameter matters — it is how a specific combination
+ * gets shared for review.
+ *
+ * THEME IS NOT SPECIAL-CASED IN THE CALLER. It declares `systemValue: 'system'`,
+ * which means "remove the attribute entirely so the CSS media query decides".
+ * That third state is real and is the default; writing an explicit value on first
+ * load is what leaves dark-mode visitors on a bright page.
  */
 
-export const VARIANTS = [
-  'interferometer',
-  'bitplane',
-  'bengal',
-  'journal',
-  'terminal',
-  'monograph',
-] as const;
+export type AxisId = 'variant' | 'motion' | 'theme';
 
-export type Variant = (typeof VARIANTS)[number];
+export interface AxisOption {
+  value: string;
+  name: string;
+  note: string;
+}
 
-/** Human-facing names and one-line descriptions, used by the switcher. */
-export const VARIANT_META: Record<Variant, { name: string; note: string }> = {
-  interferometer: { name: 'Interferometer', note: 'Cool instrument panel · condensed' },
-  bitplane: { name: 'Bit Plane', note: 'Amber signal · editorial serif · grid' },
-  bengal: { name: 'Bengal Modern', note: 'Indigo · geometric modernist' },
-  journal: { name: 'Journal', note: 'Scientific publishing · numbered' },
-  terminal: { name: 'Terminal', note: 'Monospaced throughout · austere' },
-  monograph: { name: 'Monograph', note: 'Quiet · maximal whitespace' },
+export interface AxisDef {
+  id: AxisId;
+  /** The data-* attribute name, without the `data-` prefix. */
+  attr: string;
+  /** Shown as the group heading in the switcher. */
+  label: string;
+  options: readonly AxisOption[];
+  default: string;
+  /**
+   * When set, this option means "no attribute" — the CSS decides for itself.
+   * Used by theme, where absence is how prefers-color-scheme stays in charge.
+   */
+  systemValue?: string;
+  /** Render as a compact segmented row rather than a list. */
+  compact?: boolean;
+}
+
+export const AXES: readonly AxisDef[] = [
+  {
+    id: 'variant',
+    attr: 'variant',
+    label: 'Design direction',
+    default: 'bitplane',
+    options: [
+      { value: 'interferometer', name: 'Interferometer', note: 'Cool instrument panel · condensed' },
+      { value: 'bitplane', name: 'Bit Plane', note: 'Amber signal · editorial serif · grid' },
+      { value: 'bengal', name: 'Bengal Modern', note: 'Indigo · geometric modernist' },
+      { value: 'journal', name: 'Journal', note: 'Scientific publishing · all serif' },
+      { value: 'terminal', name: 'Terminal', note: 'Monospaced throughout · austere' },
+      { value: 'monograph', name: 'Monograph', note: 'Quiet · maximal whitespace' },
+    ],
+  },
+  {
+    id: 'motion',
+    attr: 'motion',
+    label: 'Motion',
+    default: 'pronounced',
+    options: [
+      { value: 'still', name: 'Still', note: 'No motion at all' },
+      { value: 'restrained', name: 'Restrained', note: 'Only where it carries meaning' },
+      { value: 'pronounced', name: 'Pronounced', note: 'Reveals, parallax, count-up' },
+      { value: 'maximalist', name: 'Maximalist', note: 'Scrubbed, ambient, staggered' },
+    ],
+  },
+  {
+    id: 'theme',
+    attr: 'theme',
+    label: 'Theme',
+    default: 'system',
+    systemValue: 'system',
+    compact: true,
+    options: [
+      { value: 'light', name: 'Light', note: '' },
+      { value: 'system', name: 'System', note: 'Follow the OS' },
+      { value: 'dark', name: 'Dark', note: '' },
+    ],
+  },
+];
+
+export const axis = (id: AxisId): AxisDef => {
+  const found = AXES.find((a) => a.id === id);
+  if (!found) throw new Error(`Unknown appearance axis: ${id}`);
+  return found;
 };
 
-export type Theme = 'light' | 'dark' | 'system';
+const storageKey = (a: AxisDef) => `ds-${a.id}`;
 
-const VARIANT_KEY = 'ds-variant';
-const THEME_KEY = 'ds-theme';
+function isValid(a: AxisDef, v: string | null): v is string {
+  return !!v && a.options.some((o) => o.value === v);
+}
 
-export const DEFAULT_VARIANT: Variant = 'bitplane';
+function read(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    // Private mode, or storage disabled. Fall through to the default.
+    return null;
+  }
+}
 
-function isVariant(v: string | null): v is Variant {
-  return !!v && (VARIANTS as readonly string[]).includes(v);
+function write(key: string, value: string | null) {
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** URL parameter, then stored value, then the axis default. */
+export function resolveAxis(id: AxisId): string {
+  const a = axis(id);
+  if (typeof window === 'undefined') return a.default;
+  const fromUrl = new URLSearchParams(window.location.search).get(a.attr);
+  if (isValid(a, fromUrl)) return fromUrl;
+  const stored = read(storageKey(a));
+  return isValid(a, stored) ? stored : a.default;
+}
+
+export function applyAxis(id: AxisId, value: string, persist = true) {
+  const a = axis(id);
+  const root = document.documentElement;
+  if (a.systemValue && value === a.systemValue) {
+    root.removeAttribute(`data-${a.attr}`);
+    if (persist) write(storageKey(a), null);
+    return;
+  }
+  root.setAttribute(`data-${a.attr}`, value);
+  if (persist) write(storageKey(a), value);
 }
 
 /**
- * A `?variant=` query parameter wins over stored state, so a link can carry a
- * specific direction — which is how the six get shared for review.
+ * Stamp every axis before React mounts, so the first paint is already in the
+ * right palette and at the right motion level rather than flashing the default.
  */
-export function resolveVariant(): Variant {
-  if (typeof window === 'undefined') return DEFAULT_VARIANT;
-  const fromUrl = new URLSearchParams(window.location.search).get('variant');
-  if (isVariant(fromUrl)) return fromUrl;
-  let stored: string | null = null;
-  try {
-    stored = window.localStorage.getItem(VARIANT_KEY);
-  } catch {
-    /* private mode / storage disabled — fall through to the default */
-  }
-  return isVariant(stored) ? stored : DEFAULT_VARIANT;
-}
-
-export function resolveTheme(): Theme {
-  if (typeof window === 'undefined') return 'system';
-  const fromUrl = new URLSearchParams(window.location.search).get('theme');
-  if (fromUrl === 'light' || fromUrl === 'dark') return fromUrl;
-  let stored: string | null = null;
-  try {
-    stored = window.localStorage.getItem(THEME_KEY);
-  } catch {
-    /* ignore */
-  }
-  return stored === 'light' || stored === 'dark' ? stored : 'system';
-}
-
-export function setVariant(v: Variant) {
-  document.documentElement.setAttribute('data-variant', v);
-  try {
-    window.localStorage.setItem(VARIANT_KEY, v);
-  } catch {
-    /* ignore */
-  }
-}
-
-export function setTheme(t: Theme) {
-  const root = document.documentElement;
-  // 'system' removes the attribute entirely rather than writing a value, so the
-  // prefers-color-scheme media query is what decides.
-  if (t === 'system') root.removeAttribute('data-theme');
-  else root.setAttribute('data-theme', t);
-  try {
-    if (t === 'system') window.localStorage.removeItem(THEME_KEY);
-    else window.localStorage.setItem(THEME_KEY, t);
-  } catch {
-    /* ignore */
-  }
-}
-
-/** Called before React mounts so the first paint is already correct. */
 export function applyStoredAppearance() {
   if (typeof document === 'undefined') return;
-  setVariant(resolveVariant());
-  setTheme(resolveTheme());
+  for (const a of AXES) applyAxis(a.id, resolveAxis(a.id), false);
 }
 
-/** True when the variant switcher should be shown. */
+/** True when the appearance switcher should be shown. */
 export function switcherEnabled(): boolean {
   if (typeof window === 'undefined') return false;
   const params = new URLSearchParams(window.location.search);
   if (params.has('variants')) return params.get('variants') !== '0';
-  try {
-    return window.localStorage.getItem('ds-switcher') === '1';
-  } catch {
-    return false;
-  }
+  return read('ds-switcher') === '1';
+}
+
+/**
+ * Does the visitor want motion? Mirrors the CSS guard so JS-driven effects (the
+ * number count-up) make the same decision the stylesheet does.
+ */
+export function motionAllowed(): boolean {
+  if (typeof window === 'undefined') return false;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  return resolveAxis('motion') !== 'still';
 }
