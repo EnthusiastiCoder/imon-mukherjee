@@ -1,0 +1,266 @@
+/**
+ * Motion system — one shared vocabulary, four intensities.
+ *
+ * Selected by `data-motion` on <html>, independently of design direction and
+ * theme. All six directions share this system; only the intensity varies.
+ *
+ * ── Two rules this file will not break ──────────────────────────────────────
+ *
+ * 1. CONTENT IS NEVER HIDDEN BY DEFAULT. Every reveal is written so the visible,
+ *    settled state is what plain CSS produces, and the animation only *starts*
+ *    somewhere else. Concretely: reveals live inside `@supports
+ *    (animation-timeline: view())`, so a browser without scroll-driven animation
+ *    (Firefox, today) simply renders finished content. An earlier version of this
+ *    site faded tiles in from `opacity: 0` via an IntersectionObserver, which
+ *    meant the content vanished entirely whenever the observer did not fire.
+ *    That must not come back.
+ *
+ * 2. `prefers-reduced-motion` WINS OVER EVERY INTENSITY. Even `maximalist`
+ *    resolves to no motion when the OS asks for less. The whole file sits behind
+ *    `(prefers-reduced-motion: no-preference)`.
+ *
+ * ── Why CSS scroll-driven animation rather than JavaScript ───────────────────
+ *
+ * `animation-timeline: view()` runs on the compositor, so reveals and parallax
+ * do not compete with React for the main thread on a page this long, and they
+ * degrade to "already visible" for free. JavaScript is used for exactly one
+ * thing — counting numbers up — because CSS cannot interpolate a text node.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1 · Intensity tokens
+   Degree is expressed numerically so one keyframe set serves every level.
+   Feature presence (parallax, ambient drift) is switched by attribute instead,
+   since custom properties cannot turn a rule on and off.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --m-distance: 14px; /* how far a revealing element travels */
+  --m-duration: 0.55s; /* entrance durations */
+  --m-stagger: 45ms; /* delay step between siblings */
+  --m-parallax: 0px; /* image drift range */
+  --m-hover-lift: 0px; /* plane hover displacement */
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Scroll ranges for reveals: when the animation starts and finishes relative
+     to the element entering the viewport. */
+  --m-range-start: entry 5%;
+  --m-range-end: entry 60%;
+}
+
+:root[data-motion='still'] {
+  --m-distance: 0px;
+  --m-duration: 0s;
+  --m-stagger: 0ms;
+  --m-parallax: 0px;
+  --m-hover-lift: 0px;
+}
+
+:root[data-motion='restrained'] {
+  --m-distance: 8px;
+  --m-duration: 0.4s;
+  --m-stagger: 30ms;
+  --m-parallax: 0px;
+  --m-hover-lift: 0px;
+  --m-range-start: entry 10%;
+  --m-range-end: entry 45%;
+}
+
+:root[data-motion='pronounced'] {
+  --m-distance: 18px;
+  --m-duration: 0.6s;
+  --m-stagger: 55ms;
+  --m-parallax: 22px;
+  --m-hover-lift: 2px;
+  --m-range-start: entry 2%;
+  --m-range-end: entry 65%;
+}
+
+:root[data-motion='maximalist'] {
+  --m-distance: 34px;
+  --m-duration: 0.8s;
+  --m-stagger: 80ms;
+  --m-parallax: 48px;
+  --m-hover-lift: 4px;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 40%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2 · Everything below is opt-in on motion preference
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Page-load entrance ───────────────────────────────────────────────────
+     A single orchestrated cascade at the top of the page. Uses a normal
+     animation rather than a scroll timeline because the hero is already in view
+     on load, and `both` fill with a settled end state means the finished
+     position is what persists. */
+  :root:not([data-motion='still']) .ds-enter {
+    animation: ds-enter var(--m-duration) var(--m-ease) both;
+  }
+
+  /* Children of an entrance group cascade. Nth-child rather than per-element
+     delays so markup does not carry animation bookkeeping. */
+  :root:not([data-motion='still']) .ds-enter-group > * {
+    animation: ds-enter var(--m-duration) var(--m-ease) both;
+  }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(1) { animation-delay: 0ms; }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(2) { animation-delay: calc(var(--m-stagger) * 1); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(3) { animation-delay: calc(var(--m-stagger) * 2); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(4) { animation-delay: calc(var(--m-stagger) * 3); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(5) { animation-delay: calc(var(--m-stagger) * 4); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(6) { animation-delay: calc(var(--m-stagger) * 5); }
+
+  @keyframes ds-enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--m-distance));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ── Hover feedback on planes ────────────────────────────────────────────
+     Border colour and a small lift. Deliberately not a scale on the plane
+     itself, which would blur its hairline. */
+  :root:not([data-motion='still']) .ds-plane {
+    transition:
+      border-color var(--dur-mid) var(--m-ease),
+      transform var(--dur-mid) var(--m-ease);
+  }
+  :root:not([data-motion='still']) .ds-plane:hover {
+    border-color: var(--rule-strong);
+    transform: translateY(calc(var(--m-hover-lift) * -1));
+  }
+
+  /* ── Scroll-driven reveals ───────────────────────────────────────────────
+     Guarded: where `view()` is unsupported, none of this applies and content is
+     simply already in place. This is the mechanism that makes the no-JS and
+     no-support paths safe rather than blank. */
+  @supports (animation-timeline: view()) {
+    :root:not([data-motion='still']) .ds-reveal {
+      animation: ds-enter linear both;
+      animation-timeline: view();
+      animation-range: var(--m-range-start) var(--m-range-end);
+    }
+
+    /* A reveal group staggers by shifting each child's range rather than by
+       delay, because delays are meaningless on a scroll timeline. */
+    :root:not([data-motion='still']) .ds-reveal-group > * {
+      animation: ds-enter linear both;
+      animation-timeline: view();
+      animation-range: var(--m-range-start) var(--m-range-end);
+    }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range: entry 8% entry 70%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range: entry 14% entry 76%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range: entry 20% entry 82%; }
+
+    /* ── Parallax ─────────────────────────────────────────────────────────
+       Off at `still` and `restrained` because --m-parallax is 0 there, so the
+       rule is harmless rather than needing its own guard. */
+    :root:not([data-motion='still']) .ds-parallax {
+      animation: ds-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+      will-change: transform;
+    }
+
+    @keyframes ds-parallax {
+      from {
+        transform: translateY(calc(var(--m-parallax) * -1));
+      }
+      to {
+        transform: translateY(var(--m-parallax));
+      }
+    }
+
+    /* ── Scroll progress rule ─────────────────────────────────────────────
+       A hairline under the fixed header tracking read position. Meaningful on
+       a page this long, and it is the one piece of chrome that earns continuous
+       scroll-linking. */
+    :root[data-motion='pronounced'] .ds-scroll-progress,
+    :root[data-motion='maximalist'] .ds-scroll-progress {
+      animation: ds-progress linear both;
+      animation-timeline: scroll(root block);
+      transform-origin: 0 50%;
+    }
+
+    @keyframes ds-progress {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    /* ── Maximalist-only additions ────────────────────────────────────────
+       Scrubbed rather than triggered: these track scroll position continuously
+       instead of playing once, which is the character difference between
+       pronounced and maximalist. */
+    :root[data-motion='maximalist'] .ds-scrub-fade {
+      animation: ds-scrub-fade linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+
+    @keyframes ds-scrub-fade {
+      from {
+        opacity: 0;
+        transform: translateY(var(--m-distance)) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* Section headings drift slightly against the scroll, which reads as depth
+       without moving any content the reader is trying to hold still. */
+    :root[data-motion='maximalist'] .ds-display {
+      animation: ds-heading-drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+
+    @keyframes ds-heading-drift {
+      from {
+        transform: translateY(6px);
+      }
+      to {
+        transform: translateY(-6px);
+      }
+    }
+  }
+
+  /* ── Bit Plane's decode reveal ───────────────────────────────────────────
+     The one direction-specific flourish, kept because it is the concept rather
+     than decoration: a stego payload emerging from its cover. The masthead grid
+     drifts and sharpens as the page settles. Only at the two higher intensities.
+     Runs once on load, not looped — ambient looping motion behind text is what
+     makes long pages tiring. */
+  :root[data-variant='bitplane'][data-motion='pronounced'] #home,
+  :root[data-variant='bitplane'][data-motion='maximalist'] #home {
+    animation: ds-substrate-settle 1.6s var(--m-ease) both;
+  }
+
+  @keyframes ds-substrate-settle {
+    from {
+      background-size: 96px 96px;
+      opacity: 0.97;
+    }
+    to {
+      background-size: 28px 28px;
+      opacity: 1;
+    }
+  }
+}
+
+/* ── The count-up's resting state ──────────────────────────────────────────
+   The final value is always what the DOM contains; JavaScript only animates
+   toward it. Tabular figures stop the width jittering as digits change. */
+.ds-countup {
+  font-variant-numeric: tabular-nums;
+}
