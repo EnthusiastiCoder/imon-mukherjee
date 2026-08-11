@@ -68,11 +68,13 @@ export const AXES: readonly AxisDef[] = [
     attr: 'motion',
     label: 'Motion',
     default: 'pronounced',
+    // Five gestures that differ in kind, not amount — see styles/motion.css.
     options: [
-      { value: 'still', name: 'Still', note: 'No motion at all' },
-      { value: 'restrained', name: 'Restrained', note: 'Only where it carries meaning' },
-      { value: 'pronounced', name: 'Pronounced', note: 'Reveals, parallax, count-up' },
-      { value: 'maximalist', name: 'Maximalist', note: 'Scrubbed, ambient, staggered' },
+      { value: 'still', name: 'Still', note: 'Nothing moves' },
+      { value: 'restrained', name: 'Restrained', note: 'Fade only — nothing travels' },
+      { value: 'pronounced', name: 'Pronounced', note: 'Directional rise, parallax' },
+      { value: 'kinetic', name: 'Kinetic', note: 'Springy overshoot, alternating sides' },
+      { value: 'maximalist', name: 'Maximalist', note: '3D tilt and wipe, scrubbed' },
     ],
   },
   {
