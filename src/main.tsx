@@ -22,10 +22,14 @@ import './index.css'
 // After index.css on purpose: this gives the token layer the later cascade
 // position, so its body and element styling wins over Tailwind's preflight.
 import './styles/design-system.css'
+// After the token layer: the motion system reads --dur-* from it, and its
+// element rules should win where both touch the same property.
+import './styles/motion.css'
 import { applyStoredAppearance } from './lib/appearance.ts'
 
-// Resolve variant + theme before React mounts so the first paint is already in
-// the right palette rather than flashing the default one.
+// Stamp every appearance axis before React mounts, so the first paint is already
+// in the right palette and at the right motion level rather than flashing the
+// defaults.
 applyStoredAppearance()
 
 createRoot(document.getElementById("root")!).render(<App />);

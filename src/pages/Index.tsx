@@ -336,8 +336,8 @@ const Index = () => {
 			{/* About Section */}
 			<section id="about" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<h2 className="ds-display text-display-md mb-[var(--space-block)]">About</h2>
-					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
+					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">About</h2>
+					<div className="ds-reveal-group grid md:grid-cols-2 gap-8 md:gap-12">
 						<div>
 							<h3 className="text-display-sm font-semibold text-ink-1 mb-4">Academic Background</h3>
 							<div className="space-y-4">
@@ -403,7 +403,7 @@ const Index = () => {
 			{/* Research Interests */}
 			<section id="research" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 			  <div className="container">
-			    <h2 className="ds-display text-display-md mb-[var(--space-block)]">
+			    <h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">
 			      Research Interests
 			    </h2>
 			
@@ -411,7 +411,7 @@ const Index = () => {
 			        left rail — that rail on a translucent rounded card is the exact
 			        template look this redesign is replacing. The 2px gap lets the
 			        page ground read as a hairline between planes. */}
-			    <div className="grid gap-[2px] sm:grid-cols-3">
+			    <div className="ds-reveal-group grid gap-[2px] sm:grid-cols-3">
 				  {researchInterests.map((interest) => {
 				    const IconComponent = interest.icon;
 				    return (
@@ -432,7 +432,7 @@ const Index = () => {
 			{/* Funded Projects */}
 			<section id="projects" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
 						<h2 className="ds-display text-display-md">Funded Projects</h2>
 						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/funded-projects">
@@ -441,9 +441,9 @@ const Index = () => {
 							</Link>
 						</Button>
 					</div>
-					<div className="grid md:grid-cols-2 gap-6 md:gap-8">
+					<div className="ds-reveal-group grid md:grid-cols-2 gap-6 md:gap-8">
 						{fundedProjects.slice(0, 4).map((project, index) => (
-							<Card key={index} className="ds-plane transition-colors">
+							<Card key={index} className="ds-reveal ds-plane transition-colors">
 								<CardHeader>
 									<CardTitle className="text-ink-1 text-lg">{project.title}</CardTitle>
 								</CardHeader>
@@ -476,7 +476,7 @@ const Index = () => {
 			{/* Publications */}
 			<section id="publications" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 				<div className="container">
-					<div className="flex justify-between items-center mb-8">
+					<div className="ds-reveal flex justify-between items-center mb-8">
 						<h2 className="ds-display text-display-md">Publications</h2>
 						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/publications">
@@ -513,7 +513,7 @@ const Index = () => {
 
 					<div className="space-y-6">
 						{filteredPublications.slice(0, 4).map((pub, index) => (
-							<Card key={index} className="ds-plane transition-colors">
+							<Card key={index} className="ds-reveal ds-plane transition-colors">
 								<CardContent className="p-6">
 									<div className="flex justify-between items-start gap-4">
 										<div className="flex-1">
@@ -561,7 +561,7 @@ const Index = () => {
 			{/* Ph.D. Supervision */}
 			<section id="supervision" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
 						<h2 className="ds-display text-display-md">Ph.D. Supervision</h2>
 						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/academic-supervision">
@@ -571,7 +571,7 @@ const Index = () => {
 						</Button>
 					</div>
 					
-					<div className="grid md:grid-cols-2 gap-8 md:gap-12">
+					<div className="ds-reveal-group grid md:grid-cols-2 gap-8 md:gap-12">
 						{/* Awarded */}
 						<div>
 							<h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
@@ -580,7 +580,7 @@ const Index = () => {
 							</h3>
 							<div className="space-y-4">
 								{phdSupervision.awarded.slice(0, 2).map((student, index) => (
-									<Card key={index} className="ds-plane">
+									<Card key={index} className="ds-reveal ds-plane">
 										<CardContent className="p-6">
 											<h4 className="font-semibold text-ink-1">{student.name}</h4>
 											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
@@ -602,7 +602,7 @@ const Index = () => {
 							</h3>
 							<div className="space-y-4">
 								{phdSupervision.ongoing.slice(0, 2).map((student, index) => (
-									<Card key={index} className="ds-plane">
+									<Card key={index} className="ds-reveal ds-plane">
 										<CardContent className="p-6">
 											<h4 className="font-semibold text-ink-1">{student.name}</h4>
 											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
@@ -619,11 +619,11 @@ const Index = () => {
 			{/* Talks & Outreach */}
 			<section id="talks" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
 				<div className="container">
-					<h2 className="ds-display text-display-md mb-[var(--space-block)]">Recent Invited Talks</h2>
+					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">Recent Invited Talks</h2>
 					<div className="max-w-4xl mx-auto">
 						<div className="space-y-6">
 							{talks.map((talk, index) => (
-								<Card key={index} className="ds-plane transition-colors">
+								<Card key={index} className="ds-reveal ds-plane transition-colors">
 									<CardContent className="p-6">
 										<div className="flex items-start justify-between gap-4">
 											<div className="flex-1">
@@ -650,7 +650,7 @@ const Index = () => {
 			{/* Gallery Section */}
 			<section id="gallery" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<div className="flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
 						<h2 className="ds-display text-display-md">Gallery</h2>
 						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
 							<Link to="/gallery">
@@ -659,7 +659,7 @@ const Index = () => {
 							</Link>
 						</Button>
 					</div>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+					<div className="ds-reveal-group grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
 						{[
 							{
 								// url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",
@@ -711,7 +711,7 @@ const Index = () => {
 			{/* Contact Section */}
 			<section id="contact" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
 				<div className="container">
-					<h2 className="ds-display text-display-md mb-[var(--space-block)]">Contact</h2>
+					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">Contact</h2>
 					<div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
 						<div>
 							<h3 className="text-display-sm font-semibold text-ink-1 mb-6">Get in Touch</h3>

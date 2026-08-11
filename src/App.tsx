@@ -10,7 +10,7 @@ import FundedProjects from "./pages/FundedProjects";
 import Gallery from "./pages/Gallery";
 import Lectures from "./pages/Lectures";
 import NotFound from "./pages/NotFound";
-import VariantSwitcher from "./components/VariantSwitcher";
+import AppearanceSwitcher from "./components/AppearanceSwitcher";
 
 const queryClient = new QueryClient();
 
@@ -30,8 +30,9 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* Renders only with ?variants=1 — temporary, for choosing a direction. */}
-        <VariantSwitcher />
+        {/* Renders only with ?variants=1 — temporary, for choosing between the
+            appearance axes. Built from the AXES registry, so it grows by itself. */}
+        <AppearanceSwitcher />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
