@@ -153,11 +153,25 @@ export function applyStoredAppearance() {
   for (const a of AXES) applyAxis(a.id, resolveAxis(a.id), false);
 }
 
-/** True when the appearance switcher should be shown. */
+/**
+ * True when the appearance switcher should be shown.
+ *
+ * `?variants=1` LATCHES: it is written to storage so the panel survives every
+ * later navigation, including links that do not carry the parameter. Without
+ * that it disappeared any time a direction was shared as a plain
+ * `?variant=…&motion=…` link, which is most of them — the control for choosing a
+ * design should not be something you can lose by following a link to a design.
+ *
+ * `?variants=0` clears it, which is the only way to turn the panel back off.
+ */
 export function switcherEnabled(): boolean {
   if (typeof window === 'undefined') return false;
   const params = new URLSearchParams(window.location.search);
-  if (params.has('variants')) return params.get('variants') !== '0';
+  if (params.has('variants')) {
+    const on = params.get('variants') !== '0';
+    write('ds-switcher', on ? '1' : null);
+    return on;
+  }
   return read('ds-switcher') === '1';
 }
 
