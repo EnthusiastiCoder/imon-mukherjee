@@ -34,21 +34,39 @@
    since custom properties cannot turn a rule on and off.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/*
+ * ── A note on animation-range, because the first tuning of this file was wrong
+ *
+ * `entry` spans only from "the element's leading edge touches the viewport's
+ * trailing edge" to "its trailing edge passes that same line". For a tall
+ * element that is a very short scroll distance. The original ranges ended at
+ * `entry 60-65%`, which measured as the entire reveal completing between
+ * viewport fraction 1.05 and 0.95 — finished in the bottom 10% of the screen,
+ * before the element was meaningfully visible. Technically animating, invisible
+ * in practice.
+ *
+ * Ranges therefore end in `cover`, which spans the whole time the element
+ * intersects the viewport, so the motion plays out while the reader is actually
+ * looking at it.
+ */
+
 :root {
-  --m-distance: 14px; /* how far a revealing element travels */
-  --m-duration: 0.55s; /* entrance durations */
-  --m-stagger: 45ms; /* delay step between siblings */
+  --m-distance: 40px; /* how far a revealing element travels */
+  --m-scale-from: 0.985; /* reveal start scale */
+  --m-blur-from: 0px; /* reveal start blur */
+  --m-duration: 0.6s; /* load-entrance duration */
+  --m-stagger: 60ms; /* delay step between siblings on load */
   --m-parallax: 0px; /* image drift range */
   --m-hover-lift: 0px; /* plane hover displacement */
   --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* Scroll ranges for reveals: when the animation starts and finishes relative
-     to the element entering the viewport. */
-  --m-range-start: entry 5%;
-  --m-range-end: entry 60%;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 25%;
 }
 
 :root[data-motion='still'] {
   --m-distance: 0px;
+  --m-scale-from: 1;
+  --m-blur-from: 0px;
   --m-duration: 0s;
   --m-stagger: 0ms;
   --m-parallax: 0px;
@@ -56,33 +74,42 @@
 }
 
 :root[data-motion='restrained'] {
-  --m-distance: 8px;
-  --m-duration: 0.4s;
-  --m-stagger: 30ms;
+  --m-distance: 24px;
+  --m-scale-from: 1;
+  --m-blur-from: 0px;
+  --m-duration: 0.45s;
+  --m-stagger: 40ms;
   --m-parallax: 0px;
   --m-hover-lift: 0px;
-  --m-range-start: entry 10%;
-  --m-range-end: entry 45%;
+  --m-range-start: entry 0%;
+  /* cover 22%, not 15%: at 15% a tall panel still finished before it was
+     properly on screen, which is the same failure the note at the top of this
+     file describes, just smaller. */
+  --m-range-end: cover 22%;
 }
 
 :root[data-motion='pronounced'] {
-  --m-distance: 18px;
-  --m-duration: 0.6s;
-  --m-stagger: 55ms;
-  --m-parallax: 22px;
-  --m-hover-lift: 2px;
-  --m-range-start: entry 2%;
-  --m-range-end: entry 65%;
+  --m-distance: 56px;
+  --m-scale-from: 0.97;
+  --m-blur-from: 3px;
+  --m-duration: 0.65s;
+  --m-stagger: 70ms;
+  --m-parallax: 70px;
+  --m-hover-lift: 3px;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 30%;
 }
 
 :root[data-motion='maximalist'] {
-  --m-distance: 34px;
-  --m-duration: 0.8s;
-  --m-stagger: 80ms;
-  --m-parallax: 48px;
-  --m-hover-lift: 4px;
+  --m-distance: 92px;
+  --m-scale-from: 0.94;
+  --m-blur-from: 6px;
+  --m-duration: 0.85s;
+  --m-stagger: 95ms;
+  --m-parallax: 130px;
+  --m-hover-lift: 5px;
   --m-range-start: entry 0%;
-  --m-range-end: cover 40%;
+  --m-range-end: cover 45%;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -114,11 +141,13 @@
   @keyframes ds-enter {
     from {
       opacity: 0;
-      transform: translateY(var(--m-distance));
+      transform: translateY(var(--m-distance)) scale(var(--m-scale-from));
+      filter: blur(var(--m-blur-from));
     }
     to {
       opacity: 1;
       transform: none;
+      filter: blur(0);
     }
   }
 
@@ -132,7 +161,12 @@
   }
   :root:not([data-motion='still']) .ds-plane:hover {
     border-color: var(--rule-strong);
-    transform: translateY(calc(var(--m-hover-lift) * -1));
+    /* `translate`, not `transform`. Many planes are also reveal or parallax
+       targets, and those animations run with `both` fill, which pins
+       `transform` to its end state and would swallow a hover transform
+       entirely. `translate` is an independent property that composes with
+       `transform` instead of competing with it. */
+    translate: 0 calc(var(--m-hover-lift) * -1);
   }
 
   /* ── Scroll-driven reveals ───────────────────────────────────────────────
@@ -153,9 +187,12 @@
       animation-timeline: view();
       animation-range: var(--m-range-start) var(--m-range-end);
     }
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range: entry 8% entry 70%; }
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range: entry 14% entry 76%; }
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range: entry 20% entry 82%; }
+    /* Stagger by pushing each child's range further into `cover`, so later
+       tiles are still travelling when earlier ones have settled. Delays cannot
+       do this — they are meaningless on a scroll timeline. */
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range: entry 6% cover 34%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range: entry 12% cover 40%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range: entry 18% cover 46%; }
 
     /* ── Parallax ─────────────────────────────────────────────────────────
        Off at `still` and `restrained` because --m-parallax is 0 there, so the
@@ -196,43 +233,18 @@
       }
     }
 
-    /* ── Maximalist-only additions ────────────────────────────────────────
-       Scrubbed rather than triggered: these track scroll position continuously
-       instead of playing once, which is the character difference between
-       pronounced and maximalist. */
-    :root[data-motion='maximalist'] .ds-scrub-fade {
-      animation: ds-scrub-fade linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
-    }
+    /* ── How maximalist differs ───────────────────────────────────────────
+       By amplitude and range length, not by extra animations.
+       --m-distance 92px, --m-blur-from 6px and a range ending at `cover 45%`
+       mean the same reveal is scrubbed against scroll across nearly half the
+       time an element is on screen, rather than snapping early.
 
-    @keyframes ds-scrub-fade {
-      from {
-        opacity: 0;
-        transform: translateY(var(--m-distance)) scale(0.985);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    /* Section headings drift slightly against the scroll, which reads as depth
-       without moving any content the reader is trying to hold still. */
-    :root[data-motion='maximalist'] .ds-display {
-      animation: ds-heading-drift linear both;
-      animation-timeline: view();
-      animation-range: cover;
-    }
-
-    @keyframes ds-heading-drift {
-      from {
-        transform: translateY(6px);
-      }
-      to {
-        transform: translateY(-6px);
-      }
-    }
+       An earlier version added a second animation here — a drift on
+       `.ds-display` — and it silently broke the reveals. Section headings carry
+       both `ds-reveal` and `ds-display`, and the later `animation` shorthand
+       replaced the reveal outright: measured as 9.5px of travel with opacity
+       pinned at 1, i.e. no reveal at all on every heading on the page. Two
+       animation shorthands must never target the same element. */
   }
 
   /* ── Bit Plane's decode reveal ───────────────────────────────────────────

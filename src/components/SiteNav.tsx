@@ -180,7 +180,9 @@ export default function SiteNav() {
           motion levels or where scroll-driven animation is unsupported.
           aria-hidden because it duplicates the scrollbar for screen readers. */}
       <div
-        className="ds-scroll-progress absolute bottom-0 left-0 h-px w-full bg-signal"
+        // 2px, not the 1px this started as. At 1px against a 1px bottom rule it
+        // was indistinguishable from the border it sits on.
+        className="ds-scroll-progress absolute -bottom-px left-0 h-[2px] w-full bg-signal"
         style={{ transform: 'scaleX(0)' }}
         aria-hidden="true"
       />
