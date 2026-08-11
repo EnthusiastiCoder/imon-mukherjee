@@ -258,27 +258,61 @@ export default function Hero() {
 					    observer, which made them vanish entirely when it did not fire. */}
 					<div className="ds-reveal-group mt-4 grid gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
 						{researchAreas.map((area) => (
-							<article
+							// figure/figcaption rather than a div: the text genuinely is a
+							// caption for the image it sits on.
+							<figure
 								key={area.title}
-								className="group ds-plane overflow-hidden"
+								className="group relative ds-plane overflow-hidden"
 							>
 								<Img
 									src={area.src}
 									alt={area.alt}
 									sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-									className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-									style={{ aspectRatio: "4 / 3" }}
+									// Portrait from sm up, landscape on a single-column phone.
+									// At four across a tile is ~300px wide, so 16:10 would be
+									// 187px tall and the caption would eat over half of it; 4:5
+									// gives the photograph room. On mobile the tile is full
+									// width, so landscape is the right shape there.
+									className="aspect-[16/10] w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.05] sm:aspect-[4/5]"
 								/>
-								<div className="border-t border-rule p-4">
+
+								{/*
+									The caption returns to the image, which is what gave the old
+									hero its weight.
+
+									This scrim and its text stay dark-and-light in BOTH themes,
+									and that is deliberate rather than an oversight: the ground
+									here is a photograph, not a themed surface, so taking these
+									colours from the theme tokens would put dark text on a dark
+									photo in light mode. It is the one place in this design where
+									a colour correctly ignores the palette.
+
+									The gradient covers only the lower part of the frame so the
+									photograph is not flattened, and the title carries a text
+									shadow because these are documentary photos with
+									unpredictable bright areas near the bottom edge.
+								*/}
+								<figcaption
+									className="ds-on-media pointer-events-none absolute inset-x-0 bottom-0 p-4 pt-10"
+									style={{
+										background:
+											"linear-gradient(to top, rgba(8,8,10,.88) 0%, rgba(8,8,10,.62) 45%, rgba(8,8,10,0) 100%)",
+									}}
+								>
 									<h3
 										className="ds-display text-lg"
-										style={{ letterSpacing: "-0.01em" }}
+										style={{ letterSpacing: "-0.01em", textShadow: "0 1px 3px rgba(0,0,0,.5)" }}
 									>
 										{area.title}
 									</h3>
-									<p className="mt-1 text-[13px] leading-snug text-ink-3">{area.note}</p>
-								</div>
-							</article>
+									<p
+										className="ds-on-media-muted mt-1 text-[13px] leading-snug"
+										style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}
+									>
+										{area.note}
+									</p>
+								</figcaption>
+							</figure>
 						))}
 					</div>
 				</div>
