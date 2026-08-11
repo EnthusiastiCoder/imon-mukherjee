@@ -328,3 +328,97 @@
 .ds-countup {
   font-variant-numeric: tabular-nums;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4 · Marquee
+   Static and horizontally scrollable by default; it only animates once motion
+   is wanted. That ordering matters — the band carries real content (the venues
+   he publishes in), so it has to stay readable when motion is switched off
+   rather than depending on the animation to be legible.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-marquee {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ds-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+/* The duplicate track is only needed to make an animated loop seamless. With no
+   animation it is redundant, so hide it rather than printing the list twice. */
+.ds-marquee > .ds-marquee-track + .ds-marquee-track {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='still']):not([data-motion='restrained']) .ds-marquee {
+    overflow-x: hidden;
+  }
+  :root:not([data-motion='still']):not([data-motion='restrained'])
+    .ds-marquee
+    > .ds-marquee-track
+    + .ds-marquee-track {
+    display: flex;
+  }
+  :root:not([data-motion='still']):not([data-motion='restrained']) .ds-marquee-track {
+    animation: ds-marquee var(--marquee-duration, 42s) linear infinite;
+  }
+  /* These need the same :not() chain as the rule above, not a shorter selector.
+     `:not()` takes the specificity of its argument, so the base rule scores
+     higher than a plain [data-motion='kinetic'] and the speed-up was silently
+     losing the cascade — measured as 46s when it should have been 27.6s. */
+  :root:not([data-motion='still']):not([data-motion='restrained'])[data-motion='kinetic'] .ds-marquee-track,
+  :root:not([data-motion='still']):not([data-motion='restrained'])[data-motion='maximalist'] .ds-marquee-track {
+    animation-duration: calc(var(--marquee-duration, 42s) * 0.55);
+  }
+  .ds-marquee[data-reverse='true'] .ds-marquee-track {
+    animation-direction: reverse;
+  }
+
+  /* Pause so it can be read, and so a link inside stays clickable. */
+  .ds-marquee:hover .ds-marquee-track,
+  .ds-marquee:focus-within .ds-marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* -50% exactly, because the track is rendered twice. Any other value shows a
+     jump at the wrap. */
+  @keyframes ds-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5 · Grain
+   A tiling noise overlay. Cheap, and it is most of the difference between a
+   page that looks rendered and one that looks printed. Fixed so it does not
+   travel with the scroll, which is what makes it read as a property of the
+   surface rather than of the content.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-mid) ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+:root[data-motion='pronounced'] .ds-grain::after {
+  opacity: 0.035;
+}
+:root[data-motion='kinetic'] .ds-grain::after {
+  opacity: 0.055;
+}
+:root[data-motion='maximalist'] .ds-grain::after {
+  opacity: 0.075;
+}

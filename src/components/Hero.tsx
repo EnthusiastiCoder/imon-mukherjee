@@ -2,7 +2,28 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Img from "@/components/Img";
 import CitationChart, { type CitationYear } from "@/components/CitationChart";
+import AmbientCanvas from "@/components/AmbientCanvas";
+import Marquee from "@/components/Marquee";
 import { useCountUp } from "@/hooks/useCountUp";
+
+/**
+ * Venues he actually publishes in, for the marquee band.
+ *
+ * Real content rather than decoration: this list is precisely what a
+ * collaborator or a prospective doctoral student is trying to establish, and a
+ * band carries it better than a paragraph of comma-separated names.
+ */
+const venues = [
+	"IEEE Transactions on Consumer Electronics",
+	"Knowledge-Based Systems",
+	"Engineering Applications of Artificial Intelligence",
+	"IEEE Transactions on Artificial Intelligence",
+	"Journal of Information Security and Applications",
+	"IEEE Transactions on AgriFood Electronics",
+	"ACM/IEEE Joint Conference on Digital Libraries",
+	"Findings of the ACL: NAACL",
+	"ESWC",
+];
 
 interface ScholarMetrics {
 	citations: { total: number; since2020: number };
@@ -122,7 +143,24 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section id="home" className="pt-24">
+		<section id="home" className="ds-grain relative pt-24">
+			{/* The generative field behind the masthead — a different world per
+			    direction. Absolutely positioned and pointer-events:none so it never
+			    interferes with the content sitting on it, and masked at the bottom
+			    so it dissolves rather than ending on a hard line. */}
+			<AmbientCanvas
+				className="absolute inset-x-0 top-0 -z-[1] h-[min(92vh,900px)] w-full"
+				// Dissolves downward so the field is strongest where the page opens
+				// and gone by the time it reaches the citation chart, which needs a
+				// quiet ground to be read against. Both prefixes: Safari still wants
+				// the -webkit- form.
+				style={{
+					WebkitMaskImage:
+						"linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
+					maskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
+				}}
+			/>
+
 			<div className="container">
 				{/* ── Masthead ─────────────────────────────────────────────────────
 				    Motion comes from the shared system in styles/motion.css, driven by
@@ -247,6 +285,23 @@ export default function Hero() {
 					</div>
 				</div>
 
+			</div>
+
+			{/* ── Published in ──────────────────────────────────────────────────
+			    Full-bleed, outside the container, so the band runs edge to edge —
+			    a contained marquee reads as a widget rather than as a masthead. */}
+			<div className="mt-[var(--space-block)] border-y border-rule bg-surface-1 py-3">
+				<p className="sr-only">Selected publication venues</p>
+				<Marquee speed={46} className="ds-data text-[13px] text-ink-2">
+					{venues.map((v) => (
+						<span key={v} className="whitespace-nowrap">
+							{v}
+						</span>
+					))}
+				</Marquee>
+			</div>
+
+			<div className="container">
 				{/* ── Research areas ──────────────────────────────────────────── */}
 				<div id="research" className="scroll-mt-24 pt-[var(--space-section)]">
 					<h2 className="ds-label">Research</h2>
