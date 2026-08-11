@@ -557,6 +557,27 @@ time,
   color: var(--ink-2);
 }
 
+/**
+ * Text sitting on top of a photograph.
+ *
+ * The one place in this system where colour correctly ignores the palette: the
+ * ground is an image, not a themed surface, so theme ink would put dark text on
+ * a dark photo in light mode. Light text over a scrim, in both themes.
+ *
+ * It must also come AFTER .ds-display in this file. Tailwind's `text-white`
+ * cannot do this job — these element classes load after Tailwind's utilities, so
+ * `.ds-display { color: var(--ink-1) }` wins at equal specificity and the
+ * caption renders dark-on-dark. That was measured, not guessed.
+ */
+.ds-on-media,
+.ds-on-media .ds-display {
+  color: #ffffff;
+}
+
+.ds-on-media-muted {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 /* ── Surfaces ───────────────────────────────────────────────────────────── */
 
 /* A "plane": content sitting flush, delimited by a rule rather than floating on
@@ -602,7 +623,29 @@ time,
   --substrate: #d4d4c4;
 }
 
+/*
+ * The grid lives on a pseudo-element, NOT on #home itself.
+ *
+ * Putting the mask on the section masked its CONTENT as well as its background:
+ * the stat row, the citation chart and the four research tiles all faded toward
+ * transparent down the hero, which is why they measured at full opacity while
+ * rendering washed out. A mask applies to the element's entire rendered
+ * subtree — it cannot be scoped to the background.
+ *
+ * `isolation: isolate` keeps the z-index: -1 layer inside the section instead of
+ * dropping it behind the page background.
+ */
 :root[data-variant='bitplane'] #home {
+  position: relative;
+  isolation: isolate;
+}
+
+:root[data-variant='bitplane'] #home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: linear-gradient(to right, var(--substrate) 1px, transparent 1px),
     linear-gradient(to bottom, var(--substrate) 1px, transparent 1px);
   background-size: 28px 28px;

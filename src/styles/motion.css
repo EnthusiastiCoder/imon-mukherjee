@@ -252,16 +252,21 @@
      than decoration: a stego payload emerging from its cover. The masthead grid
      drifts and sharpens as the page settles. Only at the two higher intensities.
      Runs once on load, not looped — ambient looping motion behind text is what
-     makes long pages tiring. */
-  :root[data-variant='bitplane'][data-motion='pronounced'] #home,
-  :root[data-variant='bitplane'][data-motion='maximalist'] #home {
-    animation: ds-substrate-settle 1.6s var(--m-ease) both;
+     makes long pages tiring.
+
+     Targets #home::before, not #home. The grid lives on that pseudo-element
+     precisely so neither its mask nor this animation touches the section's
+     content — an earlier version animated opacity on #home itself and dimmed
+     the stat row, the chart and the research tiles along with the grid. */
+  :root[data-variant='bitplane'][data-motion='pronounced'] #home::before,
+  :root[data-variant='bitplane'][data-motion='maximalist'] #home::before {
+    animation: ds-substrate-settle 1.8s var(--m-ease) both;
   }
 
   @keyframes ds-substrate-settle {
     from {
-      background-size: 96px 96px;
-      opacity: 0.97;
+      background-size: 112px 112px;
+      opacity: 0;
     }
     to {
       background-size: 28px 28px;
