@@ -374,7 +374,7 @@ const Index = () => {
 										decoding="async"
 										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="text-ink-2 hover:text-status-good">
+									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-ink-2 hover:text-status-good">
 										Google Scholar Profile
 									</a>
 								</div>
@@ -388,7 +388,7 @@ const Index = () => {
 										decoding="async"
 										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="text-ink-2 hover:text-signal">
+									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-ink-2 hover:text-signal">
 										ORCID Profile
 									</a>
 								</div>
@@ -491,21 +491,21 @@ const Index = () => {
 						<Button 
 							onClick={() => setActiveFilter("all")}
 							variant={activeFilter === "all" ? "default" : "outline"}
-							className={activeFilter === "all" ? "bg-signal text-signal-ink" : ""}
+							className={activeFilter === "all" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							All
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("journal")}
 							variant={activeFilter === "journal" ? "default" : "outline"}
-							className={activeFilter === "journal" ? "bg-signal text-signal-ink" : ""}
+							className={activeFilter === "journal" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							Journals
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("conference")}
 							variant={activeFilter === "conference" ? "default" : "outline"}
-							className={activeFilter === "conference" ? "bg-signal text-signal-ink" : ""}
+							className={activeFilter === "conference" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							Conferences
 						</Button>
@@ -533,9 +533,23 @@ const Index = () => {
 												)}
 											</div>
 										</div>
-										<Button variant="ghost" size="sm" className="hover:bg-surface-2">
-											<ExternalLink size={16} />
-										</Button>
+										{/* Was a <Button> with no onClick, no href and no accessible
+										    name: a control that looked interactive, did nothing when
+										    clicked, and announced itself as an unlabelled button to a
+										    screen reader. The publication data already carries `doi`,
+										    so it now links there when one exists and renders nothing
+										    when it does not. */}
+										{pub.doi && (
+											<a
+												href={pub.doi.startsWith("http") ? pub.doi : `https://doi.org/${pub.doi}`}
+												target="_blank"
+												rel="noopener noreferrer"
+												aria-label={`Open "${pub.title}" at the publisher`}
+												className="inline-flex h-11 w-11 shrink-0 items-center justify-center text-ink-3 transition-colors hover:bg-surface-2 hover:text-signal"
+											>
+												<ExternalLink size={16} aria-hidden="true" />
+											</a>
+										)}
 									</div>
 								</CardContent>
 							</Card>
