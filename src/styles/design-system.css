@@ -320,8 +320,8 @@
     --signal: #2ec4d0;
     --signal-ink: #06232a;
     --signal-wash: #12333a;
-    --rule: #27353b;
-    --rule-strong: #3d5158;
+    --rule: #35474f;
+    --rule-strong: #4e666f;
   }
 
   :root:not([data-theme='light'])[data-variant='bitplane'] {
@@ -334,8 +334,8 @@
     --signal: #e8a33d;
     --signal-ink: #241800;
     --signal-wash: #33280f;
-    --rule: #2a3026;
-    --rule-strong: #414937;
+    --rule: #3b4331;
+    --rule-strong: #566047;
   }
 
   :root:not([data-theme='light'])[data-variant='bengal'] {
@@ -348,8 +348,8 @@
     --signal: #8b83e8;
     --signal-ink: #12112a;
     --signal-wash: #26245a;
-    --rule: #2c2c42;
-    --rule-strong: #44446a;
+    --rule: #3f3f5d;
+    --rule-strong: #585884;
   }
 
   :root:not([data-theme='light'])[data-variant='journal'] {
@@ -362,8 +362,8 @@
     --signal: #e0788c;
     --signal-ink: #2a0d13;
     --signal-wash: #3a1c22;
-    --rule: #2e3238;
-    --rule-strong: #474d55;
+    --rule: #414750;
+    --rule-strong: #5b626c;
   }
 
   :root:not([data-theme='light'])[data-variant='terminal'] {
@@ -376,8 +376,8 @@
     --signal: #2dd4bf;
     --signal-ink: #04231f;
     --signal-wash: #10322d;
-    --rule: #232827;
-    --rule-strong: #384040;
+    --rule: #343b3a;
+    --rule-strong: #4a5453;
   }
 
   :root:not([data-theme='light'])[data-variant='monograph'] {
@@ -390,8 +390,8 @@
     --signal: #8fb4dc;
     --signal-ink: #10202e;
     --signal-wash: #22313f;
-    --rule: #2e3132;
-    --rule-strong: #474b4c;
+    --rule: #424648;
+    --rule-strong: #5c6163;
   }
 }
 
@@ -415,8 +415,8 @@
   --signal: #2ec4d0;
   --signal-ink: #06232a;
   --signal-wash: #12333a;
-  --rule: #27353b;
-  --rule-strong: #3d5158;
+  --rule: #35474f;
+  --rule-strong: #4e666f;
 }
 
 :root[data-theme='dark'][data-variant='bitplane'] {
@@ -429,8 +429,8 @@
   --signal: #e8a33d;
   --signal-ink: #241800;
   --signal-wash: #33280f;
-  --rule: #2a3026;
-  --rule-strong: #414937;
+  --rule: #3b4331;
+  --rule-strong: #566047;
 }
 
 :root[data-theme='dark'][data-variant='bengal'] {
@@ -443,8 +443,8 @@
   --signal: #8b83e8;
   --signal-ink: #12112a;
   --signal-wash: #26245a;
-  --rule: #2c2c42;
-  --rule-strong: #44446a;
+  --rule: #3f3f5d;
+  --rule-strong: #585884;
 }
 
 :root[data-theme='dark'][data-variant='journal'] {
@@ -457,8 +457,8 @@
   --signal: #e0788c;
   --signal-ink: #2a0d13;
   --signal-wash: #3a1c22;
-  --rule: #2e3238;
-  --rule-strong: #474d55;
+  --rule: #414750;
+  --rule-strong: #5b626c;
 }
 
 :root[data-theme='dark'][data-variant='terminal'] {
@@ -471,8 +471,8 @@
   --signal: #2dd4bf;
   --signal-ink: #04231f;
   --signal-wash: #10322d;
-  --rule: #232827;
-  --rule-strong: #384040;
+  --rule: #343b3a;
+  --rule-strong: #4a5453;
 }
 
 :root[data-theme='dark'][data-variant='monograph'] {
@@ -485,8 +485,8 @@
   --signal: #8fb4dc;
   --signal-ink: #10202e;
   --signal-wash: #22313f;
-  --rule: #2e3132;
-  --rule-strong: #474b4c;
+  --rule: #424648;
+  --rule-strong: #5c6163;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -541,7 +541,7 @@ time,
   font-weight: var(--label-weight);
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: var(--ink-3);
 }
 
@@ -586,15 +586,61 @@ time,
 }
 
 /* ── Bit Plane's grid substrate ─────────────────────────────────────────
-   A faint pixel matrix referencing the least-significant-bit plane that
-   steganography operates in. Only this direction gets it; it is the one place
-   the concept becomes literal, and it stays at the threshold of visibility so
-   it reads as texture rather than decoration. */
-:root[data-variant='bitplane'] body {
-  background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-  background-size: 32px 32px;
+   A pixel matrix referencing the least-significant-bit plane steganography
+   operates in. The one place the concept becomes literal.
+
+   Two corrections from the first attempt, both found by measuring rather than
+   looking. It was drawn in `--rule` on `--surface-0`, which is a contrast ratio
+   of 1.29:1 — painting correctly and completely invisible. Hence a dedicated
+   `--substrate` token stepped for the job.
+
+   And it was on `body`, where every opaque section covers it, so it could only
+   ever have shown in the gaps. It now sits on the masthead and dissolves
+   downward, which is the honest version of the idea: texture where the page
+   opens, gone before it becomes wallpaper. */
+:root[data-variant='bitplane'] {
+  --substrate: #d4d4c4;
+}
+
+:root[data-variant='bitplane'] #home {
+  background-image: linear-gradient(to right, var(--substrate) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--substrate) 1px, transparent 1px);
+  background-size: 28px 28px;
   background-position: center top;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 88%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light'])[data-variant='bitplane'] {
+    --substrate: #333b2c;
+  }
+}
+:root[data-theme='dark'][data-variant='bitplane'] {
+  --substrate: #333b2c;
+}
+
+/* ── Per-direction structural devices ───────────────────────────────────
+   Where a direction needs more than tokens to read as its own design. Kept
+   here rather than in the components so the component tree stays one tree.
+
+   BENGAL MODERN: an Archivo-bold sans on a light ground is structurally close
+   to Interferometer, so colour and weight were carrying the whole difference.
+   The modernist idiom this direction sits in — NID, Correa — builds with solid
+   masses and voids, not hairlines, so its eyebrow labels become filled blocks.
+   That single change alters the page's rhythm rather than just its palette. */
+:root[data-variant='bengal'] .ds-label {
+  display: inline-block;
+  background-color: var(--signal);
+  color: var(--signal-ink);
+  padding: 0.3rem 0.6rem 0.25rem;
+  letter-spacing: 0.09em;
+  /* The block has to hug its text. Several of these labels sit in flex columns,
+     where the default `align-self: stretch` made a four-character word paint a
+     bar across the whole cell. */
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
