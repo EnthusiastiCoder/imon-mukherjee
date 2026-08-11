@@ -1,8 +1,8 @@
-import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Img from "@/components/Img";
 import CitationChart, { type CitationYear } from "@/components/CitationChart";
+import { useCountUp } from "@/hooks/useCountUp";
 
 interface ScholarMetrics {
 	citations: { total: number; since2020: number };
@@ -56,23 +56,43 @@ const affiliation = [
 	"An Institute of National Importance under the Govt. of India",
 ];
 
+/**
+ * One cell of the instrument readout.
+ *
+ * `count` animates from zero when the row scrolls into view; `value` is for
+ * anything that is not a number to count. The counted value always exists in the
+ * DOM regardless of whether the animation runs — see useCountUp.
+ */
 function StatCell({
 	label,
+	count,
 	value,
 	sub,
+	format,
 }: {
 	label: string;
-	value: string;
+	count?: number | null;
+	value?: string;
 	sub?: string;
+	format?: (n: number) => string;
 }) {
+	const { ref, display } = useCountUp(count ?? null);
+	const shown =
+		count !== undefined
+			? display === null
+				? "—"
+				: (format ?? ((n: number) => n.toLocaleString("en-IN")))(display)
+			: (value ?? "—");
+
 	return (
 		<div className="flex flex-col gap-1 px-[var(--space-gutter)] py-4 first:pl-0">
 			<span className="ds-label">{label}</span>
 			<span
-				className="ds-data text-2xl leading-none text-ink-1 sm:text-3xl"
+				ref={ref as React.Ref<HTMLSpanElement>}
+				className="ds-countup ds-data text-2xl leading-none text-ink-1 sm:text-3xl"
 				style={{ fontWeight: 500 }}
 			>
-				{value}
+				{shown}
 			</span>
 			{sub && <span className="text-[11px] text-ink-3">{sub}</span>}
 		</div>
@@ -82,7 +102,6 @@ function StatCell({
 export default function Hero() {
 	const [metrics, setMetrics] = useState<ScholarMetrics | null>(null);
 	const [loading, setLoading] = useState(true);
-	const reduce = useReducedMotion();
 
 	useEffect(() => {
 		let live = true;
@@ -102,23 +121,17 @@ export default function Hero() {
 		};
 	}, []);
 
-	// One orchestrated load sequence rather than a dozen independent animations.
-	// Scattered effects are what make a page feel generated; a single cascade
-	// reads as deliberate.
-	const rise = reduce
-		? {}
-		: {
-				initial: { opacity: 0, y: 12 },
-				animate: { opacity: 1, y: 0 },
-				transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-			};
-
 	return (
 		<section id="home" className="pt-24">
 			<div className="container">
-				{/* ── Masthead ─────────────────────────────────────────────────── */}
-				<div className="grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
-					<motion.div {...rise}>
+				{/* ── Masthead ─────────────────────────────────────────────────────
+				    Motion comes from the shared system in styles/motion.css, driven by
+				    data-motion. `ds-enter-group` cascades its direct children on load;
+				    `ds-reveal` plays on scroll. Both are written so the settled state
+				    is what plain CSS produces, which is why no wrapper here sets an
+				    initial hidden state of its own. */}
+				<div className="ds-enter-group grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
+					<div>
 						<p className="ds-label">
 							IIIT Kalyani &middot; Dept. of Computer Science &amp; Engineering
 						</p>
@@ -164,51 +177,38 @@ export default function Hero() {
 								Supervision &rarr;
 							</Link>
 						</div>
-					</motion.div>
+					</div>
 
-					{/* Portrait. A photograph, not a floating circle with a bounce
-					    animation on an infinite loop. */}
-					<motion.div
-						{...rise}
-						transition={{ ...(rise.transition ?? {}), delay: reduce ? 0 : 0.08 }}
-						className="order-first lg:order-none"
-					>
+					{/* Portrait. A photograph, not a floating circle bouncing on an
+					    infinite loop. `ds-parallax` gives it a slow drift against the
+					    scroll at the higher motion levels and nothing at the lower ones,
+					    since --m-parallax is 0 there. */}
+					<div className="order-first lg:order-none">
 						<Img
 							src="profile_image.jpg"
 							alt="Dr. Imon Mukherjee"
 							priority
 							sizes="(min-width: 1024px) 20rem, (min-width: 640px) 16rem, 12rem"
-							wrapperClassName="w-40 sm:w-56 lg:w-full"
-							className="w-full object-cover ds-plane"
+							wrapperClassName="w-40 sm:w-56 lg:w-full overflow-hidden"
+							className="ds-parallax w-full object-cover ds-plane"
 							style={{ aspectRatio: "4 / 5" }}
 						/>
-					</motion.div>
+					</div>
 				</div>
 
 				{/* ── Instrument readout ───────────────────────────────────────────
 				    Hero numbers before any chart: these four are what a collaborator
-				    or funding body scans for first. */}
-				<motion.div
-					{...rise}
-					transition={{ ...(rise.transition ?? {}), delay: reduce ? 0 : 0.16 }}
-					className="mt-[var(--space-block)] grid grid-cols-2 border-y border-rule sm:grid-cols-4 [&>*+*]:border-l [&>*+*]:border-rule [&>:nth-child(3)]:border-l-0 sm:[&>:nth-child(3)]:border-l"
-				>
-					<StatCell
-						label="Citations"
-						value={metrics ? metrics.citations.total.toLocaleString("en-IN") : "—"}
-						sub="Google Scholar"
-					/>
-					<StatCell label="h-index" value={metrics ? String(metrics.hIndex.total) : "—"} />
-					<StatCell label="i10-index" value={metrics ? String(metrics.i10Index.total) : "—"} />
-					<StatCell label="PhD awarded" value="5" sub="7 in progress" />
-				</motion.div>
+				    or funding body scans for first. Each counts up from zero when the
+				    row first scrolls into view. */}
+				<div className="ds-reveal mt-[var(--space-block)] grid grid-cols-2 border-y border-rule sm:grid-cols-4 [&>*+*]:border-l [&>*+*]:border-rule [&>:nth-child(3)]:border-l-0 sm:[&>:nth-child(3)]:border-l">
+					<StatCell label="Citations" count={metrics?.citations.total ?? null} sub="Google Scholar" />
+					<StatCell label="h-index" count={metrics?.hIndex.total ?? null} />
+					<StatCell label="i10-index" count={metrics?.i10Index.total ?? null} />
+					<StatCell label="PhD awarded" count={5} sub="7 in progress" />
+				</div>
 
 				{/* ── Citations over time ──────────────────────────────────────── */}
-				<motion.div
-					{...rise}
-					transition={{ ...(rise.transition ?? {}), delay: reduce ? 0 : 0.24 }}
-					className="mt-[var(--space-block)] grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem]"
-				>
+				<div className="ds-reveal mt-[var(--space-block)] grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem]">
 					<div className="ds-plane p-5">
 						<div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
 							<h2 className="ds-label">Citations by year</h2>
@@ -245,20 +245,19 @@ export default function Hero() {
 						</p>
 						<p className="text-[11px] text-ink-3">DRDO &middot; SERB &middot; MeitY</p>
 					</div>
-				</motion.div>
+				</div>
 
 				{/* ── Research areas ──────────────────────────────────────────── */}
 				<div id="research" className="scroll-mt-24 pt-[var(--space-section)]">
 					<h2 className="ds-label">Research</h2>
-					<div className="mt-4 grid gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
+					{/* ds-reveal-group staggers the four tiles by shifting each one's
+					    scroll range rather than by delay, which is meaningless on a
+					    scroll timeline. Where scroll-driven animation is unsupported the
+					    whole rule drops out and the tiles are simply already in place —
+					    an earlier version faded these in from opacity 0 through an
+					    observer, which made them vanish entirely when it did not fire. */}
+					<div className="ds-reveal-group mt-4 grid gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
 						{researchAreas.map((area) => (
-							// Deliberately not a whileInView opacity reveal. Fading content
-							// in from opacity 0 makes it invisible whenever the
-							// IntersectionObserver does not fire — printing, an unusual
-							// scroll restoration, a crawler — and these four tiles are the
-							// answer to "what does he actually work on". A hover transform
-							// is the only motion here, so the worst failure is no animation
-							// rather than no content.
 							<article
 								key={area.title}
 								className="group ds-plane overflow-hidden"

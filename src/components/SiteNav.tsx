@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, Monitor, Moon, Sun } from "lucide-react";
-import { resolveTheme, setTheme, type Theme } from "@/lib/appearance";
+import { applyAxis, resolveAxis } from "@/lib/appearance";
 
 import {
   DropdownMenu,
@@ -172,6 +172,18 @@ export default function SiteNav() {
           </Sheet>
         </div>
       </div>
+
+      {/* Read-position rule. The one piece of chrome that earns being linked
+          continuously to scroll rather than triggered once — on a page this long
+          it answers "how much is left". Driven by animation-timeline: scroll(),
+          so it costs no JavaScript and simply does not appear at the lower
+          motion levels or where scroll-driven animation is unsupported.
+          aria-hidden because it duplicates the scrollbar for screen readers. */}
+      <div
+        className="ds-scroll-progress absolute bottom-0 left-0 h-px w-full bg-signal"
+        style={{ transform: 'scaleX(0)' }}
+        aria-hidden="true"
+      />
     </nav>
   );
 }
@@ -183,11 +195,13 @@ export default function SiteNav() {
  * "System" is a real state and the default — writing an explicit value on first
  * load is what leaves dark-mode visitors staring at a bright page.
  */
-function ThemeToggle() {
-  const [theme, setThemeState] = useState<Theme>(resolveTheme);
+type ThemeValue = 'light' | 'dark' | 'system';
 
-  const next: Record<Theme, Theme> = { system: 'light', light: 'dark', dark: 'system' };
-  const icon: Record<Theme, typeof Sun> = { system: Monitor, light: Sun, dark: Moon };
+function ThemeToggle() {
+  const [theme, setThemeState] = useState<ThemeValue>(() => resolveAxis('theme') as ThemeValue);
+
+  const next: Record<ThemeValue, ThemeValue> = { system: 'light', light: 'dark', dark: 'system' };
+  const icon: Record<ThemeValue, typeof Sun> = { system: Monitor, light: Sun, dark: Moon };
   const Icon = icon[theme];
 
   return (
@@ -196,7 +210,7 @@ function ThemeToggle() {
       onClick={() => {
         const t = next[theme];
         setThemeState(t);
-        setTheme(t);
+        applyAxis('theme', t);
       }}
       // 44px, not the 36px this started as: it is a real control and needs a
       // real tap target on a phone.
