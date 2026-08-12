@@ -203,7 +203,19 @@ export function switcherEnabled(): boolean {
     write('ds-switcher', on ? '1' : null);
     return on;
   }
-  return read('ds-switcher') === '1';
+  if (read('ds-switcher') === '1') return true;
+
+  /**
+   * On by default wherever this is deployed for review, off on the live site.
+   *
+   * Vercel names a branch preview `<project>-git-<branch>-<scope>.vercel.app`,
+   * so the presence of `-git-` distinguishes a preview from production without
+   * needing a build flag. Localhost counts as review too. Anything else — the
+   * production domain, a custom domain — gets the clean page, so the panel
+   * cannot appear to a real visitor.
+   */
+  const host = window.location.hostname;
+  return host === 'localhost' || host === '127.0.0.1' || host.includes('-git-');
 }
 
 /**
