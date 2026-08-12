@@ -23,3 +23,16 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Generated image derivatives — rebuilt by `npm run images` (prebuild)
+public/images/derived/
+
+# Generated image manifest — written by `npm run images` alongside the
+# derivatives. Not imported by anything at this revision.
+src/generated/
+
+# Local Claude Code workspace config
+CLAUDE.md
+.claude/
+.mcp.json
+prompts/
