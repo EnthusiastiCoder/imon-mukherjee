@@ -23,7 +23,7 @@
  * load is what leaves dark-mode visitors on a bright page.
  */
 
-export type AxisId = 'variant' | 'motion' | 'theme';
+export type AxisId = 'variant' | 'motion' | 'background' | 'theme';
 
 export interface AxisOption {
   value: string;
@@ -75,6 +75,37 @@ export const AXES: readonly AxisDef[] = [
       { value: 'pronounced', name: 'Pronounced', note: 'Directional rise, parallax' },
       { value: 'kinetic', name: 'Kinetic', note: 'Springy overshoot, alternating sides' },
       { value: 'maximalist', name: 'Maximalist', note: '3D tilt and wipe, scrubbed' },
+    ],
+  },
+  {
+    // Its own axis rather than a property of the design direction, so any field
+    // pairs with any direction. Labels and notes mirror ambient/fields.ts; the
+    // field library is the source of truth for what each one actually does.
+    id: 'background',
+    attr: 'background',
+    label: 'Background',
+    default: 'auto',
+    options: [
+      { value: 'auto', name: 'Auto', note: "Match the design direction" },
+      { value: 'none', name: 'None', note: 'No field' },
+      { value: 'bitplane', name: 'Bit plane', note: 'Cells flipping in the noise floor' },
+      { value: 'cipher', name: 'Cipher', note: 'Columns of substituting characters' },
+      { value: 'circuit', name: 'Circuit', note: 'Orthogonal traces and vias' },
+      { value: 'interferometer', name: 'Interference', note: 'Fringe sets beating' },
+      { value: 'waves', name: 'Waves', note: 'Stacked sine bands drifting' },
+      { value: 'contour', name: 'Contour', note: 'Topographic lines shifting' },
+      { value: 'constellation', name: 'Constellation', note: 'Points linking when close' },
+      { value: 'flowfield', name: 'Flow field', note: 'Particles following a current' },
+      { value: 'starfield', name: 'Starfield', note: 'Points receding into depth' },
+      { value: 'rain', name: 'Rain', note: 'Diagonal streaks' },
+      { value: 'halftone', name: 'Halftone', note: 'Dot grid swelling' },
+      { value: 'hexgrid', name: 'Hex grid', note: 'Hexagonal lattice pulsing' },
+      { value: 'orbits', name: 'Orbits', note: 'Concentric rings turning' },
+      { value: 'bengal', name: 'Masses', note: 'Hard geometric forms' },
+      { value: 'terminal', name: 'Glyph rain', note: 'Falling characters, scanlines' },
+      { value: 'monograph', name: 'Rules', note: 'Long lines drifting' },
+      { value: 'journal', name: 'Grain', note: 'Drifting paper texture' },
+      { value: 'drift', name: 'Drift', note: 'Slow soft blobs' },
     ],
   },
   {
