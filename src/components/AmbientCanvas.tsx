@@ -17,8 +17,10 @@ import { useEffect, useRef } from 'react';
  *   journal         drifting paper grain and faint rule lines, like a page held
  *                   up to light.
  *   terminal        sparse falling glyphs, cut with scanlines.
- *   monograph       nothing. Restraint is that direction's whole identity, and
- *                   the way to express it is to leave the canvas empty.
+ *   monograph       long horizontal rules drifting at different speeds, like
+ *                   ruled paper breathing. Quiet is this direction's identity,
+ *                   so it gets the slowest and faintest field rather than none —
+ *                   an empty canvas read as a missing feature, not as restraint.
  *
  * Canvas rather than SVG or DOM because these are generative fields with
  * hundreds of cells — the design guidance is explicit that generative graphics
@@ -43,7 +45,7 @@ const FPS: Record<Mode, number> = {
   bengal: 30,
   journal: 8,
   terminal: 14,
-  monograph: 0,
+  monograph: 10,
 };
 
 function tokens() {
@@ -86,8 +88,6 @@ export function AmbientCanvas({
     if (reduced || motion === 'still' || motion === 'restrained') return;
 
     const mode = (root.dataset.variant ?? 'bitplane') as Mode;
-    if (mode === 'monograph') return;
-
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
@@ -247,6 +247,27 @@ export function AmbientCanvas({
         // Scanlines.
         ctx.fillStyle = `rgba(${rgb(c.muted)},0.035)`;
         for (let y = 0; y < h; y += 4) ctx.fillRect(0, y, w, 1);
+        return;
+      }
+
+      if (mode === 'monograph') {
+        // Long rules drifting at slightly different speeds. The slowest and
+        // faintest of the six: this direction is defined by restraint, so its
+        // field should be barely perceptible rather than absent.
+        const ink = rgb(c.muted);
+        const sig = rgb(c.signal);
+        const lines = Math.ceil(h / 110) + 2;
+        ctx.lineWidth = 1;
+        for (let i = 0; i < lines; i++) {
+          const speed = 0.4 + ((i * 13) % 7) / 12;
+          const y = ((i * 110 + t * speed * 9) % (h + 220)) - 110;
+          const inset = 40 + Math.sin(t * 0.08 + i) * 90;
+          ctx.strokeStyle = i % 5 === 0 ? `rgba(${sig},0.07)` : `rgba(${ink},0.05)`;
+          ctx.beginPath();
+          ctx.moveTo(inset, y);
+          ctx.lineTo(w - inset * 0.6, y);
+          ctx.stroke();
+        }
         return;
       }
     };

@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Img from "@/components/Img";
 import CitationChart, { type CitationYear } from "@/components/CitationChart";
-import AmbientCanvas from "@/components/AmbientCanvas";
 import Marquee from "@/components/Marquee";
 import { useCountUp } from "@/hooks/useCountUp";
 import { totalFundingLakhs } from "@/data/funding";
@@ -157,24 +156,7 @@ export default function Hero({
 	}, []);
 
 	return (
-		<section id="home" className="ds-grain relative pt-24">
-			{/* The generative field behind the masthead — a different world per
-			    direction. Absolutely positioned and pointer-events:none so it never
-			    interferes with the content sitting on it, and masked at the bottom
-			    so it dissolves rather than ending on a hard line. */}
-			<AmbientCanvas
-				className="absolute inset-x-0 top-0 -z-[1] h-[min(92vh,900px)] w-full"
-				// Dissolves downward so the field is strongest where the page opens
-				// and gone by the time it reaches the citation chart, which needs a
-				// quiet ground to be read against. Both prefixes: Safari still wants
-				// the -webkit- form.
-				style={{
-					WebkitMaskImage:
-						"linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
-					maskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
-				}}
-			/>
-
+		<section id="home" className="relative pt-24">
 			<div className="container">
 				{/* ── Masthead ─────────────────────────────────────────────────────
 				    Motion comes from the shared system in styles/motion.css, driven by

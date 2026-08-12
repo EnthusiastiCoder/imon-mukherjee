@@ -11,6 +11,7 @@ import Gallery from "./pages/Gallery";
 import Lectures from "./pages/Lectures";
 import NotFound from "./pages/NotFound";
 import AppearanceSwitcher from "./components/AppearanceSwitcher";
+import AmbientCanvas from "./components/AmbientCanvas";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,22 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      {/*
+        The generative field, as one page-wide fixed layer rather than a canvas
+        per section.
+
+        Fixed and behind everything, so it runs the whole length of the page and
+        across every route instead of only the hero. One canvas rather than one
+        per section: nine canvases would each need their own loop and observer to
+        animate the same field, at nine times the cost, and they would seam at
+        every section boundary.
+
+        Sections above it are transparent (see index.css) so the field is the
+        page's ground everywhere; content that needs a quiet backdrop sits on an
+        opaque .ds-plane.
+      */}
+      <AmbientCanvas className="ds-field fixed inset-0 -z-10 h-full w-full" />
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

@@ -316,7 +316,9 @@ const Index = () => {
 		: publications.filter(pub => pub.type === activeFilter);
 
 	return (
-		<div className="min-h-screen bg-surface-0">
+		// ds-grain moved here from the hero: the field now runs the whole page,
+		// so its texture should too.
+		<div className="ds-grain min-h-screen">
 			<SiteNav />
 
 			<Hero
@@ -325,7 +327,7 @@ const Index = () => {
 			/>
 
 			{/* About Section */}
-			<section id="about" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
+			<section id="about" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">About</h2>
 					<div className="ds-reveal-group grid md:grid-cols-2 gap-8 md:gap-12">
@@ -392,7 +394,7 @@ const Index = () => {
 			{/* Research Interests */}
 
 			{/* Research Interests */}
-			<section id="research" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
+			<section id="research" className="py-[var(--space-section)] border-t border-rule">
 			  <div className="container">
 			    <h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">
 			      Research Interests
@@ -426,7 +428,7 @@ const Index = () => {
 			    quantities spanning ₹1.85L to ₹45.61L — a 25x range that four equal
 			    cards actively hid. Magnitude over a set of items is a bar chart, so
 			    it is one now, and the bar doubles as the row's structure. */}
-			<section id="projects" className="py-[var(--space-section)] bg-surface-1">
+			<section id="projects" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<SectionHeader
 						eyebrow="Grants"
@@ -482,7 +484,7 @@ const Index = () => {
 			</section>
 
 			{/* Publications */}
-			<section id="publications" className="py-[var(--space-section)] bg-surface-0">
+			<section id="publications" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<SectionHeader
 						eyebrow="Selected work"
@@ -617,7 +619,7 @@ const Index = () => {
 			    grey text at the bottom of a card; for anyone weighing whether to do
 			    a PhD with him, that placement record IS the credential, so it now
 			    sits directly under the name. */}
-			<section id="supervision" className="py-[var(--space-section)] bg-surface-1">
+			<section id="supervision" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<SectionHeader
 						eyebrow="Doctoral supervision"
@@ -713,7 +715,7 @@ const Index = () => {
 			    a spine with the date in the margin and a node per talk. The
 			    numbering here is honest in a way section numbering would not be:
 			    these genuinely are a sequence. */}
-			<section id="talks" className="py-[var(--space-section)] bg-surface-0">
+			<section id="talks" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<SectionHeader
 						eyebrow="Speaking"
@@ -764,7 +766,7 @@ const Index = () => {
 			</section>
 
 			{/* Gallery Section */}
-			<section id="gallery" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
+			<section id="gallery" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
 						<h2 className="ds-display text-display-md">Gallery</h2>
@@ -825,7 +827,7 @@ const Index = () => {
 			</section>
 
 			{/* Contact Section */}
-			<section id="contact" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
+			<section id="contact" className="py-[var(--space-section)] border-t border-rule">
 				<div className="container">
 					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">Contact</h2>
 					<div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">

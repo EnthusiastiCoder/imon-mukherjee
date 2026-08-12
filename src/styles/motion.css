@@ -395,6 +395,34 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   4b · Ambient field strength
+   The field now runs behind the whole page rather than only the masthead, so it
+   sits under body text everywhere. At full strength that competes with reading.
+   Tying its opacity to the motion axis keeps the default legible and lets the
+   louder levels actually be louder — the same control that governs everything
+   else about how alive the page feels.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-field {
+  opacity: 0;
+  transition: opacity var(--dur-mid) ease;
+}
+:root[data-motion='pronounced'] .ds-field {
+  opacity: 0.5;
+}
+:root[data-motion='kinetic'] .ds-field {
+  opacity: 0.72;
+}
+:root[data-motion='maximalist'] .ds-field {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-field {
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    5 · Grain
    A tiling noise overlay. Cheap, and it is most of the difference between a
    page that looks rendered and one that looks printed. Fixed so it does not

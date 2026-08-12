@@ -114,6 +114,9 @@
   }
 
   body {
+    /* NOTE: the design system re-declares body's background from --surface-0 in
+       styles/design-system.css, which loads after this file and wins. This rule
+       stays only for the shadcn components that still reference these tokens. */
     @apply bg-background text-foreground;
     /* Safety net only — a stray absolutely-positioned element should still be
        fixed at the source. `clip` rather than `hidden` so it does not silently
