@@ -7,6 +7,14 @@
       "destination": "/api/:path*"
     },
     {
+      "source": "/variants",
+      "destination": "/variants/index.html"
+    },
+    {
+      "source": "/variants/(.*)",
+      "destination": "/variants/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
