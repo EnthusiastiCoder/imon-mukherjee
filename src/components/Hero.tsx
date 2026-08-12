@@ -5,6 +5,7 @@ import CitationChart, { type CitationYear } from "@/components/CitationChart";
 import AmbientCanvas from "@/components/AmbientCanvas";
 import Marquee from "@/components/Marquee";
 import { useCountUp } from "@/hooks/useCountUp";
+import { totalFundingLakhs } from "@/data/funding";
 
 /**
  * Venues he actually publishes in, for the marquee band.
@@ -120,7 +121,20 @@ function StatCell({
 	);
 }
 
-export default function Hero() {
+/**
+ * Counts come from the page that owns the supervision data rather than being
+ * written here. The hero previously hard-coded "7 in progress" and "Supervising
+ * seven doctoral candidates" while the array held six — the same drift as the
+ * hard-coded funding total. Numbers quoted in copy have to be derived from the
+ * list they summarise or they eventually contradict it.
+ */
+export default function Hero({
+	doctoratesAwarded,
+	doctoratesOngoing,
+}: {
+	doctoratesAwarded: number;
+	doctoratesOngoing: number;
+}) {
 	const [metrics, setMetrics] = useState<ScholarMetrics | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -242,7 +256,11 @@ export default function Hero() {
 					<StatCell label="Citations" count={metrics?.citations.total ?? null} sub="Google Scholar" />
 					<StatCell label="h-index" count={metrics?.hIndex.total ?? null} />
 					<StatCell label="i10-index" count={metrics?.i10Index.total ?? null} />
-					<StatCell label="PhD awarded" count={5} sub="7 in progress" />
+					<StatCell
+						label="PhD awarded"
+						count={doctoratesAwarded}
+						sub={`${doctoratesOngoing} in progress`}
+					/>
 				</div>
 
 				{/* ── Citations over time ──────────────────────────────────────── */}
@@ -275,11 +293,16 @@ export default function Hero() {
 					<div className="ds-plane flex flex-col justify-center gap-3 p-5">
 						<p className="ds-label">Currently</p>
 						<p className="text-sm leading-relaxed text-ink-2">
-							Supervising seven doctoral candidates across steganography, quantum
-							machine learning and post-quantum cryptography.
+							Supervising {doctoratesOngoing} doctoral candidates across steganography,
+							quantum machine learning and post-quantum cryptography.
 						</p>
+						{/* Was ₹87.86L, which is the sum of only the first two grants.
+						    The four listed on this page total ₹105.89L. The figure is
+						    now derived in Index.tsx from the same array the Funded
+						    Projects section renders, so the two cannot disagree. */}
 						<p className="ds-data text-sm text-ink-1">
-							&#8377;87.86L <span className="text-ink-3">in funded projects</span>
+							&#8377;{totalFundingLakhs.toFixed(2)}L{' '}
+							<span className="text-ink-3">in funded projects, as PI</span>
 						</p>
 						<p className="text-[11px] text-ink-3">DRDO &middot; SERB &middot; MeitY</p>
 					</div>

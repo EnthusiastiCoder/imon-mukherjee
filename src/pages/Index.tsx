@@ -10,8 +10,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
 import SiteNav from "@/components/SiteNav";
+import SectionHeader from "@/components/SectionHeader";
 import Img from "@/components/Img";
+import {
+	fundedProjects,
+	parseLakhs,
+	totalFundingLakhs,
+	maxFundingLakhs,
+} from "@/data/funding";
 import { motion } from "framer-motion";
+
 
 const Index = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
@@ -46,37 +54,11 @@ const Index = () => {
 		}
 	];
 
-	const fundedProjects = [
-		{
-			title: "Study of Quantum Attacks on Stream Ciphers and Its Counter-Measures",
-			funding: "DRDO, Govt. of India",
-			duration: "Sept, 2022 – Sept, 2024",
-			amount: "₹42.25 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "Extraction, Organization and Query of Scholarly Information",
-			funding: "SERB (CRG), Govt. of India",
-			duration: "March, 2022 to March, 2025",
-			amount: "₹45.61 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "AI in Agriculture & Food Sustainability",
-			funding: "MeitY, Govt. of India",
-			duration: "March, 2020 to March, 2023",
-			amount: "₹16.18 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "Implementation of Security in eGovernance through Steganography",
-			funding: "DST, Govt. of West Bengal",
-			duration: "July, 2013, to June, 2016",
-			amount: "₹1.85 Lakhs",
-			role: "PI"
-		}
-	];
 
+
+	// Derived from the array rather than written into the copy, for the same
+	// reason the funding total is — a number typed into a heading drifts from
+	// the list beneath it the moment a paper is added.
 	const publications = [
 		{
 			title: "Quantized Contour based Intelligent Stego-malware Sterilizer for Smart Consumer Electronics Network",
@@ -181,6 +163,12 @@ const Index = () => {
       		award: "Best Paper Award"
     	}
 	];
+
+	const journalCount = publications.filter((p) => p.type === "journal").length;
+	const conferenceCount = publications.filter((p) => p.type === "conference").length;
+	const peakImpactFactor = Math.max(
+		...publications.map((p) => Number.parseFloat(p.impactFactor ?? "") || 0)
+	).toFixed(1);
 
 	const phdSupervision = {
 		awarded: [
@@ -331,7 +319,10 @@ const Index = () => {
 		<div className="min-h-screen bg-surface-0">
 			<SiteNav />
 
-			<Hero />
+			<Hero
+				doctoratesAwarded={phdSupervision.awarded.length}
+				doctoratesOngoing={phdSupervision.ongoing.length}
+			/>
 
 			{/* About Section */}
 			<section id="about" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
@@ -429,65 +420,82 @@ const Index = () => {
 			</section>
 
 
-			{/* Funded Projects */}
-			<section id="projects" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
+			{/* Funded Projects
+			    Was four identical cards, each repeating an agency badge, a calendar
+			    icon and a dollar icon. But these four grants are directly comparable
+			    quantities spanning ₹1.85L to ₹45.61L — a 25x range that four equal
+			    cards actively hid. Magnitude over a set of items is a bar chart, so
+			    it is one now, and the bar doubles as the row's structure. */}
+			<section id="projects" className="py-[var(--space-section)] bg-surface-1">
 				<div className="container">
-					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="ds-display text-display-md">Funded Projects</h2>
-						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
-							<Link to="/funded-projects">
-								View All Projects
-								<ExternalLink size={16} className="ml-2" />
-							</Link>
-						</Button>
-					</div>
-					<div className="ds-reveal-group grid md:grid-cols-2 gap-6 md:gap-8">
-						{fundedProjects.slice(0, 4).map((project, index) => (
-							<Card key={index} className="ds-reveal ds-plane transition-colors">
-								<CardHeader>
-									<CardTitle className="text-ink-1 text-lg">{project.title}</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div className="space-y-3">
-										<div className="flex items-center gap-2">
-											<Badge className="bg-cat-1 text-white">
-												{project.funding}
-											</Badge>
-											<Badge className="bg-cat-3 text-white">
-												{project.role}
-											</Badge>
-										</div>
-										<div className="flex items-center gap-2 text-ink-2">
-											<Calendar size={16} />
-											<span>{project.duration}</span>
-										</div>
-										<div className="flex items-center gap-2 text-ink-2">
-											<DollarSign size={16} />
-											<span className="font-semibold text-status-good">{project.amount}</span>
+					<SectionHeader
+						eyebrow="Grants"
+						title="Funded Projects"
+						summary={`₹${totalFundingLakhs.toFixed(2)}L as Principal Investigator across ${fundedProjects.length} projects`}
+						to="/funded-projects"
+						actionLabel="All projects"
+					/>
+
+					<ol className="ds-reveal-group">
+						{fundedProjects.map((project) => {
+							const lakhs = parseLakhs(project.amount);
+							const pct = Math.max(2, (lakhs / maxFundingLakhs) * 100);
+							return (
+								<li
+									key={project.title}
+									className="ds-reveal group grid gap-x-6 gap-y-2 border-t border-rule py-5 last:border-b sm:grid-cols-[minmax(0,1fr)_auto]"
+								>
+									<div className="min-w-0">
+										<h3 className="text-base font-semibold leading-snug text-ink-1">
+											{project.title}
+										</h3>
+										<p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
+											<span>{project.funding}</span>
+											<span aria-hidden="true">·</span>
+											<span className="ds-data">{project.duration}</span>
+											<span aria-hidden="true">·</span>
+											<span>{project.role}</span>
+										</p>
+									</div>
+
+									{/* Amount and its bar. Right-aligned and tabular so the figures
+									    form a scannable column rather than floating in prose. */}
+									<div className="sm:w-56 sm:text-right">
+										<span className="ds-data text-lg text-ink-1">{project.amount}</span>
+										<div
+											className="mt-2 h-[6px] w-full overflow-hidden bg-surface-2"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											role="img"
+											aria-label={`${project.amount}, ${Math.round(pct)} percent of the largest grant`}
+										>
+											<div
+												className="h-full bg-signal transition-[width] duration-500"
+												style={{ width: `${pct}%`, borderRadius: 'var(--ds-radius-sm)' }}
+											/>
 										</div>
 									</div>
-								</CardContent>
-							</Card>
-						))}
-					</div>
+								</li>
+							);
+						})}
+					</ol>
 				</div>
 			</section>
 
 			{/* Publications */}
-			<section id="publications" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
+			<section id="publications" className="py-[var(--space-section)] bg-surface-0">
 				<div className="container">
-					<div className="ds-reveal flex justify-between items-center mb-8">
-						<h2 className="ds-display text-display-md">Publications</h2>
-						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
-							<Link to="/publications">
-								View All Publications
-								<ExternalLink size={16} className="ml-2" />
-							</Link>
-						</Button>
-					</div>
-					
-					{/* Filter Buttons */}
-					<div className="flex justify-center gap-4 mb-8">
+					<SectionHeader
+						eyebrow="Selected work"
+						title="Publications"
+						summary={`Peak impact factor ${peakImpactFactor} · ${journalCount} journal, ${conferenceCount} conference`}
+						to="/publications"
+						actionLabel="All publications"
+					/>
+
+					{/* Filter. Left-aligned with the content rather than centred: a
+					    centred control row under a left-aligned heading reads as a
+					    separate widget. */}
+					<div className="mb-2 flex flex-wrap gap-3">
 						<Button 
 							onClick={() => setActiveFilter("all")}
 							variant={activeFilter === "all" ? "default" : "outline"}
@@ -511,139 +519,247 @@ const Index = () => {
 						</Button>
 					</div>
 
-					<div className="space-y-6">
-						{filteredPublications.slice(0, 4).map((pub, index) => (
-							<Card key={index} className="ds-reveal ds-plane transition-colors">
-								<CardContent className="p-6">
-									<div className="flex justify-between items-start gap-4">
-										<div className="flex-1">
-											<h3 className="font-semibold text-ink-1 mb-2">{pub.title}</h3>
-											<p className="text-ink-2 mb-2">{pub.journal}</p>
-											<div className="flex items-center gap-3">
-												<Badge variant="outline" className="border-rule bg-surface-2 text-ink-2">
-													{pub.year}
-												</Badge>
-												<Badge className={pub.type === "journal" ? "bg-cat-1 text-white" : "bg-cat-3 text-white"}>
-													{pub.type === "journal" ? "Journal" : "Conference"}
-												</Badge>
-												{pub.impactFactor && (
-													<Badge className="bg-cat-4 text-white">
-														IF: {pub.impactFactor}
-													</Badge>
-												)}
-											</div>
-										</div>
-										{/* Was a <Button> with no onClick, no href and no accessible
-										    name: a control that looked interactive, did nothing when
-										    clicked, and announced itself as an unlabelled button to a
-										    screen reader. The publication data already carries `doi`,
-										    so it now links there when one exists and renders nothing
-										    when it does not. */}
-										{pub.doi && (
-											<a
-												href={pub.doi.startsWith("http") ? pub.doi : `https://doi.org/${pub.doi}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												aria-label={`Open "${pub.title}" at the publisher`}
-												className="inline-flex h-11 w-11 shrink-0 items-center justify-center text-ink-3 transition-colors hover:bg-surface-2 hover:text-signal"
-											>
-												<ExternalLink size={16} aria-hidden="true" />
-											</a>
+				{/* The impact factor is the strongest single credential on each row —
+					    10.9 in IEEE TCE is the headline, not a footnote — so it is set
+					    at display size on the left and everything else reads against it.
+					    Previously it was a small pill indistinguishable from the year. */}
+					<ol className="ds-reveal-group">
+						{filteredPublications.slice(0, 4).map((pub) => {
+							const isJournal = pub.type === "journal";
+							const hasIF = pub.impactFactor && pub.impactFactor !== "N/A";
+							return (
+								<li
+									key={pub.title}
+									className="ds-reveal group relative grid gap-x-6 gap-y-3 border-t border-rule py-6 last:border-b sm:grid-cols-[7rem_minmax(0,1fr)_auto]"
+								>
+									{/* Impact factor, or the type when there is none to show. */}
+									<div className="sm:pt-1">
+										{hasIF ? (
+											<>
+												<span className="ds-data block text-[2.25rem] leading-none text-signal">
+													{pub.impactFactor}
+												</span>
+												<span className="ds-label mt-1 block">Impact factor</span>
+											</>
+										) : (
+											<span className="ds-label block sm:pt-2">
+												{isJournal ? "Journal" : "Conference"}
+											</span>
 										)}
 									</div>
-								</CardContent>
-							</Card>
-						))}
-					</div>
+
+									<div className="min-w-0">
+										<h3 className="text-base font-semibold leading-snug text-ink-1 sm:text-lg">
+											{pub.title}
+										</h3>
+										<p className="ds-display mt-1.5 text-[15px] text-ink-2">{pub.journal}</p>
+										<p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
+											{/* A 2px rule in the categorical colour instead of a filled
+											    pill: type is a category and keeps its hue, but it no
+											    longer shouts over the title beside it. */}
+											<span className="inline-flex items-center gap-2">
+												<span
+													className="inline-block h-[2px] w-5"
+													style={{ backgroundColor: isJournal ? "var(--cat-1)" : "var(--cat-3)" }}
+													aria-hidden="true"
+												/>
+												{isJournal ? "Journal" : "Conference"}
+											</span>
+											<span aria-hidden="true">·</span>
+											<span className="ds-data">{pub.year}</span>
+											{pub.indexed && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span>{pub.indexed}</span>
+												</>
+											)}
+											{pub.award && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span className="text-status-warn">{pub.award}</span>
+												</>
+											)}
+										</p>
+									</div>
+
+									{/* Was a <Button> with no onClick, no href and no accessible
+									    name: a control that looked interactive, did nothing when
+									    clicked, and announced itself as an unlabelled button. The
+									    data already carries `doi`, so it links there when one exists
+									    and renders nothing when it does not. */}
+									{pub.doi ? (
+										<a
+											href={pub.doi.startsWith("http") ? pub.doi : `https://doi.org/${pub.doi}`}
+											target="_blank"
+											rel="noopener noreferrer"
+											aria-label={`Open "${pub.title}" at the publisher`}
+											className="inline-flex h-11 w-11 shrink-0 items-center justify-center self-start text-ink-3 transition-colors hover:bg-surface-2 hover:text-signal"
+										>
+											<ExternalLink size={16} aria-hidden="true" />
+										</a>
+									) : (
+										<span aria-hidden="true" />
+									)}
+								</li>
+							);
+						})}
+					</ol>
 				</div>
 			</section>
 
-			{/* Ph.D. Supervision */}
-			<section id="supervision" className="py-[var(--space-section)] bg-surface-1 border-t border-rule">
-				<div className="container">
-					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="ds-display text-display-md">Ph.D. Supervision</h2>
-						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
-							<Link to="/academic-supervision">
-								View All Supervision
-								<ExternalLink size={16} className="ml-2" />
-							</Link>
-						</Button>
-					</div>
-					
-					<div className="ds-reveal-group grid md:grid-cols-2 gap-8 md:gap-12">
-						{/* Awarded */}
-						<div>
-							<h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
-								<Award className="text-status-good" size={24} />
-								Awarded ({phdSupervision.awarded.length})
-							</h3>
-							<div className="space-y-4">
-								{phdSupervision.awarded.slice(0, 2).map((student, index) => (
-									<Card key={index} className="ds-reveal ds-plane">
-										<CardContent className="p-6">
-											<h4 className="font-semibold text-ink-1">{student.name}</h4>
-											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
-											<div className="flex items-center justify-between text-sm">
-												<span className="text-status-good font-medium">{student.year}</span>
-												<span className="text-ink-3">{student.position}</span>
-											</div>
-										</CardContent>
-									</Card>
-								))}
-							</div>
-						</div>
+			{/* Ph.D. Supervision
+			    Was two columns showing 2 of 5 awarded and 2 of 7 ongoing behind a
+			    "View All" button — hiding the record it exists to present. All of
+			    them are here now.
 
-						{/* Ongoing */}
-						<div>
-							<h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
-								<BookOpen className="text-signal" size={24} />
-								Ongoing ({phdSupervision.ongoing.length})
-							</h3>
-							<div className="space-y-4">
-								{phdSupervision.ongoing.slice(0, 2).map((student, index) => (
-									<Card key={index} className="ds-reveal ds-plane">
-										<CardContent className="p-6">
-											<h4 className="font-semibold text-ink-1">{student.name}</h4>
-											<p className="text-ink-2 text-sm mb-2">{student.thesis}</p>
-											<span className="text-signal font-medium text-sm">Started: {student.startYear}</span>
-										</CardContent>
-									</Card>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* Talks & Outreach */}
-			<section id="talks" className="py-[var(--space-section)] bg-surface-0 border-t border-rule">
+			    The important change is what is emphasised. Where his doctorates
+			    ended up (IISc, IIT BHU, assistant professorships) was set in small
+			    grey text at the bottom of a card; for anyone weighing whether to do
+			    a PhD with him, that placement record IS the credential, so it now
+			    sits directly under the name. */}
+			<section id="supervision" className="py-[var(--space-section)] bg-surface-1">
 				<div className="container">
-					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">Recent Invited Talks</h2>
-					<div className="max-w-4xl mx-auto">
-						<div className="space-y-6">
-							{talks.map((talk, index) => (
-								<Card key={index} className="ds-reveal ds-plane transition-colors">
-									<CardContent className="p-6">
-										<div className="flex items-start justify-between gap-4">
-											<div className="flex-1">
-												<h3 className="font-semibold text-ink-1 mb-2">{talk.title}</h3>
-												<p className="text-ink-2">{talk.venue}</p>
+					<SectionHeader
+						eyebrow="Doctoral supervision"
+						title="Ph.D. Supervision"
+						to="/academic-supervision"
+						actionLabel="All supervision"
+					>
+						<span className="ds-data text-sm text-ink-2">
+							<span className="text-[1.75rem] leading-none text-signal">
+								{phdSupervision.awarded.length}
+							</span>{' '}
+							awarded
+						</span>
+						<span className="ds-data text-sm text-ink-2">
+							<span className="text-[1.75rem] leading-none text-ink-1">
+								{phdSupervision.ongoing.length}
+							</span>{' '}
+							in progress
+						</span>
+					</SectionHeader>
+
+					<div className="grid gap-x-12 gap-y-10 lg:grid-cols-2">
+						<div className="ds-reveal-group">
+							<h3 className="ds-label mb-3 border-b border-rule pb-3">Awarded</h3>
+							<ol>
+								{phdSupervision.awarded.map((student) => (
+									<li
+										key={student.name}
+										className="ds-reveal flex gap-4 border-b border-rule py-4"
+									>
+										{/* Status encoded in form as well as colour: awarded is a
+										    filled node, in-progress an outline one. */}
+										<span
+											className="mt-[7px] h-[9px] w-[9px] shrink-0 bg-signal"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											aria-hidden="true"
+										/>
+										<div className="min-w-0 flex-1">
+											<div className="flex flex-wrap items-baseline justify-between gap-x-4">
+												<h4 className="font-semibold text-ink-1">{student.name}</h4>
+												<time className="ds-data shrink-0 text-xs text-ink-3">
+													{student.year ?? student.startYear}
+												</time>
 											</div>
-											{/* A date is not categorical data, so it does not get a
-											    categorical colour. Eleven identical blue pills down
-											    the page were reading as eleven emphases and drowning
-											    the titles they sat beside. Mono, muted, right-aligned:
-											    scannable as a column of dates. */}
-											<time className="ds-data shrink-0 whitespace-nowrap text-xs text-ink-3">
-												{talk.date}
-											</time>
+											{student.position && (
+												<p className="mt-0.5 text-[13px] text-signal">{student.position}</p>
+											)}
+											<p className="mt-1 text-[13px] leading-snug text-ink-3">
+												{student.thesis}
+											</p>
 										</div>
-									</CardContent>
-								</Card>
-							))}
+									</li>
+								))}
+							</ol>
+						</div>
+
+						<div className="ds-reveal-group">
+							<h3 className="ds-label mb-3 border-b border-rule pb-3">In progress</h3>
+							<ol>
+								{phdSupervision.ongoing.map((student) => (
+									<li
+										key={student.name}
+										className="ds-reveal flex gap-4 border-b border-rule py-4"
+									>
+										<span
+											className="mt-[7px] h-[9px] w-[9px] shrink-0 border-2 border-rule-strong"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											aria-hidden="true"
+										/>
+										<div className="min-w-0 flex-1">
+											<div className="flex flex-wrap items-baseline justify-between gap-x-4">
+												<h4 className="font-semibold text-ink-1">{student.name}</h4>
+												<time className="ds-data shrink-0 text-xs text-ink-3">
+													from {student.startYear}
+												</time>
+											</div>
+											<p className="mt-1 text-[13px] leading-snug text-ink-3">
+												{student.thesis}
+											</p>
+										</div>
+									</li>
+								))}
+							</ol>
 						</div>
 					</div>
+				</div>
+			</section>
+
+			{/* Talks & Outreach
+			    Eleven identical bordered cards stacked vertically was the most
+			    monotonous block on the page, and it threw away the one thing the
+			    data has: order. These are a chronology, so this is a timeline —
+			    a spine with the date in the margin and a node per talk. The
+			    numbering here is honest in a way section numbering would not be:
+			    these genuinely are a sequence. */}
+			<section id="talks" className="py-[var(--space-section)] bg-surface-0">
+				<div className="container">
+					<SectionHeader
+						eyebrow="Speaking"
+						title="Recent Invited Talks"
+						summary={`${talks.length} invited lectures and keynotes`}
+					/>
+
+					<ol className="ds-reveal-group relative mx-auto max-w-4xl">
+						{/* The spine. Sits behind the nodes and stops at the last one
+						    rather than running past it into whitespace. */}
+						<span
+							className="absolute bottom-4 left-[7px] top-3 w-px bg-rule sm:left-[calc(9rem+1.5rem+7px)]"
+							aria-hidden="true"
+						/>
+
+						{talks.map((talk) => (
+							<li
+								key={talk.title}
+								className="ds-reveal group relative flex gap-4 pb-8 last:pb-0 sm:gap-6"
+							>
+								{/* Date in the margin at sm+, above the title on a phone.
+								    w-36 plus nowrap: "September 29, 2024" needs ~130px in the
+								    mono face, so at w-28 and even w-32 it broke after the
+								    comma and read as two separate entries. */}
+								<time className="ds-data hidden w-36 shrink-0 whitespace-nowrap pt-2 text-right text-xs text-ink-3 sm:block">
+									{talk.date}
+								</time>
+
+								<span
+									className="relative z-[1] mt-3 h-[15px] w-[15px] shrink-0 border-2 border-rule-strong bg-surface-0 transition-colors group-hover:border-signal group-hover:bg-signal"
+									style={{ borderRadius: 'var(--ds-radius-sm)' }}
+									aria-hidden="true"
+								/>
+
+								<div className="min-w-0 pt-1">
+									<time className="ds-data mb-1 block text-xs text-ink-3 sm:hidden">
+										{talk.date}
+									</time>
+									<h3 className="text-base font-semibold leading-snug text-ink-1">
+										{talk.title}
+									</h3>
+									<p className="mt-1 text-sm text-ink-2">{talk.venue}</p>
+								</div>
+							</li>
+						))}
+					</ol>
 				</div>
 			</section>
 
