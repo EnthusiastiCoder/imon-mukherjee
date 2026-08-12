@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "git": {
     "deploymentEnabled": {
-      "feat/responsive-images": false
+      "feat/responsive-images": true
     }
   },
   "rewrites": [
