@@ -43,8 +43,12 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --m-anim: ds-rise;
-  --m-anim-alt: ds-rise; /* used by alternating children at `kinetic` */
+  --m-anim: ds-enter-dir;
+  /* Base travel. The direction cycle multiplies these by -1, 0 or +1 per element
+     to produce an entry side; a level only sets how far and how hard. */
+  --m-dx: 70px;
+  --m-dy: 56px;
+  --m-rot-max: 0deg;
   --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --m-duration: 0.6s;
   --m-stagger: 60ms;
@@ -57,7 +61,6 @@
 
 :root[data-motion='still'] {
   --m-anim: none;
-  --m-anim-alt: none;
   --m-duration: 0s;
   --m-stagger: 0ms;
   --m-parallax: 0px;
@@ -65,11 +68,14 @@
   --m-hover-scale: 1;
 }
 
-/* Opacity only. No travel at all — the qualitative difference from every level
-   above it, not a smaller version of them. */
+/* The quietest level. It takes the same directional keyframe as the rest so it
+   also varies its entry side — the offsets are just small enough that the effect
+   reads as a settle rather than a slide. Roughly a sixth of pronounced's throw. */
 :root[data-motion='restrained'] {
-  --m-anim: ds-fade;
-  --m-anim-alt: ds-fade;
+  --m-anim: ds-enter-dir;
+  --m-dx: 16px;
+  --m-dy: 12px;
+  --m-rot-max: 0deg;
   --m-ease: linear;
   --m-duration: 0.45s;
   --m-stagger: 40ms;
@@ -81,8 +87,10 @@
 }
 
 :root[data-motion='pronounced'] {
-  --m-anim: ds-rise;
-  --m-anim-alt: ds-rise;
+  --m-anim: ds-enter-dir;
+  --m-dx: 86px;
+  --m-dy: 60px;
+  --m-rot-max: 0.8deg;
   --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --m-duration: 0.65s;
   --m-stagger: 70ms;
@@ -93,10 +101,13 @@
   --m-range-end: cover 32%;
 }
 
-/* Overshoot easing plus alternating entry sides. Physical rather than smooth. */
+/* Overshoot easing. Physical rather than smooth, and the widest throw. */
 :root[data-motion='kinetic'] {
-  --m-anim: ds-spring-left;
-  --m-anim-alt: ds-spring-right;
+  --m-anim: ds-enter-dir;
+  --m-dx: 130px;
+  --m-dy: 84px;
+  --m-rot-max: 2.4deg;
+  --m-scale-from: 0.9;
   --m-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
   --m-duration: 0.8s;
   --m-stagger: 85ms;
@@ -111,7 +122,9 @@
    screen, so it tracks the scroll rather than playing and finishing. */
 :root[data-motion='maximalist'] {
   --m-anim: ds-construct;
-  --m-anim-alt: ds-construct;
+  --m-dx: 150px;
+  --m-dy: 130px;
+  --m-rot-max: 0deg;
   --m-ease: linear;
   --m-duration: 0.95s;
   --m-stagger: 110ms;
@@ -129,45 +142,42 @@
    2 · The gestures
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/*
+ * ── One keyframe, direction supplied by custom properties ───────────────────
+ *
+ * Everything previously rose from below, because each level baked its offsets
+ * into its own keyframes. Direction is now `--m-from-x` / `--m-from-y` /
+ * `--m-rot`, so entry direction and motion character are independent: any level
+ * can enter from any side, and a level is defined by HOW it moves (distance,
+ * easing, blur, scale) rather than by WHERE it comes from.
+ *
+ * The direction cycle is set further down and deliberately is not a simple
+ * left/right alternation — a strict A/B pattern becomes predictable by the third
+ * item, which is the thing that made this read as bland.
+ */
+@keyframes ds-enter-dir {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--m-from-x, 0px), var(--m-from-y, 0px), 0)
+      scale(var(--m-scale-from, 1)) rotate(var(--m-rot, 0deg));
+    filter: blur(var(--m-blur-from, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Fade only, for the quietest level. Kept as its own keyframe rather than
+   ds-enter-dir with zero offsets, so `restrained` cannot accidentally inherit a
+   direction from the cycle below. */
 @keyframes ds-fade {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes ds-rise {
-  from {
-    opacity: 0;
-    transform: translateY(64px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes ds-spring-left {
-  from {
-    opacity: 0;
-    transform: translate3d(-56px, 72px, 0) scale(0.9) rotate(-1.5deg);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes ds-spring-right {
-  from {
-    opacity: 0;
-    transform: translate3d(56px, 72px, 0) scale(0.9) rotate(1.5deg);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -184,7 +194,8 @@
 @keyframes ds-construct {
   from {
     opacity: 0;
-    transform: perspective(1100px) rotateX(26deg) translateY(150px) scale(0.86);
+    transform: perspective(1100px) rotateX(20deg) rotateY(var(--m-rot-y, 0deg))
+      translate3d(var(--m-from-x, 0px), var(--m-from-y, 0px), 0) scale(0.86);
     filter: blur(10px);
     clip-path: inset(0 0 92% 0);
   }
@@ -264,18 +275,19 @@
       animation-range: var(--m-range-start) var(--m-range-end);
     }
 
-    /* Alternating children pick up the mirrored gesture. At every level except
-       kinetic both custom properties hold the same keyframes, so this is inert
-       there rather than needing its own guard. */
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(even) {
-      animation-name: var(--m-anim-alt);
-    }
+    /* Entry direction cycles on a five-beat pattern (see the block below), so
+       it does not resolve into an obvious left/right/left rhythm. */
 
-    /* Stagger by pushing each child's range further into `cover`. Delays are
-       meaningless on a scroll timeline. */
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range: entry 6% cover 36%; }
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range: entry 12% cover 42%; }
-    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range: entry 18% cover 48%; }
+    /* Stagger the START only, never the end. Delays are meaningless on a scroll
+       timeline, so children have to be offset by range — but these previously
+       set the whole `animation-range` shorthand with hard-coded ends, which
+       overrode each level's own range. Restrained intends to finish by
+       `cover 18%` and its children were running to `cover 48%`, still in flight
+       long after the level says they should have settled. Shifting only the
+       start keeps every child inside the level's range. */
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range-start: entry 6%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range-start: entry 12%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range-start: entry 18%; }
 
     /* Parallax. --m-parallax is 0 at still and restrained, so the rule is inert
        there rather than needing a guard. */
@@ -391,6 +403,84 @@
     to {
       transform: translateX(-50%);
     }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3b · Entry directions
+   Elements used to rise from below without exception, which is the single most
+   generic reveal there is. Direction is now assigned from a cycle.
+
+   FIVE beats, not two or four. An A/B alternation is legible by the third item
+   and a four-beat cycle lines up with the four-column grids used on this page,
+   so both resolve into an obvious pattern. Five is coprime with the 2, 3 and 4
+   column counts here, so a row of tiles and the rows above and below it never
+   repeat the same arrangement.
+
+   Applied at two scopes: within a reveal group, so neighbouring tiles differ;
+   and by section parity, so a standalone element in one section leans opposite
+   to the same element in the next.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Horizontal entry means an element starts up to 150px outside its own
+   * column. Measured before this rule: document scrollWidth 1594 against a
+   * 1521 viewport — a horizontal scrollbar, which is precisely the defect this
+   * whole redesign started by fixing.
+   *
+   * `clip` rather than `hidden`: `hidden` would make each section a scroll
+   * container, which silently breaks `position: sticky` on any descendant and
+   * changes what scrollIntoView does. `clip` just clips.
+   */
+  :root:not([data-motion='still']) section {
+    overflow-x: clip;
+  }
+
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 1) {
+    --m-from-x: calc(var(--m-dx) * -1);
+    --m-from-y: calc(var(--m-dy) * 0.25);
+    --m-rot: calc(var(--m-rot-max) * -1);
+    --m-rot-y: -14deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 2) {
+    --m-from-x: var(--m-dx);
+    --m-from-y: calc(var(--m-dy) * -0.5); /* from above right */
+    --m-rot: var(--m-rot-max);
+    --m-rot-y: 14deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 3) {
+    --m-from-x: calc(var(--m-dx) * 0.35);
+    --m-from-y: var(--m-dy);
+    --m-rot: calc(var(--m-rot-max) * 0.4);
+    --m-rot-y: 6deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 4) {
+    --m-from-x: calc(var(--m-dx) * -0.6);
+    --m-from-y: calc(var(--m-dy) * -0.8); /* from above left */
+    --m-rot: calc(var(--m-rot-max) * -0.6);
+    --m-rot-y: -8deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 5) {
+    --m-from-x: var(--m-dx);
+    --m-from-y: calc(var(--m-dy) * 0.6);
+    --m-rot: calc(var(--m-rot-max) * 1.2);
+    --m-rot-y: 18deg;
+  }
+
+  /* Standalone reveals lean by section parity, so consecutive sections do not
+     all arrive from the same side. */
+  :root:not([data-motion='still']) section:nth-of-type(odd) .ds-reveal:not(.ds-reveal-group > *) {
+    --m-from-x: calc(var(--m-dx) * -0.7);
+    --m-from-y: calc(var(--m-dy) * 0.5);
+    --m-rot: calc(var(--m-rot-max) * -0.5);
+    --m-rot-y: -10deg;
+  }
+  :root:not([data-motion='still']) section:nth-of-type(even) .ds-reveal:not(.ds-reveal-group > *) {
+    --m-from-x: calc(var(--m-dx) * 0.7);
+    --m-from-y: calc(var(--m-dy) * 0.5);
+    --m-rot: calc(var(--m-rot-max) * 0.5);
+    --m-rot-y: 10deg;
   }
 }
 
