@@ -220,7 +220,7 @@ const Lectures = () => {
 													</div>
 												</div>
 												<div className="shrink-0 sm:text-right">
-													<Badge className="bg-cat-3 text-white mb-2">
+													<Badge className="ds-chip border-cat-3 mb-2">
 														{course.progress}% Complete
 													</Badge>
 													<Progress value={course.progress} className="w-full sm:w-32" />
