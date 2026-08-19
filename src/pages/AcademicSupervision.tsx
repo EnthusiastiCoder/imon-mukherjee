@@ -341,9 +341,15 @@ const AcademicSupervision = () => {
     }
   ];
 
-  const otherInstitutions = [
-    
-  ];
+  const otherInstitutions: {
+    title: string;
+    students: string[];
+    institution: string;
+    year: string;
+    coSupervisor?: string;
+  }[] = [];
+
+  const hasOtherInstitutions = otherInstitutions.length > 0;
 
   return (
     <div className="min-h-screen">
@@ -366,7 +372,14 @@ const AcademicSupervision = () => {
       <section className="pb-16">
         <div className="container">
           <Tabs defaultValue="phd" className="w-full">
-            <ScrollableTabsList cols="md:grid-cols-5" className="mb-8">
+            {/* The "Other" tab only exists when there is something in it. An
+                always-rendered tab labelled (0) opened onto a blank panel, with
+                the footer sliding up under the tab strip — a visible dead end.
+                It comes back on its own if otherInstitutions is ever filled. */}
+            <ScrollableTabsList
+              cols={hasOtherInstitutions ? 'md:grid-cols-5' : 'md:grid-cols-4'}
+              className="mb-8"
+            >
               <TabsTrigger value="phd" className="flex shrink-0 items-center gap-2 min-h-[40px]">
                 <GraduationCap size={16} className="shrink-0" />
                 Ph.D. ({phdAwarded.length + phdOngoing.length})
@@ -383,10 +396,12 @@ const AcademicSupervision = () => {
                 <Users size={16} className="shrink-0" />
                 B.Tech. ({btechProjects.length})
               </TabsTrigger>
-              <TabsTrigger value="other" className="flex shrink-0 items-center gap-2 min-h-[40px]">
-                <Users size={16} className="shrink-0" />
-                Other ({otherInstitutions.length})
-              </TabsTrigger>
+              {hasOtherInstitutions && (
+                <TabsTrigger value="other" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                  <Users size={16} className="shrink-0" />
+                  Other ({otherInstitutions.length})
+                </TabsTrigger>
+              )}
             </ScrollableTabsList>
 
             {/* Ph.D. Tab */}
@@ -536,6 +551,7 @@ const AcademicSupervision = () => {
             </TabsContent>
 
             {/* Other Institutions Tab */}
+            {hasOtherInstitutions && (
             <TabsContent value="other" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 {otherInstitutions.map((project, index) => (
@@ -570,6 +586,7 @@ const AcademicSupervision = () => {
                 ))}
               </div>
             </TabsContent>
+            )}
           </Tabs>
         </div>
       </section>
