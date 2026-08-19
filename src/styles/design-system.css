@@ -46,8 +46,12 @@
 
   /* Status. Reserved — never reused as a categorical slot. Always shipped with
      an icon or label so state is never colour-alone. */
-  --status-good: #1a7f4b;
-  --status-warn: #a86a08;
+  /* Darkened from #1a7f4b / #a86a08. Status text is body text and needs 4.5:1
+     on every surface it can land on; the previous values measured 4.31:1 and
+     3.81:1 on surface-2, so award notes, dates and amounts failed AA in light
+     mode. Now 5.86 and 5.23 at their worst. Dark-mode values already passed. */
+  --status-good: #15683d;
+  --status-warn: #8a5706;
   --status-info: #2a6ea8;
 
   /* Spacing rhythm. Section padding is fluid so it compresses on a phone
@@ -83,7 +87,11 @@
   --surface-2: #eeeee8;
   --ink-1: #14170f;
   --ink-2: #444a3a;
-  --ink-3: #74796a;
+  /* #656a5b, darkened from #74796a. Muted text still has to clear AA: at the
+     old value it measured 4.18:1 on surface-0 and 3.85:1 on surface-2, so every
+     caption, label and metadata line on the site failed 4.5:1. Now 5.20 / 5.57 /
+     4.79 across the three surfaces, and still clearly recessive against ink-2. */
+  --ink-3: #656a5b;
   --signal: #a35f00;
   --signal-ink: #ffffff;
   --signal-wash: #f4ead8;
@@ -136,7 +144,9 @@
     --surface-2: #222820;
     --ink-1: #eceee4;
     --ink-2: #b6bbaa;
-    --ink-3: #878d7c;
+    /* #939988, lightened from #878d7c — 4.40:1 on surface-2 before, which is
+       what made the muted metadata fail AA in dark mode. Now 6.29 / 5.77 / 5.14. */
+    --ink-3: #939988;
     --signal: #e8a33d;
     --signal-ink: #241800;
     --signal-wash: #33280f;
@@ -160,7 +170,7 @@
   --surface-2: #222820;
   --ink-1: #eceee4;
   --ink-2: #b6bbaa;
-  --ink-3: #878d7c;
+  --ink-3: #939988;
   --signal: #e8a33d;
   --signal-ink: #241800;
   --signal-wash: #33280f;
@@ -276,6 +286,31 @@ time,
 
 .ds-rule {
   border-color: var(--rule);
+}
+
+/**
+ * Category chip.
+ *
+ * A hairline in the category's colour with ink text, rather than a filled pill
+ * with white text on it.
+ *
+ * Filled categorical badges cannot be made accessible here. Measured against
+ * 12px text: white fails on every one of the four categorical colours in both
+ * modes (2.17:1 to 4.42:1), dark ink fixes most of them, and cat-1 in light mode
+ * fails BOTH ways — 4.42 with white, 4.10 with ink. There is no text colour that
+ * works, because those hues were validated as chart marks needing 3:1 against a
+ * surface, not as backgrounds for small text.
+ *
+ * So the hue moves to the border, where 3:1 is the correct bar for a graphical
+ * element and the validated values already clear it, and the text takes ink,
+ * which is checked against every surface. Accessible by construction, and it
+ * matches the rule-plus-label treatment already used on the homepage.
+ */
+.ds-chip {
+  background-color: transparent;
+  color: var(--ink-1);
+  border-width: 1px;
+  border-style: solid;
 }
 
 /* ── Focus ──────────────────────────────────────────────────────────────── */
