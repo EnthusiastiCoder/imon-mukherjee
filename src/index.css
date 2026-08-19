@@ -9,17 +9,6 @@
    module graph after this file also gives it the later position in the cascade,
    which is what lets its body/element styling win over Tailwind's preflight.
 
-   Below: the original shadcn token block. Retained because the ~50 components in
-   src/components/ui are wired to it; the redesign's own surfaces come from the
-   design-system tokens. */
-
-/* The redesign's token layer lives in ./styles/design-system.css and is imported
-   from main.tsx, deliberately NOT with an @import here: `@import` is only legal
-   before any other rule, and the @tailwind directives above compile to rules, so
-   an @import placed after them is silently dropped. Importing it through the JS
-   module graph after this file also gives it the later position in the cascade,
-   which is what lets its body/element styling win over Tailwind's preflight.
-
    ── The shadcn token block below ────────────────────────────────────────────
 
    The ~50 components in src/components/ui are wired to these, and they used to

@@ -1,8 +1,36 @@
 # Design Brief — six directions to choose from
 
-**Branch:** `feat/responsive-images` (continue here; 24 commits already landed)
-**Status:** direction set agreed and colour system validated. Not yet built.
-**Date:** 2026-08-10
+**Status: CLOSED. Decided and shipped 2026-08-19.**
+
+Dr. Mukherjee reviewed all six directions at `/variants` and chose
+**Bit Plane · maximalist motion · bit-field background**, with the light/dark
+toggle kept. That combination is live at the domain root; the five other
+directions, seventeen of the eighteen background fields, the appearance
+switcher and three font families were removed in the same change (PR #5).
+
+One defect survived that change and was fixed afterwards in PR #8: shadcn's own
+tokens still hung off a `.dark` class, which nothing in this app sets, so every
+bare `<Card>` stayed white in dark mode. Those tokens now carry this palette and
+follow `data-theme`. Fixing it surfaced three contrast failures that had never
+been checked — `--ink-3` had never met AA in light mode — so
+`scripts/validate-design-palettes.mjs` now checks every ink against every surface
+rather than a hardcoded copy of the palette.
+
+The record below is the brief as written before the build, kept because it
+explains *why* each direction existed and what the colour system guarantees.
+Anything describing future work is historical — read the status line above
+first. The alternatives are recoverable from git history if one is ever wanted.
+
+Outstanding, unrelated to the design decision:
+
+- High-resolution originals for four documentary photos (`image1`, `image2`,
+  `image4`, `image6`). `npm run check:images` fails deliberately until then.
+- Whether the commented-out seventh ongoing PhD student should be listed.
+
+---
+
+**Branch:** `feat/responsive-images` (merged to `main` as 220154c)
+**Date:** 2026-08-10, closed 2026-08-19
 
 > Read `plans/responsive-and-images.md` first — it covers the responsive/image work
 > already done and what remains outstanding. This file is the visual redesign.
@@ -177,12 +205,12 @@ entity", a named anti-pattern.
 
 - `npm run dev` → Vite on **:8080**, Express scholar API on **:3001**.
   `SERPAPI_KEY` is in `server/.env` (gitignored). **Rotate it** — it was pasted in chat.
-- **The MCP servers in `.mcp.json` need a session restart to load.** They were written
-  after the previous session started, so `chrome-devtools`, `webfetch` and `ui-critique`
-  were unavailable for all work to date. Steps 5 and 6 are blocked without them, and
-  no visual verification of the responsive work has happened yet either.
+- The MCP servers in `.mcp.json` load after a session restart. Once loaded, every
+  direction was verified in a real browser, and the shipped combination was swept for
+  contrast across all 7 routes in both themes.
 - `npm run check:images` exits non-zero on purpose: 4 documentary photos need originals
   from Dr. Mukherjee. Not a regression.
 - `npm run lint` reports 5 errors and 7 warnings, all pre-existing, none in new files.
-- Do not push to `origin main` — the allowlist hook blocks it. Vercel auto-deploy is
-  off for this branch; previews are manual via `npx vercel`.
+- Do not push to `origin main` — the allowlist hook blocks it. Land work by PR.
+  `main` auto-deploys to production on merge, so avoid merging comment- or docs-only
+  branches on their own; fold them into the next real change.
