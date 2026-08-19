@@ -27,6 +27,16 @@ type ManifestEntry = {
 
 const entries = manifest as Record<string, ManifestEntry>;
 
+/**
+ * Derived-image root — absolute, and deliberately NOT prefixed with the app's
+ * base path.
+ *
+ * The /variants sub-app is served from the same domain as the root site, so it
+ * shares one copy of the images rather than carrying its own. Making these
+ * base-relative duplicated 13 MB of derived AVIF/WebP/JPEG into the sub-app's
+ * output for no benefit. Only the JS and CSS need the base prefix, and Vite
+ * handles those itself.
+ */
 const DERIVED = "/images/derived";
 
 export type ImgProps = Omit<
