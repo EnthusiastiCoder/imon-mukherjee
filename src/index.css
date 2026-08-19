@@ -13,91 +13,136 @@
    src/components/ui are wired to it; the redesign's own surfaces come from the
    design-system tokens. */
 
+/* The redesign's token layer lives in ./styles/design-system.css and is imported
+   from main.tsx, deliberately NOT with an @import here: `@import` is only legal
+   before any other rule, and the @tailwind directives above compile to rules, so
+   an @import placed after them is silently dropped. Importing it through the JS
+   module graph after this file also gives it the later position in the cascade,
+   which is what lets its body/element styling win over Tailwind's preflight.
+
+   ── The shadcn token block below ────────────────────────────────────────────
+
+   The ~50 components in src/components/ui are wired to these, and they used to
+   carry shadcn's stock palette with the dark values behind a `.dark` class,
+   because tailwind.config sets darkMode: ["class"].
+
+   Nothing in this app ever adds `.dark` — theming is `data-theme` on <html>. So
+   --card stayed at its light value of `0 0% 100%`, pure white, in both themes,
+   and every bare <Card> rendered white while the token-driven text inside it
+   went near-white in dark mode. White card, white text.
+
+   Two changes fix that class of bug for good:
+
+     1. These now carry Bit Plane's own palette, so a shadcn surface and a
+        design-system surface are the same colour rather than two systems.
+     2. The dark values hang off `data-theme` and prefers-color-scheme, the same
+        triggers the design system uses, instead of a class nobody sets.
+
+   They stay HSL triplets rather than referencing the hex tokens directly,
+   because Tailwind composes them as `hsl(var(--card) / <alpha>)` and there are
+   17 opacity modifiers in use (bg-accent/50, bg-destructive/90, and so on) that
+   a plain var() would break.
+
+   Values are GENERATED from design-system.css, not transcribed — see the
+   shadcn-token check in scripts/validate-design-palettes.mjs, which fails if the
+   two representations ever drift. */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 60 15.8% 96.3%;  /* surface-0 #f7f7f4 */
+    --foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --card: 60 100% 99.6%;  /* surface-1 #fffffd */
+    --card-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --popover: 60 100% 99.6%;  /* surface-1 #fffffd */
+    --popover-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --primary: 35 100% 32%;  /* signal #a35f00 */
+    --primary-foreground: 0 0% 100%;  /* signal-ink #ffffff */
+    --secondary: 60 15% 92.2%;  /* surface-2 #eeeee8 */
+    --secondary-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --muted: 60 15% 92.2%;  /* surface-2 #eeeee8 */
+    --muted-foreground: 80 7.6% 38.6%;  /* ink-3 #656a5b */
+    --accent: 60 15% 92.2%;  /* surface-2 #eeeee8 */
+    --accent-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --border: 60 12.5% 84.3%;  /* rule #dcdcd2 */
+    --input: 60 12.5% 84.3%;  /* rule #dcdcd2 */
+    --ring: 35 100% 32%;  /* signal #a35f00 */
+    --sidebar-background: 60 100% 99.6%;  /* surface-1 #fffffd */
+    --sidebar-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --sidebar-primary: 35 100% 32%;  /* signal #a35f00 */
+    --sidebar-primary-foreground: 0 0% 100%;  /* signal-ink #ffffff */
+    --sidebar-accent: 60 15% 92.2%;  /* surface-2 #eeeee8 */
+    --sidebar-accent-foreground: 82.5 21.1% 7.5%;  /* ink-1 #14170f */
+    --sidebar-border: 60 12.5% 84.3%;  /* rule #dcdcd2 */
+    --sidebar-ring: 35 100% 32%;  /* signal #a35f00 */
+    --destructive: 0 70% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --radius: 0px;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  /* Follow the OS, unless an explicit light choice overrides it. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --background: 100 16.7% 7.1%;  /* surface-0 #11150f */
+      --foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --card: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+      --card-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --popover: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+      --popover-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --primary: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+      --primary-foreground: 40 100% 7.1%;  /* signal-ink #241800 */
+      --secondary: 105 11.1% 14.1%;  /* surface-2 #222820 */
+      --secondary-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --muted: 105 11.1% 14.1%;  /* surface-2 #222820 */
+      --muted-foreground: 81.2 7.7% 56.7%;  /* ink-3 #939988 */
+      --accent: 105 11.1% 14.1%;  /* surface-2 #222820 */
+      --accent-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --border: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+      --input: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+      --ring: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+      --sidebar-background: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+      --sidebar-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --sidebar-primary: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+      --sidebar-primary-foreground: 40 100% 7.1%;  /* signal-ink #241800 */
+      --sidebar-accent: 105 11.1% 14.1%;  /* surface-2 #222820 */
+      --sidebar-accent-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+      --sidebar-border: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+      --sidebar-ring: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+      --destructive: 0 68% 58%;
+      --destructive-foreground: 0 0% 100%;
+      --radius: 0px;
+    }
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* The explicit toggle, which must also win over an OS set to light. */
+  :root[data-theme='dark'] {
+    --background: 100 16.7% 7.1%;  /* surface-0 #11150f */
+    --foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --card: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+    --card-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --popover: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+    --popover-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --primary: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+    --primary-foreground: 40 100% 7.1%;  /* signal-ink #241800 */
+    --secondary: 105 11.1% 14.1%;  /* surface-2 #222820 */
+    --secondary-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --muted: 105 11.1% 14.1%;  /* surface-2 #222820 */
+    --muted-foreground: 81.2 7.7% 56.7%;  /* ink-3 #939988 */
+    --accent: 105 11.1% 14.1%;  /* surface-2 #222820 */
+    --accent-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --border: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+    --input: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+    --ring: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+    --sidebar-background: 97.5 15.4% 10.2%;  /* surface-1 #191e16 */
+    --sidebar-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --sidebar-primary: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+    --sidebar-primary-foreground: 40 100% 7.1%;  /* signal-ink #241800 */
+    --sidebar-accent: 105 11.1% 14.1%;  /* surface-2 #222820 */
+    --sidebar-accent-foreground: 72 22.7% 91.4%;  /* ink-1 #eceee4 */
+    --sidebar-border: 86.7 15.5% 22.7%;  /* rule #3b4331 */
+    --sidebar-ring: 35.8 78.8% 57.5%;  /* signal #e8a33d */
+    --destructive: 0 68% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --radius: 0px;
   }
 }
 

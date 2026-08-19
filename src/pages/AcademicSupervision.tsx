@@ -452,8 +452,8 @@ const AcademicSupervision = () => {
                         <p className="text-ink-1 text-sm font-medium">{student.project}</p>
                         <Badge className={`mt-2 ${
                           student.status === "Thesis Submitted" 
-                            ? "bg-cat-4 text-white" 
-                            : "bg-cat-1 text-white"
+                            ? "ds-chip border-cat-4" 
+                            : "ds-chip border-cat-1"
                         }`}>
                           {student.status}
                         </Badge>
