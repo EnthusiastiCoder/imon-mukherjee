@@ -32,6 +32,10 @@ public/images/derived/
 .env.*
 !.env.example
 
+# NOTE: src/generated/ is deliberately NOT ignored here. Img.tsx imports the
+# image manifest, so tsc and the editor need it present without first running
+# `npm run images`.
+
 # Local Claude Code workspace config
 CLAUDE.md
 .claude/

@@ -1,11 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "git": {
-    "deploymentEnabled": {
-      "feat/responsive-images": true
-    }
-  },
   "rewrites": [
     {
       "source": "/api/:path*",
