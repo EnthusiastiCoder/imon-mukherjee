@@ -1,154 +1,202 @@
 /**
- * Validates the redesign's colour system against the dataviz six checks.
+ * Validates the design system's colour decisions.
  *
  *   node scripts/validate-design-palettes.mjs
  *
- * Exits non-zero on any failure, so it can gate a commit.
+ * Exits non-zero on any failure, so it can gate a commit or a build.
  *
- * ── Architecture ────────────────────────────────────────────────────────────
- * An earlier draft gave each visual direction its own "on brand" categorical
- * palette. That was wrong twice over. Practically, it kept failing: tinting the
- * hues toward a direction's mood pushed them out of the lightness band, under the
- * chroma floor, or into collisions — Terminal's violet and magenta came out at
- * ΔE 0.9 under protanopia, i.e. the same colour for those readers. Conceptually
- * it was backwards: categorical hues encode *which entity a datum belongs to*,
- * not the page's mood. Publication type should not change colour because the
- * theme changed.
+ * ── Why this exists in this shape ────────────────────────────────────────────
  *
- * So the system splits in two:
+ * Earlier versions carried their own copy of the palette and checked only two
+ * pairings: ink-1 and the accent, each against surface-0. Both choices caused
+ * real bugs to ship.
  *
- *   SHARED  one categorical set, fixed entity order, identical across every
- *           direction — validated here against every surface in both modes.
+ *   - The copy went stale. It still described six design directions after five
+ *     had been deleted from the stylesheet.
+ *   - The narrow coverage missed ink-3, which carries every caption, label and
+ *     metadata line. It measured 4.18:1 on surface-0 and 3.85:1 on surface-2 in
+ *     light mode — below AA on every surface — and nothing caught it because
+ *     nothing looked.
  *
- *   PER-DIRECTION  surface, ink, and a single accent. This is where a direction's
- *           identity lives, along with typography and structure, which carry far
- *           more of it than chart hues ever could.
+ * So: the palette is PARSED from src/styles/design-system.css rather than
+ * restated, and every ink is checked against every surface.
  *
- * Colour is computable, so it is computed. Do not hand-tune these values without
- * re-running this script.
+ * A third check guards a duplication that cannot be removed. The ~50 components
+ * in src/components/ui read HSL-triplet tokens from src/index.css, because
+ * Tailwind composes them as hsl(var(--x) / <alpha>) and 17 opacity modifiers in
+ * those components depend on that form, while the design system stores the same
+ * colours as hex. Two representations of one palette drift; when they did, the
+ * symptom was a white card behind near-white text in dark mode on the Lectures
+ * page. This fails the build instead.
  */
-import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 
-const SKILL =
-  process.env.DATAVIZ_SKILL ||
-  'C:/Users/enthu/AppData/Local/Temp/claude/bundled-skills/2.1.226/fa737198c698c62d8512f1844f2bb43c/dataviz';
-const VALIDATOR = `${SKILL}/scripts/validate_palette.js`;
+const DESIGN_CSS = 'src/styles/design-system.css';
+const SHADCN_CSS = 'src/index.css';
 
-/**
- * Shared categorical set — slot order is the entity order and never changes.
- * Slots map to: 1 journals · 2 conferences · 3 book chapters · 4 patents
- * (and equivalently to funding agencies elsewhere on the site).
- */
-const CATEGORICAL = {
-  light: ['#2a78d6', '#eb6834', '#1baf7a', '#eda100'],
-  dark: ['#3987e5', '#d95926', '#199e70', '#c98500'],
+/* ── colour maths ─────────────────────────────────────────────────────────── */
+
+const channels = (hex) => {
+  const h = hex.replace('#', '');
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
 };
 
-/**
- * Per-direction identity. `accent` is the single brand colour: links, active
- * states, the emphasised bar in the citation chart. `ink` is body text.
- */
-const DIRECTIONS = {
-  interferometer: {
-    label: 'Interferometer — cool instrument panel, condensed grotesque',
-    light: { surface: '#f6f8f9', ink: '#101a1e', accent: '#0d7d8a' },
-    dark: { surface: '#0e1519', ink: '#e6eef1', accent: '#2ec4d0' },
-  },
-  bitplane: {
-    label: 'Bit Plane — amber signal, editorial serif, hairline grid',
-    light: { surface: '#f7f7f4', ink: '#14170f', accent: '#a35f00' },
-    dark: { surface: '#11150f', ink: '#eceee4', accent: '#e8a33d' },
-  },
-  bengal: {
-    label: 'Bengal Modern — indigo and madder, geometric modernist',
-    light: { surface: '#f4f4f7', ink: '#15152a', accent: '#3f38b8' },
-    dark: { surface: '#14141f', ink: '#e8e8f2', accent: '#8b83e8' },
-  },
-  journal: {
-    label: 'Journal — scientific publishing, numbered sections',
-    light: { surface: '#fdfdfb', ink: '#16181c', accent: '#9c1f35' },
-    dark: { surface: '#16181c', ink: '#ecedef', accent: '#e0788c' },
-  },
-  terminal: {
-    label: 'Terminal — austere, monospaced throughout',
-    light: { surface: '#fbfbfa', ink: '#0e1110', accent: '#0f766e' },
-    dark: { surface: '#0b0d0c', ink: '#e4e8e6', accent: '#2dd4bf' },
-  },
-  monograph: {
-    label: 'Monograph — near-monochrome, category encoded typographically',
-    light: { surface: '#fbfbfa', ink: '#1a1a19', accent: '#2b6098' },
-    dark: { surface: '#17191a', ink: '#eaeae8', accent: '#8fb4dc' },
-  },
+const relLuminance = (hex) => {
+  const [r, g, b] = channels(hex);
+  const f = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
 };
 
-/** WCAG relative-luminance contrast ratio. */
-function contrast(a, b) {
-  const lum = (hex) => {
-    const [r, g, bl] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
-    const f = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(bl);
-  };
-  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+const contrast = (a, b) => {
+  const [hi, lo] = [relLuminance(a), relLuminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
-}
+};
 
-function categoricalReport(palette, mode, surface) {
-  try {
-    return execFileSync('node', [VALIDATOR, palette.join(','), '--mode', mode, '--surface', surface], {
-      encoding: 'utf8',
-    });
-  } catch (err) {
-    return `${err.stdout || ''}${err.stderr || ''}`;
+const hexToHslTriplet = (hex) => {
+  const [r, g, b] = channels(hex);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let hue = 0;
+  let sat = 0;
+  if (max !== min) {
+    const d = max - min;
+    sat = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) hue = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+    else if (max === g) hue = ((b - r) / d + 2) / 6;
+    else hue = ((r - g) / d + 4) / 6;
   }
-}
+  const n = (x) => Math.round(x * 10) / 10;
+  return `${n(hue * 360)} ${n(sat * 100)}% ${n(l * 100)}%`;
+};
 
-if (!existsSync(VALIDATOR)) {
-  console.error(`Validator not found at ${VALIDATOR}\nSet DATAVIZ_SKILL to the dataviz skill directory.`);
-  process.exit(2);
-}
+/* ── parsing ──────────────────────────────────────────────────────────────── */
+
+const tokensIn = (text, blockRe, valueRe) => {
+  const m = text.match(blockRe);
+  if (!m) throw new Error(`block not found: ${blockRe}`);
+  return Object.fromEntries([...m[1].matchAll(valueRe)].map((x) => [x[1], x[2]]));
+};
+
+const HEX = /--([a-z0-9-]+):\s*(#[0-9a-fA-F]{6})/g;
+const HSL = /--([a-z0-9-]+):\s*([\d.]+ [\d.]+% [\d.]+%)/g;
+
+const design = readFileSync(DESIGN_CSS, 'utf8');
+const shadcn = readFileSync(SHADCN_CSS, 'utf8');
+
+/**
+ * The categorical and status colours live in a shared :root block rather than
+ * per-mode, so they are merged into both. Reading only the per-mode blocks meant
+ * the light-mode status colours were silently skipped — which is how two of them
+ * shipped below AA.
+ */
+const shared = tokensIn(design, /^:root \{([^}]*)\}/m, HEX);
+const palette = {
+  light: { ...shared, ...tokensIn(design, /:root,\s*\n:root\[data-variant='bitplane'\]\s*\{([^}]*)\}/, HEX) },
+  dark: { ...shared, ...tokensIn(design, /:root\[data-theme='dark'\]\s*\{([^}]*)\}/, HEX) },
+};
+
+const shadcnTokens = {
+  light: tokensIn(shadcn, /@layer base \{\s*\n  :root \{([^}]*)\}/, HSL),
+  dark: tokensIn(shadcn, /:root\[data-theme='dark'\] \{([^}]*)\}/, HSL),
+};
+
+/* ── checks ───────────────────────────────────────────────────────────────── */
+
+const AA_BODY = 4.5;
+const INKS = ['ink-1', 'ink-2', 'ink-3'];
+const SURFACES = ['surface-0', 'surface-1', 'surface-2'];
+
+/** Which design token each shadcn role must equal. Mirrors src/index.css. */
+const SHADCN_MAP = {
+  background: 'surface-0',
+  foreground: 'ink-1',
+  card: 'surface-1',
+  popover: 'surface-1',
+  primary: 'signal',
+  secondary: 'surface-2',
+  muted: 'surface-2',
+  accent: 'surface-2',
+  border: 'rule',
+  input: 'rule',
+  ring: 'signal',
+};
 
 let failures = 0;
 const mark = (ok) => (ok ? 'PASS' : 'FAIL');
 
-console.log('\nSHARED CATEGORICAL SET — checked against every direction surface');
+console.log('\nINK ON SURFACES — every ink on every surface, both modes');
 console.log('='.repeat(74));
+console.log(`  ink-3 carries captions and metadata, which is body text, so it is`);
+console.log(`  held to the same ${AA_BODY}:1 bar as the rest.\n`);
 for (const mode of ['light', 'dark']) {
-  console.log(`  ${mode}: ${CATEGORICAL[mode].join('  ')}`);
-  for (const [key, dir] of Object.entries(DIRECTIONS)) {
-    const surface = dir[mode].surface;
-    const report = categoricalReport(CATEGORICAL[mode], mode, surface);
-    const ok = /ALL CHECKS PASS/.test(report);
-    if (!ok) failures++;
-    console.log(`    ${mark(ok)}  on ${surface}  (${key})`);
-    if (!ok) {
-      for (const l of report.split('\n').filter((l) => /\[(FAIL|WARN)\]/.test(l))) {
-        console.log(`          ${l.trim().replace(/\s{2,}/g, ' ')}`);
-      }
-    }
+  for (const ink of INKS) {
+    const cells = SURFACES.map((s) => {
+      const c = contrast(palette[mode][ink], palette[mode][s]);
+      const ok = c >= AA_BODY;
+      if (!ok) failures++;
+      return `${s.replace('surface-', 's')}=${c.toFixed(2)}${ok ? '' : ' FAIL'}`;
+    });
+    console.log(`    ${mode.padEnd(5)} ${ink} ${palette[mode][ink]}  ${cells.join('  ')}`);
   }
 }
 
-console.log('\nPER-DIRECTION IDENTITY — ink and accent contrast');
+console.log('\nSIGNAL — used on links and on filled controls');
 console.log('='.repeat(74));
-console.log('  ink needs >= 4.5:1 (body text) · accent >= 4.5:1 (it is used on links)\n');
-for (const [key, dir] of Object.entries(DIRECTIONS)) {
-  console.log(`  ${dir.label}`);
-  for (const mode of ['light', 'dark']) {
-    const { surface, ink, accent } = dir[mode];
-    const inkRatio = contrast(ink, surface);
-    const accRatio = contrast(accent, surface);
-    const inkOk = inkRatio >= 4.5;
-    const accOk = accRatio >= 4.5;
-    if (!inkOk) failures++;
-    if (!accOk) failures++;
+for (const mode of ['light', 'dark']) {
+  const p = palette[mode];
+  const onSurface = contrast(p.signal, p['surface-0']);
+  const inkOnSignal = contrast(p['signal-ink'], p.signal);
+  const a = onSurface >= AA_BODY;
+  const b = inkOnSignal >= AA_BODY;
+  if (!a) failures++;
+  if (!b) failures++;
+  console.log(
+    `    ${mode.padEnd(5)} signal ${p.signal} on surface-0 ${onSurface.toFixed(2)}:1 ${mark(a)}` +
+      `   signal-ink on signal ${inkOnSignal.toFixed(2)}:1 ${mark(b)}`
+  );
+}
+
+console.log('');
+console.log('STATUS COLOURS — used as text, so held to the body-text bar');
+console.log('='.repeat(74));
+for (const mode of ['light', 'dark']) {
+  for (const role of ['status-good', 'status-warn', 'status-info']) {
+    // Status colours are declared once in the shared block, so light mode is
+    // the fallback when a mode does not override them.
+    const c = palette[mode][role] ?? palette.light[role];
+    if (!c) continue;
+    const cells = SURFACES.map((sf) => {
+      const v = contrast(c, palette[mode][sf]);
+      const ok = v >= AA_BODY;
+      if (!ok) failures++;
+      return `${sf.replace('surface-', 's')}=${v.toFixed(2)}${ok ? '' : ' FAIL'}`;
+    });
+    console.log(`    ${mode.padEnd(5)} ${role.padEnd(11)} ${c}  ${cells.join('  ')}`);
+  }
+}
+
+console.log('\nSHADCN TOKEN PARITY — src/components/ui must use the same palette');
+console.log('='.repeat(74));
+for (const mode of ['light', 'dark']) {
+  for (const [role, token] of Object.entries(SHADCN_MAP)) {
+    const hex = palette[mode][token];
+    const got = shadcnTokens[mode][role];
+    if (!hex || !got) {
+      console.log(`    FAIL  ${mode.padEnd(5)} --${role} missing (expects ${token})`);
+      failures++;
+      continue;
+    }
+    const want = hexToHslTriplet(hex);
+    const ok = want === got;
+    if (!ok) failures++;
     console.log(
-      `    ${mode.padEnd(5)} ink ${ink} ${inkRatio.toFixed(2).padStart(5)}:1 ${mark(inkOk)}` +
-        `   accent ${accent} ${accRatio.toFixed(2).padStart(5)}:1 ${mark(accOk)}`
+      `    ${mark(ok)}  ${mode.padEnd(5)} --${role.padEnd(10)} ${token.padEnd(9)} ${hex}` +
+        (ok ? '' : `  want "${want}" got "${got}"`)
     );
   }
 }
 
 console.log('\n' + '='.repeat(74));
-console.log(failures === 0 ? 'All checks pass.' : `${failures} check(s) failed — fix before building.`);
+console.log(failures === 0 ? 'All checks pass.' : `${failures} check(s) failed.`);
 process.exit(failures === 0 ? 0 : 1);
