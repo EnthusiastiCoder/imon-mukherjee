@@ -14,6 +14,8 @@ import { totalFundingLakhs } from "@/data/funding";
  * band carries it better than a paragraph of comma-separated names.
  */
 const venues = [
+	"IEEE Transactions on Computational Social Systems",
+	"ACM Transactions on Information Systems",
 	"IEEE Transactions on Consumer Electronics",
 	"Knowledge-Based Systems",
 	"Engineering Applications of Artificial Intelligence",

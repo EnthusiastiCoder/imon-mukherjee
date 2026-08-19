@@ -12,6 +12,7 @@ import Hero from "@/components/Hero";
 import SiteNav from "@/components/SiteNav";
 import SectionHeader from "@/components/SectionHeader";
 import Img from "@/components/Img";
+import { featuredJournals, journalPublications } from "@/data/publications";
 import {
 	fundedProjects,
 	parseLakhs,
@@ -59,115 +60,98 @@ const Index = () => {
 	// Derived from the array rather than written into the copy, for the same
 	// reason the funding total is — a number typed into a heading drifts from
 	// the list beneath it the moment a paper is added.
-	const publications = [
-		{
-			title: "Quantized Contour based Intelligent Stego-malware Sterilizer for Smart Consumer Electronics Network",
-      		// authors: "Sreeparna Ganguly, Abhisek Banerjee, Arpan Bairagi and Imon Mukherjee",
-      		journal: "IEEE Transactions on Consumer Electronics",
-      		year: "Accepted",
-			type: "journal",
-      		doi: "",
-      		impactFactor: "10.9",
-      		indexed: "SCI/SCI(E)"
-		},
-		{
-			title: "SteriCNN: Cloud Native Stego content Sterilization",
-			journal: "Journal of Information Security and Applications",
-			year: "2024",
-			type: "journal",
-			impactFactor: "5.6"
-		},
-		{
-			title: "A complex network analysis approach to compare the performance of batsmen across different formats",
-			journal: "Knowledge-Based Systems",
-			year: "2024",
-			type: "journal",
-			impactFactor: "8.8"
-		},
-		{
-			title: "Design and analysis of an unbiased intelligent recommendation system for all-rounders in cricket based on multiple criteria decision making",
-      		// authors: "Nayan Ranjan Das, Imon Mukherjee, Goutam Paul",
-      		journal: "Engineering Applications of Artificial Intelligence",
-      		year: "2025",
-			type: "journal",
-      		doi: "https://doi.org/10.1016/j.engappai.2025.112197",
-      		impactFactor: "8",
-      		indexed: "SCI/SCI(E)"
-		},
-		{
-			title: "A Hybrid Lane Detection Model for Wild Road Conditions",
-      		// authors: "Abhishek Mukhopadhyay, LRD Murthy, Imon Mukherjee and Pradipta Biswas",
-      		journal: "IEEE Transactions on Artificial Intelligence",
-      		year: "2022",
-			type: "journal",
-      		doi: "10.1109/TAI.2022.3212347",
-      		impactFactor: "N/A",
-      		indexed: "IEEE"
-		},
-		{
-			title: "Robust Deep Convolutional Solutions for Identifying Biotic Crop Stress in Wild Environments",
-      		// authors: "Chiranjit Pal, Imon Mukherjee, Sanjay Chatterji, Sanjoy Pratihar, Pabitra Mitra, Partha Pratim Chakraborti",
-      		journal: "IEEE Transactions on AgriFood Electronics",
-      		year: "2024",
-			type: "journal",
-      		doi: "10.1109/TAFE.2024.3422187",
-      		impactFactor: "N/A",
-      		indexed: "IEEE"
-		},
+	/**
+	 * Featured publications.
+	 *
+	 * Journals come from src/data/publications.ts rather than being restated
+	 * here. This page used to carry its own copy, and it drifted: it described
+	 * the IEEE Transactions on Consumer Electronics paper as "Accepted" long
+	 * after it had been published as volume 71, issue 4. Taking the leading
+	 * entries from the shared list means featuring a new paper is just adding it
+	 * there.
+	 *
+	 * The conference entries stay local — a hand-picked sample in a different
+	 * shape, not part of the journal list.
+	 */
+	/**
+	 * One shape covering both kinds of featured entry. Without it TypeScript
+	 * infers a union of the journal and conference literals, and every field that
+	 * only one of them carries — impactFactor, award — fails to resolve.
+	 */
+	type FeaturedPublication = {
+		title: string;
+		journal: string;
+		year: string;
+		type: "journal" | "conference";
+		authors?: string;
+		doi?: string;
+		impactFactor?: string;
+		indexed?: string;
+		venue?: string;
+		publisher?: string;
+		note?: string;
+		award?: string;
+		volume?: string;
+		issue?: string;
+		pages?: string;
+		articleNo?: string;
+		month?: string;
+	};
+
+	const featuredConferences: FeaturedPublication[] = [
 		{
 			title: "K-Span Select and Multi-Dimensional Judging for Reliable Scholarly Question Answering",
-	      	// authors: "Preetam Pati, Sayan De, Saurabh Tiwari, Debarshi Kumar Sanyal and Imon Mukherjee",
-      		journal: "ACM/IEEE Joint Conference on Digital Libraries (JCDL 2025)",
-      		year: "Accepted",
+			journal: "ACM/IEEE Joint Conference on Digital Libraries (JCDL 2025)",
+			year: "Accepted",
 			type: "conference",
-      		// doi: "10.1109/TAFE.2024.3422187",
-      		// impactFactor: "N/A",
-      		indexed: "IEEE"
+			indexed: "IEEE",
 		},
-		 {
-      		title: "Few-TK: A Dataset for Few-shot Scientific Typed Keyphrase Recognition",
-      		// authors: "Avishek Lahiri, Imon Mukherjee, Debarshi",
-      		journal: "Findings of the Association for Computational Linguistics: NAACL 2024",
-      		venue: "Mexico",
-			type: "conference",
-      		year: "2024",
-      		publisher: "ACL",
-      		doi: "10.18653/v1/2024.findings-naacl.253"
-    	},
-
 		{
-      		title: "AgriNER: An NER Dataset of Agricultural Entities for the Semantic Web",
-      		// authors: "Sayan De, Debarshi K. Sanyal, Imon Mukherjee",
-      		journal: "ESWC 2023",
+			title: "Few-TK: A Dataset for Few-shot Scientific Typed Keyphrase Recognition",
+			journal: "Findings of the Association for Computational Linguistics: NAACL 2024",
+			venue: "Mexico",
 			type: "conference",
-      		venue: "Hersonissos, Greece",
-      		year: "2023",
-      		note: "Scopus Indexed, Tier-I Conference"
-    	},
- 		{
-      		title: "CitePrompt: Using Prompts to Identify Citation Intent in Scientific Papers",
-      		// authors: "Avishek Lahiri, Debarshi Kumar Sanyal and Imon Mukherjee",
-      		journal: "JCDL 2023",
-			type: "conference",
-      		venue: "Santa Fe, New Mexico, USA",
-      		year: "2023"
-    	},
+			year: "2024",
+			publisher: "ACL",
+			doi: "10.18653/v1/2024.findings-naacl.253",
+		},
 		{
-      		title: "Disjunctive Edge Map based Image Sterilization for Destruction of Steganograms in Spatial Domain",
-      		// authors: "Sreeparna Ganguly, Srijanjeet Singh Sehra, Imon Mukherjee",
-      		journal: "2023 IEEE Silchar Subsection Conference (SILCON 2023)",
-      		venue: "National Institute of Technology Silchar",
+			title: "AgriNER: An NER Dataset of Agricultural Entities for the Semantic Web",
+			journal: "ESWC 2023",
 			type: "conference",
-      		year: "2023",
-      		publisher: "IEEE",
-      		award: "Best Paper Award"
-    	}
+			venue: "Hersonissos, Greece",
+			year: "2023",
+			note: "Scopus Indexed, Tier-I Conference",
+		},
+		{
+			title: "CitePrompt: Using Prompts to Identify Citation Intent in Scientific Papers",
+			journal: "JCDL 2023",
+			type: "conference",
+			venue: "Santa Fe, New Mexico, USA",
+			year: "2023",
+		},
+		{
+			title: "Disjunctive Edge Map based Image Sterilization for Destruction of Steganograms in Spatial Domain",
+			journal: "2023 IEEE Silchar Subsection Conference (SILCON 2023)",
+			venue: "National Institute of Technology Silchar",
+			type: "conference",
+			year: "2023",
+			publisher: "IEEE",
+			award: "Best Paper Award",
+		}
 	];
 
-	const journalCount = publications.filter((p) => p.type === "journal").length;
-	const conferenceCount = publications.filter((p) => p.type === "conference").length;
+	const publications: FeaturedPublication[] = [
+		...featuredJournals.map((p) => ({ ...p, type: "journal" as const })),
+		...featuredConferences,
+	];
+
+	// Counted over the whole journal list, not the seven featured below. A
+	// heading that said "7 journal" would describe this section's contents rather
+	// than his output, and understate it by a factor of four.
+	const journalCount = journalPublications.length;
 	const peakImpactFactor = Math.max(
-		...publications.map((p) => Number.parseFloat(p.impactFactor ?? "") || 0)
+		...journalPublications.map((p) => Number.parseFloat(p.impactFactor ?? "") || 0)
 	).toFixed(1);
 
 	const phdSupervision = {
@@ -489,7 +473,7 @@ const Index = () => {
 					<SectionHeader
 						eyebrow="Selected work"
 						title="Publications"
-						summary={`Peak impact factor ${peakImpactFactor} · ${journalCount} journal, ${conferenceCount} conference`}
+						summary={`${journalCount} journal papers · peak impact factor ${peakImpactFactor} · ${featuredJournals.length} selected here`}
 						to="/publications"
 						actionLabel="All publications"
 					/>
@@ -526,7 +510,14 @@ const Index = () => {
 					    at display size on the left and everything else reads against it.
 					    Previously it was a small pill indistinguishable from the year. */}
 					<ol className="ds-reveal-group">
-						{filteredPublications.slice(0, 4).map((pub) => {
+						{/* All seven of the curated selection, not a further slice of it —
+						    truncating a list someone deliberately curated to seven would
+						    hide three of their choices. The Conferences tab is a sample, so
+						    it keeps a cap. */}
+						{(activeFilter === "conference"
+							? filteredPublications.slice(0, 4)
+							: filteredPublications
+						).map((pub) => {
 							const isJournal = pub.type === "journal";
 							const hasIF = pub.impactFactor && pub.impactFactor !== "N/A";
 							return (
