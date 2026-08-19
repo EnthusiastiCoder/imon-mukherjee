@@ -69,11 +69,11 @@ const FundedProjects = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Completed":
-        return "bg-status-good text-white";
+        return "ds-chip border-status-good";
       case "Ongoing":
-        return "bg-cat-1 text-white";
+        return "ds-chip border-cat-1";
       case "Proposed":
-        return "bg-cat-4 text-white";
+        return "ds-chip border-cat-4";
       default:
         return "bg-gray-500 text-white";
     }

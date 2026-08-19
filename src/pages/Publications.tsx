@@ -566,14 +566,14 @@ const Publications = () => {
                           <Badge variant="outline" className="bg-surface-2">
                             {pub.year}
                           </Badge>
-                          <Badge className="bg-cat-1 text-white">
+                          <Badge className="ds-chip border-cat-1">
                             {pub.indexed}
                           </Badge>
                           {/* Also skip when empty, not just "N/A". The three most
                               recent papers have no impact factor supplied, and the
                               previous check rendered a bare "IF:" badge for them. */}
                           {pub.impactFactor && pub.impactFactor !== "N/A" && (
-                            <Badge className="bg-cat-3 text-white">
+                            <Badge className="ds-chip border-cat-3">
                               IF: {pub.impactFactor}
                             </Badge>
                           )}
@@ -616,11 +616,11 @@ const Publications = () => {
                           <Badge variant="outline" className="bg-surface-2">
                             {pub.date}
                           </Badge>
-                          <Badge className="bg-cat-3 text-white">
+                          <Badge className="ds-chip border-cat-3">
                             {pub.publisher}
                           </Badge>
                           {pub.award && (
-                            <Badge className="bg-cat-4 text-white">
+                            <Badge className="ds-chip border-cat-4">
                               {pub.award}
                             </Badge>
                           )}
@@ -663,7 +663,7 @@ const Publications = () => {
                           <Badge variant="outline" className="bg-surface-2">
                             {chapter.year}
                           </Badge>
-                          <Badge className="bg-cat-1 text-white">
+                          <Badge className="ds-chip border-cat-1">
                             ISBN: {chapter.isbn}
                           </Badge>
                         </div>
@@ -696,7 +696,7 @@ const Publications = () => {
                           <Badge variant="outline" className="bg-surface-2">
                             {patent.publishedDate}
                           </Badge>
-                          <Badge className="bg-cat-2 text-white">
+                          <Badge className="ds-chip border-cat-2">
                             {patent.applicationNumber}
                           </Badge>
                         </div>
