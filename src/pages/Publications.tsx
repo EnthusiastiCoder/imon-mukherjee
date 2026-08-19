@@ -714,7 +714,7 @@ const Publications = () => {
       <footer className="bg-surface-2 text-ink-2 border-t border-rule py-8">
         <div className="container text-center">
           <p className="text-ink-3">
-            © 2024 Dr. Imon Mukherjee. All rights reserved.
+            © {new Date().getFullYear()} Dr. Imon Mukherjee. All rights reserved.
           </p>
           <p className="text-ink-3 text-sm mt-2">
             Distinguished Professor, Department of CSE, IIIT Kalyani

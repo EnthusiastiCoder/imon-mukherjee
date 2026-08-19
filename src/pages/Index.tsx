@@ -867,7 +867,7 @@ const Index = () => {
 			<footer className="bg-surface-2 text-ink-2 border-t border-rule py-10">
 				<div className="container text-center">
 					<p className="text-ink-3">
-						© 2025 Dr. Imon Mukherjee. All rights reserved.
+						© {new Date().getFullYear()} Dr. Imon Mukherjee. All rights reserved.
 					</p>
 					<p className="text-ink-3 text-sm mt-2">
 						Assistant Professor (Grade I), Department of CSE, IIIT Kalyani

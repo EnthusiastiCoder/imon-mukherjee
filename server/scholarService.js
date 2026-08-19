@@ -5,6 +5,17 @@ const SCHOLAR_USER_ID = '3xcXNz0AAAAJ';
 let cachedData = null;
 let lastFetch = null;
 
+// Google Scholar's "since" column is relative to the current year, so SerpAPI
+// returns the key as since_<year> and that year moves. It was since_2019 when
+// this was written and is not any more, which is why every "since" figure came
+// back as 0. Read whichever since_* key the payload actually carries rather than
+// naming one, so this does not silently zero out again each January.
+function sinceRecent(row) {
+  if (!row) return 0;
+  const key = Object.keys(row).find((k) => /^since_\d{4}$/.test(k));
+  return (key && row[key]) || 0;
+}
+
 export async function fetchScholarData() {
   return new Promise((resolve, reject) => {
     search.json({
@@ -47,15 +58,15 @@ export async function fetchScholarData() {
         cachedData = {
           citations: {
             total: data.cited_by?.table?.[0]?.citations?.all || 0,
-            since2020: data.cited_by?.table?.[0]?.citations?.since_2019 || 0
+            sinceRecent: sinceRecent(data.cited_by?.table?.[0]?.citations)
           },
           hIndex: {
             total: data.cited_by?.table?.[1]?.h_index?.all || 0,
-            since2020: data.cited_by?.table?.[1]?.h_index?.since_2019 || 0
+            sinceRecent: sinceRecent(data.cited_by?.table?.[1]?.h_index)
           },
           i10Index: {
             total: data.cited_by?.table?.[2]?.i10_index?.all || 0,
-            since2020: data.cited_by?.table?.[2]?.i10_index?.since_2019 || 0
+            sinceRecent: sinceRecent(data.cited_by?.table?.[2]?.i10_index)
           },
           citationsByYear: citationsByYearArray,
           profileUrl: `https://scholar.google.com/citations?user=${SCHOLAR_USER_ID}&hl=en`
