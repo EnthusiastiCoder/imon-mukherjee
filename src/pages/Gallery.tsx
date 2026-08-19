@@ -97,7 +97,7 @@ const Gallery = () => {
 					{galleryImages.map((image, index) => (
 						<motion.figure
 							key={image.url}
-							className="group relative overflow-hidden rounded-xl hover: transition-all duration-300 md:hover:-translate-y-2"
+							className="group relative overflow-hidden transition-colors"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.5, delay: Math.min(index, 6) * 0.08 }}

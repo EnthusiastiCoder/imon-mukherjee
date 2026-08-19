@@ -293,7 +293,7 @@ const Lectures = () => {
 														initial={{ opacity: 0, x: -20 }}
 														animate={{ opacity: 1, x: 0 }}
 														transition={{ duration: 0.3, delay: index * 0.1 }}
-														className="flex items-center justify-between p-4 rounded-lg hover: transition-shadow"
+														className="flex items-center justify-between p-4 transition-colors"
 													>
 														<div className="flex items-center gap-4">
 															<div className={`p-2 rounded-full ${lecture.type === 'video' ? 'bg-surface-2' : 'bg-surface-2'}`}>
