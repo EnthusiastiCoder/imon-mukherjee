@@ -28,9 +28,13 @@ const venues = [
 ];
 
 interface ScholarMetrics {
-	citations: { total: number; since2020: number };
-	hIndex: { total: number; since2020: number };
-	i10Index: { total: number; since2020: number };
+	// sinceRecent is what SerpAPI's rolling "since <year>" column reports. Nothing
+	// renders it today; it is typed because the endpoint returns it. It was called
+	// since2020 and read a hardcoded since_2019 key, which stopped existing and
+	// silently made every value 0 — see sinceRecent() in api/scholar.js.
+	citations: { total: number; sinceRecent: number };
+	hIndex: { total: number; sinceRecent: number };
+	i10Index: { total: number; sinceRecent: number };
 	citationsByYear: CitationYear[];
 	profileUrl: string;
 }
