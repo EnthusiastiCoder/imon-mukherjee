@@ -69,37 +69,6 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root,
-:root[data-variant='interferometer'] {
-  --surface-0: #f6f8f9; /* page ground */
-  --surface-1: #ffffff; /* raised plane */
-  --surface-2: #eef2f4; /* recessed / inset */
-  --ink-1: #101a1e; /* body text */
-  --ink-2: #3d4d54; /* secondary */
-  --ink-3: #6b7c84; /* muted, captions */
-  --signal: #0d7d8a;
-  --signal-ink: #ffffff; /* text ON accent */
-  --signal-wash: #e2eff1; /* tinted fill */
-  --rule: #d4dee2; /* hairlines */
-  --rule-strong: #a9bcc3;
-
-  --ds-radius: 0px;
-  --ds-radius-sm: 0px;
-  --rule-w: 1px;
-  --shadow: none;
-  --shadow-raised: none;
-
-  --font-display: 'IBM Plex Sans Condensed', 'IBM Plex Sans Variable', system-ui, sans-serif;
-  --font-body: 'IBM Plex Sans Variable', system-ui, sans-serif;
-  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
-
-  --display-weight: 600;
-  --display-tracking: -0.015em;
-  --display-leading: 1.05;
-  --label-tracking: 0.14em; /* uppercase eyebrow labels */
-  --label-weight: 600;
-  --density: 0.85; /* multiplies block spacing — tightest of the six */
-}
-
 /* ═══════════════════════════════════════════════════════════════════════════
    3 · Direction: BIT PLANE — steganography made structural
    Content sits flush in hairline-delineated planes over a faint grid
@@ -107,6 +76,7 @@
    technical structure. Amber signal.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+:root,
 :root[data-variant='bitplane'] {
   --surface-0: #f7f7f4;
   --surface-1: #fffffd;
@@ -139,164 +109,17 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   4 · Direction: BENGAL MODERN — indigo and madder
-   Indian modernist in the NID / Correa lineage: geometric, high contrast,
-   structural. Deliberately NOT ornamental — no motifs, no borders-as-decoration.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-:root[data-variant='bengal'] {
-  --surface-0: #f4f4f7;
-  --surface-1: #ffffff;
-  --surface-2: #e8e8ef;
-  --ink-1: #15152a;
-  --ink-2: #3f3f5c;
-  --ink-3: #6e6e88;
-  --signal: #3f38b8;
-  --signal-ink: #ffffff;
-  --signal-wash: #e5e4f6;
-  --rule: #d6d6e2;
-  --rule-strong: #a8a8c0;
-
-  --ds-radius: 2px;
-  --ds-radius-sm: 0px;
-  --rule-w: 2px; /* heavier structural rules */
-  --shadow: none;
-  --shadow-raised: none;
-
-  --font-display: 'Archivo Variable', system-ui, sans-serif;
-  --font-body: 'IBM Plex Sans Variable', system-ui, sans-serif;
-  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
-
-  --display-weight: 700;
-  --display-tracking: -0.03em;
-  --display-leading: 0.98;
-  --label-tracking: 0.1em;
-  --label-weight: 700;
-  --density: 1.05;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   5 · Direction: JOURNAL — scientific publishing
-   Modelled on the journals he publishes in. Numbered sections, figure-caption
-   discipline, reference-style type, deep maroon section marks.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-:root[data-variant='journal'] {
-  --surface-0: #fdfdfb;
-  --surface-1: #ffffff;
-  --surface-2: #f2f2ee;
-  --ink-1: #16181c;
-  --ink-2: #43474e;
-  --ink-3: #6f747c;
-  --signal: #9c1f35;
-  --signal-ink: #ffffff;
-  --signal-wash: #f7e7ea;
-  --rule: #dededa;
-  --rule-strong: #adaca8;
-
-  --ds-radius: 0px;
-  --ds-radius-sm: 0px;
-  --rule-w: 1px;
-  --shadow: none;
-  --shadow-raised: none;
-
-  --font-display: 'Newsreader Variable', Georgia, serif;
-  --font-body: 'Newsreader Variable', Georgia, serif; /* serif running text */
-  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
-  --font-label: 'IBM Plex Sans Variable', system-ui, sans-serif;
-
-  --display-weight: 500;
-  --display-tracking: -0.01em;
-  --display-leading: 1.1;
-  --label-tracking: 0.1em;
-  --label-weight: 600;
-  --density: 1.1;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   6 · Direction: TERMINAL — austere, monospaced throughout
-   One mono family in every role; weight and size do all the work. The risk
-   option: it fails if executed loosely, so spacing here is strictly gridded.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-:root[data-variant='terminal'] {
-  --surface-0: #fbfbfa;
-  --surface-1: #ffffff;
-  --surface-2: #f0f0ee;
-  --ink-1: #0e1110;
-  --ink-2: #3c4240;
-  --ink-3: #6a706d;
-  --signal: #0f766e;
-  --signal-ink: #ffffff;
-  --signal-wash: #dff0ed;
-  --rule: #dadad6;
-  --rule-strong: #aeaea8;
-
-  --ds-radius: 0px;
-  --ds-radius-sm: 0px;
-  --rule-w: 1px;
-  --shadow: none;
-  --shadow-raised: none;
-
-  --font-display: 'IBM Plex Mono', ui-monospace, monospace;
-  --font-body: 'IBM Plex Mono', ui-monospace, monospace;
-  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
-
-  --display-weight: 600;
-  --display-tracking: -0.04em; /* mono is wide; pull display tight */
-  --display-leading: 1.1;
-  --label-tracking: 0.16em;
-  --label-weight: 500;
-  --density: 0.95;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   7 · Direction: MONOGRAPH — the quiet one
-   Maximal whitespace, rules instead of containers, largest type scale,
-   near-monochrome. Category is encoded typographically (label + rule) rather
-   than by colour, which is why it leans on ink rather than the categorical set.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-:root[data-variant='monograph'] {
-  --surface-0: #fbfbfa;
-  --surface-1: #ffffff;
-  --surface-2: #f1f1ef;
-  --ink-1: #1a1a19;
-  --ink-2: #4a4a48;
-  --ink-3: #787875;
-  --signal: #2b6098;
-  --signal-ink: #ffffff;
-  --signal-wash: #e6eef6;
-  --rule: #dcdcd9;
-  --rule-strong: #b0b0ac;
-
-  --ds-radius: 0px;
-  --ds-radius-sm: 0px;
-  --rule-w: 1px;
-  --shadow: none;
-  --shadow-raised: none;
-
-  --font-display: 'Source Serif 4 Variable', Georgia, serif;
-  --font-body: 'Archivo Variable', system-ui, sans-serif;
-  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
-
-  --display-weight: 400;
-  --display-tracking: -0.025em;
-  --display-leading: 1;
-  --label-tracking: 0.18em;
-  --label-weight: 500;
-  --density: 1.35; /* most generous of the six */
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
    8 · Dark themes
    Each direction's dark values are SELECTED for the dark ground, not inverted.
    Declared twice: once for OS preference (guarded so an explicit light choice
    wins) and once for the explicit toggle.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* The token deltas live in one place and are applied under both scopes below.
-   Keeping them as a single authored block avoids the two copies drifting. */
+/* Bit Plane's dark palette. Declared twice on purpose: the media query covers
+   the OS preference, the [data-theme='dark'] block covers the explicit toggle,
+   and the :not([data-theme='light']) guard lets an explicit light choice beat an
+   OS set to dark. Values are selected for the dark ground, not inverted from the
+   light ones, and are machine-checked by scripts/validate-design-palettes.mjs. */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
@@ -307,24 +130,7 @@
     --status-good: #34a869;
     --status-warn: #c98500;
     --status-info: #4f97d8;
-  }
 
-  :root:not([data-theme='light']),
-  :root:not([data-theme='light'])[data-variant='interferometer'] {
-    --surface-0: #0e1519;
-    --surface-1: #161f24;
-    --surface-2: #1e2a30;
-    --ink-1: #e6eef1;
-    --ink-2: #a8bcc3;
-    --ink-3: #7b8f96;
-    --signal: #2ec4d0;
-    --signal-ink: #06232a;
-    --signal-wash: #12333a;
-    --rule: #35474f;
-    --rule-strong: #4e666f;
-  }
-
-  :root:not([data-theme='light'])[data-variant='bitplane'] {
     --surface-0: #11150f;
     --surface-1: #191e16;
     --surface-2: #222820;
@@ -336,67 +142,10 @@
     --signal-wash: #33280f;
     --rule: #3b4331;
     --rule-strong: #566047;
-  }
-
-  :root:not([data-theme='light'])[data-variant='bengal'] {
-    --surface-0: #14141f;
-    --surface-1: #1c1c2b;
-    --surface-2: #252538;
-    --ink-1: #e8e8f2;
-    --ink-2: #b4b4cc;
-    --ink-3: #8686a4;
-    --signal: #8b83e8;
-    --signal-ink: #12112a;
-    --signal-wash: #26245a;
-    --rule: #3f3f5d;
-    --rule-strong: #585884;
-  }
-
-  :root:not([data-theme='light'])[data-variant='journal'] {
-    --surface-0: #16181c;
-    --surface-1: #1e2126;
-    --surface-2: #272b31;
-    --ink-1: #ecedef;
-    --ink-2: #b6b9be;
-    --ink-3: #888c93;
-    --signal: #e0788c;
-    --signal-ink: #2a0d13;
-    --signal-wash: #3a1c22;
-    --rule: #414750;
-    --rule-strong: #5b626c;
-  }
-
-  :root:not([data-theme='light'])[data-variant='terminal'] {
-    --surface-0: #0b0d0c;
-    --surface-1: #131615;
-    --surface-2: #1b1f1e;
-    --ink-1: #e4e8e6;
-    --ink-2: #aab2af;
-    --ink-3: #7c8582;
-    --signal: #2dd4bf;
-    --signal-ink: #04231f;
-    --signal-wash: #10322d;
-    --rule: #343b3a;
-    --rule-strong: #4a5453;
-  }
-
-  :root:not([data-theme='light'])[data-variant='monograph'] {
-    --surface-0: #17191a;
-    --surface-1: #202324;
-    --surface-2: #2a2d2e;
-    --ink-1: #eaeae8;
-    --ink-2: #b4b5b3;
-    --ink-3: #868886;
-    --signal: #8fb4dc;
-    --signal-ink: #10202e;
-    --signal-wash: #22313f;
-    --rule: #424648;
-    --rule-strong: #5c6163;
+    --substrate: #333b2c;
   }
 }
 
-/* Explicit dark toggle — same values, higher-specificity scope so it also wins
-   over an OS light setting. */
 :root[data-theme='dark'] {
   --cat-1: #3987e5;
   --cat-2: #d95926;
@@ -406,20 +155,6 @@
   --status-warn: #c98500;
   --status-info: #4f97d8;
 
-  --surface-0: #0e1519;
-  --surface-1: #161f24;
-  --surface-2: #1e2a30;
-  --ink-1: #e6eef1;
-  --ink-2: #a8bcc3;
-  --ink-3: #7b8f96;
-  --signal: #2ec4d0;
-  --signal-ink: #06232a;
-  --signal-wash: #12333a;
-  --rule: #35474f;
-  --rule-strong: #4e666f;
-}
-
-:root[data-theme='dark'][data-variant='bitplane'] {
   --surface-0: #11150f;
   --surface-1: #191e16;
   --surface-2: #222820;
@@ -431,62 +166,7 @@
   --signal-wash: #33280f;
   --rule: #3b4331;
   --rule-strong: #566047;
-}
-
-:root[data-theme='dark'][data-variant='bengal'] {
-  --surface-0: #14141f;
-  --surface-1: #1c1c2b;
-  --surface-2: #252538;
-  --ink-1: #e8e8f2;
-  --ink-2: #b4b4cc;
-  --ink-3: #8686a4;
-  --signal: #8b83e8;
-  --signal-ink: #12112a;
-  --signal-wash: #26245a;
-  --rule: #3f3f5d;
-  --rule-strong: #585884;
-}
-
-:root[data-theme='dark'][data-variant='journal'] {
-  --surface-0: #16181c;
-  --surface-1: #1e2126;
-  --surface-2: #272b31;
-  --ink-1: #ecedef;
-  --ink-2: #b6b9be;
-  --ink-3: #888c93;
-  --signal: #e0788c;
-  --signal-ink: #2a0d13;
-  --signal-wash: #3a1c22;
-  --rule: #414750;
-  --rule-strong: #5b626c;
-}
-
-:root[data-theme='dark'][data-variant='terminal'] {
-  --surface-0: #0b0d0c;
-  --surface-1: #131615;
-  --surface-2: #1b1f1e;
-  --ink-1: #e4e8e6;
-  --ink-2: #aab2af;
-  --ink-3: #7c8582;
-  --signal: #2dd4bf;
-  --signal-ink: #04231f;
-  --signal-wash: #10322d;
-  --rule: #343b3a;
-  --rule-strong: #4a5453;
-}
-
-:root[data-theme='dark'][data-variant='monograph'] {
-  --surface-0: #17191a;
-  --surface-1: #202324;
-  --surface-2: #2a2d2e;
-  --ink-1: #eaeae8;
-  --ink-2: #b4b5b3;
-  --ink-3: #868886;
-  --signal: #8fb4dc;
-  --signal-ink: #10202e;
-  --signal-wash: #22313f;
-  --rule: #424648;
-  --rule-strong: #5c6163;
+  --substrate: #333b2c;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -661,29 +341,6 @@ time,
 }
 :root[data-theme='dark'][data-variant='bitplane'] {
   --substrate: #333b2c;
-}
-
-/* ── Per-direction structural devices ───────────────────────────────────
-   Where a direction needs more than tokens to read as its own design. Kept
-   here rather than in the components so the component tree stays one tree.
-
-   BENGAL MODERN: an Archivo-bold sans on a light ground is structurally close
-   to Interferometer, so colour and weight were carrying the whole difference.
-   The modernist idiom this direction sits in — NID, Correa — builds with solid
-   masses and voids, not hairlines, so its eyebrow labels become filled blocks.
-   That single change alters the page's rhythm rather than just its palette. */
-:root[data-variant='bengal'] .ds-label {
-  display: inline-block;
-  background-color: var(--signal);
-  color: var(--signal-ink);
-  padding: 0.3rem 0.6rem 0.25rem;
-  letter-spacing: 0.09em;
-  /* The block has to hug its text. Several of these labels sit in flex columns,
-     where the default `align-self: stretch` made a four-character word paint a
-     bar across the whole cell. */
-  align-self: flex-start;
-  width: fit-content;
-  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {

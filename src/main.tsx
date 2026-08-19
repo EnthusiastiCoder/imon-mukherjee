@@ -5,18 +5,14 @@ import App from './App.tsx'
 // request, no silent fallback if the CDN is blocked, and the subset ships with
 // the build so there is no flash of unstyled text.
 //
-// All six design directions load their faces here during the selection phase.
-// Once a direction is chosen, delete the imports the winner does not use — see
-// plans/design-directions.md.
-import '@fontsource-variable/ibm-plex-sans'          // body, most directions
-import '@fontsource/ibm-plex-sans-condensed/400.css' // Interferometer display
-import '@fontsource/ibm-plex-sans-condensed/600.css'
-import '@fontsource/ibm-plex-mono/400.css'           // data / Terminal
+// Bit Plane is the chosen direction, so only its three faces load. The five
+// other directions were explored behind the appearance switcher and their
+// families — IBM Plex Sans Condensed, Archivo, Source Serif 4 — are gone.
+import '@fontsource-variable/ibm-plex-sans'   // body
+import '@fontsource-variable/newsreader'      // display
+import '@fontsource/ibm-plex-mono/400.css'    // data
 import '@fontsource/ibm-plex-mono/500.css'
 import '@fontsource/ibm-plex-mono/600.css'
-import '@fontsource-variable/newsreader'             // Bit Plane + Journal
-import '@fontsource-variable/archivo'                // Bengal + Monograph body
-import '@fontsource-variable/source-serif-4'         // Monograph display
 
 import './index.css'
 // After index.css on purpose: this gives the token layer the later cascade

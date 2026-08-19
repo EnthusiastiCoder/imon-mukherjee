@@ -50,24 +50,24 @@ export interface AxisDef {
 
 export const AXES: readonly AxisDef[] = [
   {
+    // One direction ships: Bit Plane. The five others were explored behind the
+    // appearance switcher and their token blocks were removed with it, so they
+    // are no longer selectable — a URL asking for one would render a page with
+    // no palette. They remain in the git history.
     id: 'variant',
     attr: 'variant',
     label: 'Design direction',
     default: 'bitplane',
     options: [
-      { value: 'interferometer', name: 'Interferometer', note: 'Cool instrument panel · condensed' },
       { value: 'bitplane', name: 'Bit Plane', note: 'Amber signal · editorial serif · grid' },
-      { value: 'bengal', name: 'Bengal Modern', note: 'Indigo · geometric modernist' },
-      { value: 'journal', name: 'Journal', note: 'Scientific publishing · all serif' },
-      { value: 'terminal', name: 'Terminal', note: 'Monospaced throughout · austere' },
-      { value: 'monograph', name: 'Monograph', note: 'Quiet · maximal whitespace' },
     ],
   },
   {
     id: 'motion',
     attr: 'motion',
     label: 'Motion',
-    default: 'pronounced',
+    // Chosen by Dr. Mukherjee for the final design.
+    default: 'maximalist',
     // Five gestures that differ in kind, not amount — see styles/motion.css.
     options: [
       { value: 'still', name: 'Still', note: 'Nothing moves' },
@@ -81,31 +81,15 @@ export const AXES: readonly AxisDef[] = [
     // Its own axis rather than a property of the design direction, so any field
     // pairs with any direction. Labels and notes mirror ambient/fields.ts; the
     // field library is the source of truth for what each one actually does.
+    // One background ships. The other seventeen were reviewed behind the
+    // switcher and removed with it; see src/components/ambient/fields.ts.
     id: 'background',
     attr: 'background',
     label: 'Background',
-    default: 'auto',
+    default: 'bitplane',
     options: [
-      { value: 'auto', name: 'Auto', note: "Match the design direction" },
-      { value: 'none', name: 'None', note: 'No field' },
       { value: 'bitplane', name: 'Bit plane', note: 'Cells flipping in the noise floor' },
-      { value: 'cipher', name: 'Cipher', note: 'Columns of substituting characters' },
-      { value: 'circuit', name: 'Circuit', note: 'Orthogonal traces and vias' },
-      { value: 'interferometer', name: 'Interference', note: 'Fringe sets beating' },
-      { value: 'waves', name: 'Waves', note: 'Stacked sine bands drifting' },
-      { value: 'contour', name: 'Contour', note: 'Topographic lines shifting' },
-      { value: 'constellation', name: 'Constellation', note: 'Points linking when close' },
-      { value: 'flowfield', name: 'Flow field', note: 'Particles following a current' },
-      { value: 'starfield', name: 'Starfield', note: 'Points receding into depth' },
-      { value: 'rain', name: 'Rain', note: 'Diagonal streaks' },
-      { value: 'halftone', name: 'Halftone', note: 'Dot grid swelling' },
-      { value: 'hexgrid', name: 'Hex grid', note: 'Hexagonal lattice pulsing' },
-      { value: 'orbits', name: 'Orbits', note: 'Concentric rings turning' },
-      { value: 'bengal', name: 'Masses', note: 'Hard geometric forms' },
-      { value: 'terminal', name: 'Glyph rain', note: 'Falling characters, scanlines' },
-      { value: 'monograph', name: 'Rules', note: 'Long lines drifting' },
-      { value: 'journal', name: 'Grain', note: 'Drifting paper texture' },
-      { value: 'drift', name: 'Drift', note: 'Slow soft blobs' },
+      { value: 'none', name: 'None', note: 'No field' },
     ],
   },
   {
@@ -184,39 +168,6 @@ export function applyStoredAppearance() {
   for (const a of AXES) applyAxis(a.id, resolveAxis(a.id), false);
 }
 
-/**
- * True when the appearance switcher should be shown.
- *
- * `?variants=1` LATCHES: it is written to storage so the panel survives every
- * later navigation, including links that do not carry the parameter. Without
- * that it disappeared any time a direction was shared as a plain
- * `?variant=…&motion=…` link, which is most of them — the control for choosing a
- * design should not be something you can lose by following a link to a design.
- *
- * `?variants=0` clears it, which is the only way to turn the panel back off.
- */
-export function switcherEnabled(): boolean {
-  if (typeof window === 'undefined') return false;
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('variants')) {
-    const on = params.get('variants') !== '0';
-    write('ds-switcher', on ? '1' : null);
-    return on;
-  }
-  if (read('ds-switcher') === '1') return true;
-
-  /**
-   * On by default wherever this is deployed for review, off on the live site.
-   *
-   * Vercel names a branch preview `<project>-git-<branch>-<scope>.vercel.app`,
-   * so the presence of `-git-` distinguishes a preview from production without
-   * needing a build flag. Localhost counts as review too. Anything else — the
-   * production domain, a custom domain — gets the clean page, so the panel
-   * cannot appear to a real visitor.
-   */
-  const host = window.location.hostname;
-  return host === 'localhost' || host === '127.0.0.1' || host.includes('-git-');
-}
 
 /**
  * Does the visitor want motion? Mirrors the CSS guard so JS-driven effects (the

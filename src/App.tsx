@@ -10,7 +10,6 @@ import FundedProjects from "./pages/FundedProjects";
 import Gallery from "./pages/Gallery";
 import Lectures from "./pages/Lectures";
 import NotFound from "./pages/NotFound";
-import AppearanceSwitcher from "./components/AppearanceSwitcher";
 import AmbientCanvas from "./components/AmbientCanvas";
 
 const queryClient = new QueryClient();
@@ -36,7 +35,9 @@ const App = () => (
       */}
       <AmbientCanvas className="ds-field fixed inset-0 -z-10 h-full w-full" />
 
-      <BrowserRouter>
+      {/* BASE_URL is "/" for a root build and "/variants/" for the sub-app
+          deployment. Router basename wants it without the trailing slash. */}
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/publications" element={<Publications />} />
@@ -47,9 +48,6 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* Renders only with ?variants=1 — temporary, for choosing between the
-            appearance axes. Built from the AXES registry, so it grows by itself. */}
-        <AppearanceSwitcher />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
