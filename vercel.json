@@ -1,6 +1,18 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/variants/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/variants",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
