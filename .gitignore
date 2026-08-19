@@ -27,9 +27,14 @@ dist-ssr
 # Generated image derivatives — rebuilt by `npm run images` (prebuild)
 public/images/derived/
 
-# Generated image manifest — written by `npm run images` alongside the
-# derivatives. Not imported by anything at this revision.
-src/generated/
+# Secrets
+.env
+.env.*
+!.env.example
+
+# NOTE: src/generated/ is deliberately NOT ignored here. Img.tsx imports the
+# image manifest, so tsc and the editor need it present without first running
+# `npm run images`.
 
 # Local Claude Code workspace config
 CLAUDE.md

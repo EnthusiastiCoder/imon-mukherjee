@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, BookOpen, Video, FileText, Users, Clock, Star, Download, Play, Calendar, Award } from "lucide-react";
+import { BookOpen, Video, FileText, Users, Clock, Star, Download, Play, Calendar, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 import { useState } from "react";
 
 const courses = [
@@ -157,36 +159,21 @@ const Lectures = () => {
 	const [selectedLecture, setSelectedLecture] = useState<{title: string, type: string} | null>(null);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-			{/* Header */}
-			<div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-				<div className="container mx-auto px-6 py-4">
-					<div className="flex justify-between items-center">
-						<Link to="/">
-							<Button variant="ghost" className="flex items-center gap-2">
-								<ArrowLeft size={16} />
-								Back to Home
-							</Button>
-						</Link>
-						<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-							Dr. Imon Mukherjee
-						</h1>
-					</div>
-				</div>
-			</div>
+		<div className="min-h-screen">
+			<PageHeader title="Lectures" />
 
 			{/* Content */}
-			<div className="container mx-auto px-6 py-16">
+			<div className="container pt-24 pb-16">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
 					className="text-center mb-12"
 				>
-					<h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-4">
+					<h2 className="text-display-lg font-bold ds-display mb-4">
 						Academic Lectures
 					</h2>
-					<p className="text-xl text-slate-600 max-w-4xl mx-auto">
+					<p className="text-base sm:text-lg lg:text-xl text-ink-2 max-w-4xl mx-auto">
 						Explore comprehensive lecture series on quantum computing, cryptography, and information security. 
 						Interactive learning materials, hands-on labs, and cutting-edge research insights.
 					</p>
@@ -195,13 +182,13 @@ const Lectures = () => {
 				{/* Course Selection */}
 				<div className="flex justify-center mb-8">
 					<Tabs value={activeCourse} onValueChange={setActiveCourse} className="w-full max-w-4xl">
-						<TabsList className="grid w-full grid-cols-3">
+						<ScrollableTabsList cols="md:grid-cols-3">
 							{courses.map((course) => (
-								<TabsTrigger key={course.id} value={course.id} className="text-sm">
+								<TabsTrigger key={course.id} value={course.id} className="shrink-0 text-sm min-h-[40px]">
 									{course.code}
 								</TabsTrigger>
 							))}
-						</TabsList>
+						</ScrollableTabsList>
 
 						{courses.map((course) => (
 							<TabsContent key={course.id} value={course.id} className="mt-8">
@@ -211,32 +198,32 @@ const Lectures = () => {
 									transition={{ duration: 0.5 }}
 								>
 									{/* Course Header */}
-									<Card className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+									<Card className="mb-8 bg-surface-2 border-rule">
 										<CardHeader>
-											<div className="flex justify-between items-start">
-												<div>
-													<CardTitle className="text-2xl text-slate-800 mb-2">{course.title}</CardTitle>
-													<p className="text-slate-600 mb-4">{course.description}</p>
+											<div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
+												<div className="min-w-0">
+													<CardTitle className="text-display-sm text-ink-1 mb-2">{course.title}</CardTitle>
+													<p className="text-ink-2 mb-4">{course.description}</p>
 													<div className="flex flex-wrap gap-4">
 														<div className="flex items-center gap-2">
-															<BookOpen size={16} className="text-blue-600" />
-															<span className="text-sm text-slate-600">{course.credits} Credits</span>
+															<BookOpen size={16} className="text-signal" />
+															<span className="text-sm text-ink-2">{course.credits} Credits</span>
 														</div>
 														<div className="flex items-center gap-2">
-															<Users size={16} className="text-purple-600" />
-															<span className="text-sm text-slate-600">{course.students} Students</span>
+															<Users size={16} className="text-signal" />
+															<span className="text-sm text-ink-2">{course.students} Students</span>
 														</div>
 														<div className="flex items-center gap-2">
-															<Star size={16} className="text-yellow-500" />
-															<span className="text-sm text-slate-600">{course.rating}/5.0</span>
+															<Star size={16} className="text-status-warn" />
+															<span className="text-sm text-ink-2">{course.rating}/5.0</span>
 														</div>
 													</div>
 												</div>
-												<div className="text-right">
-													<Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white mb-2">
+												<div className="shrink-0 sm:text-right">
+													<Badge className="bg-cat-3 text-white mb-2">
 														{course.progress}% Complete
 													</Badge>
-													<Progress value={course.progress} className="w-32" />
+													<Progress value={course.progress} className="w-full sm:w-32" />
 												</div>
 											</div>
 										</CardHeader>
@@ -247,15 +234,15 @@ const Lectures = () => {
 										<Card>
 											<CardHeader>
 												<CardTitle className="flex items-center gap-2">
-													<Award size={20} className="text-blue-600" />
+													<Award size={20} className="text-signal" />
 													Topics Covered
 												</CardTitle>
 											</CardHeader>
 											<CardContent>
 												<ul className="space-y-2">
 													{course.topics.map((topic, index) => (
-														<li key={index} className="flex items-center gap-2 text-slate-600">
-															<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+														<li key={index} className="flex items-center gap-2 text-ink-2">
+															<div className="w-2 h-2 bg-cat-1 rounded-full"></div>
 															{topic}
 														</li>
 													))}
@@ -267,15 +254,15 @@ const Lectures = () => {
 										<Card>
 											<CardHeader>
 												<CardTitle className="flex items-center gap-2">
-													<FileText size={20} className="text-purple-600" />
+													<FileText size={20} className="text-signal" />
 													Course Materials
 												</CardTitle>
 											</CardHeader>
 											<CardContent>
 												<div className="space-y-3">
 													{course.materials.map((material, index) => (
-														<div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-															<span className="text-sm text-slate-700">{material}</span>
+														<div key={index} className="flex items-center justify-between p-3 bg-surface-2 rounded-lg">
+															<span className="text-sm text-ink-1">{material}</span>
 															<Button 
 																size="sm" 
 																variant="ghost"
@@ -294,7 +281,7 @@ const Lectures = () => {
 									<Card className="mt-8">
 										<CardHeader>
 											<CardTitle className="flex items-center gap-2">
-												<Video size={20} className="text-green-600" />
+												<Video size={20} className="text-status-good" />
 												Lecture Series
 											</CardTitle>
 										</CardHeader>
@@ -306,15 +293,15 @@ const Lectures = () => {
 														initial={{ opacity: 0, x: -20 }}
 														animate={{ opacity: 1, x: 0 }}
 														transition={{ duration: 0.3, delay: index * 0.1 }}
-														className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-lg hover:shadow-md transition-shadow"
+														className="flex items-center justify-between p-4 transition-colors"
 													>
 														<div className="flex items-center gap-4">
-															<div className={`p-2 rounded-full ${lecture.type === 'video' ? 'bg-blue-100' : 'bg-green-100'}`}>
-																{lecture.type === 'video' ? <Play size={16} className="text-blue-600" /> : <BookOpen size={16} className="text-green-600" />}
+															<div className={`p-2 rounded-full ${lecture.type === 'video' ? 'bg-surface-2' : 'bg-surface-2'}`}>
+																{lecture.type === 'video' ? <Play size={16} className="text-signal" /> : <BookOpen size={16} className="text-status-good" />}
 															</div>
 															<div>
-																<h4 className="font-semibold text-slate-800">{lecture.title}</h4>
-																<div className="flex items-center gap-4 text-sm text-slate-600">
+																<h4 className="font-semibold text-ink-1">{lecture.title}</h4>
+																<div className="flex items-center gap-4 text-sm text-ink-2">
 																	<span className="flex items-center gap-1">
 																		<Clock size={14} />
 																		{lecture.duration}
@@ -358,14 +345,12 @@ const Lectures = () => {
 					transition={{ duration: 0.6, delay: 0.8 }}
 					className="text-center mt-16"
 				>
-					<p className="text-slate-600 mb-4">
+					<p className="text-ink-2 mb-4">
 						Interactive learning experience with hands-on labs and real-world applications
 					</p>
-					<Link to="/">
-						<Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-							Return to Homepage
-						</Button>
-					</Link>
+					<Button asChild className="bg-signal text-signal-ink hover:opacity-90 min-h-[44px]">
+						<Link to="/">Return to Homepage</Link>
+					</Button>
 				</motion.div>
 			</div>
 
@@ -375,12 +360,12 @@ const Lectures = () => {
 					<DialogHeader>
 						<DialogTitle>Course Materials Access</DialogTitle>
 						<DialogDescription className="space-y-4 pt-4">
-							<p className="text-slate-600">
+							<p className="text-ink-2">
 								Course materials and downloads are available exclusively to enrolled students.
 							</p>
-							<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-								<p className="text-blue-800 font-medium mb-2">How to Access:</p>
-								<ul className="list-disc list-inside text-blue-700 space-y-1 text-sm">
+							<div className="bg-surface-2 border border-rule rounded-lg p-4">
+								<p className="text-ink-1 font-medium mb-2">How to Access:</p>
+								<ul className="list-disc list-inside text-signal space-y-1 text-sm">
 									<li>Log in to the Learning Management System</li>
 									<li>Navigate to your enrolled course</li>
 									<li>Or contact the department for assistance</li>
@@ -397,18 +382,18 @@ const Lectures = () => {
 					<DialogHeader>
 						<DialogTitle>Lecture Access Restricted</DialogTitle>
 						<DialogDescription className="space-y-4 pt-4">
-							<div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-								<p className="text-purple-800 font-medium mb-2">{selectedLecture?.title}</p>
-								<p className="text-purple-700 text-sm">
+							<div className="bg-surface-2 border border-rule rounded-lg p-4">
+								<p className="text-ink-1 font-medium mb-2">{selectedLecture?.title}</p>
+								<p className="text-signal text-sm">
 									Type: {selectedLecture?.type === 'video' ? 'Video Lecture' : 'Lab Session'}
 								</p>
 							</div>
-							<p className="text-slate-600">
+							<p className="text-ink-2">
 								Access to lectures is restricted to enrolled students only.
 							</p>
-							<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-								<p className="text-blue-800 font-medium mb-2">To Access This Lecture:</p>
-								<ul className="list-disc list-inside text-blue-700 space-y-1 text-sm">
+							<div className="bg-surface-2 border border-rule rounded-lg p-4">
+								<p className="text-ink-1 font-medium mb-2">To Access This Lecture:</p>
+								<ul className="list-disc list-inside text-signal space-y-1 text-sm">
 									<li>Log in to the Learning Management System with your credentials</li>
 									<li>Ensure you are enrolled in this course</li>
 									<li>Contact the department if you need enrollment assistance</li>

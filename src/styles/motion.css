@@ -1,0 +1,542 @@
+/**
+ * Motion system — five levels that differ in KIND, not just amount.
+ *
+ * Selected by `data-motion` on <html>, independently of design direction and
+ * theme. All six directions share this system.
+ *
+ * ── Why this was rewritten ──────────────────────────────────────────────────
+ *
+ * The first version scaled one keyframe set by a distance token: 24px, 56px,
+ * 92px. That is a volume knob, not a range — every level was the same fade-and-
+ * rise at a different size, which is exactly how it read. Each level now has its
+ * own keyframes and its own easing, selected through `animation-name:
+ * var(--m-anim)`, so they are different gestures rather than one gesture louder:
+ *
+ *   still        nothing moves
+ *   restrained   opacity only — content appears, nothing travels
+ *   pronounced   directional rise with a confident ease-out — content arrives
+ *   kinetic      springy overshoot, alternating left/right, slight rotation
+ *   maximalist   3D tilt plus a clip-path wipe, scrubbed over a long range —
+ *                content is assembled as you scroll
+ *
+ * ── Two rules this file will not break ──────────────────────────────────────
+ *
+ * 1. CONTENT IS NEVER HIDDEN BY DEFAULT. Every reveal lives inside
+ *    `@supports (animation-timeline: view())`, so a browser without scroll-driven
+ *    animation renders finished content rather than a blank page. An earlier
+ *    version of this site faded tiles in from opacity 0 via an
+ *    IntersectionObserver, and the content vanished whenever it did not fire.
+ *
+ * 2. `prefers-reduced-motion` WINS OVER EVERY LEVEL, including maximalist.
+ *
+ * ── One hard-won constraint ─────────────────────────────────────────────────
+ *
+ * Two `animation` shorthands must never target the same element. A previous
+ * maximalist-only drift on `.ds-display` silently replaced the reveal on every
+ * section heading, because headings carry both `ds-reveal` and `ds-display`.
+ * Extra character comes from different keyframes, never from a second animation.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1 · Per-level parameters
+   `--m-anim` selects the gesture; the rest tune it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --m-anim: ds-enter-dir;
+  /* Base travel. The direction cycle multiplies these by -1, 0 or +1 per element
+     to produce an entry side; a level only sets how far and how hard. */
+  --m-dx: 70px;
+  --m-dy: 56px;
+  --m-rot-max: 0deg;
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-duration: 0.6s;
+  --m-stagger: 60ms;
+  --m-parallax: 0px;
+  --m-hover-lift: 0px;
+  --m-hover-scale: 1;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 30%;
+}
+
+:root[data-motion='still'] {
+  --m-anim: none;
+  --m-duration: 0s;
+  --m-stagger: 0ms;
+  --m-parallax: 0px;
+  --m-hover-lift: 0px;
+  --m-hover-scale: 1;
+}
+
+/* The quietest level. It takes the same directional keyframe as the rest so it
+   also varies its entry side — the offsets are just small enough that the effect
+   reads as a settle rather than a slide. Roughly a sixth of pronounced's throw. */
+:root[data-motion='restrained'] {
+  --m-anim: ds-enter-dir;
+  --m-dx: 16px;
+  --m-dy: 12px;
+  --m-rot-max: 0deg;
+  --m-ease: linear;
+  --m-duration: 0.45s;
+  --m-stagger: 40ms;
+  --m-parallax: 0px;
+  --m-hover-lift: 0px;
+  --m-hover-scale: 1;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 18%;
+}
+
+:root[data-motion='pronounced'] {
+  --m-anim: ds-enter-dir;
+  --m-dx: 86px;
+  --m-dy: 60px;
+  --m-rot-max: 0.8deg;
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-duration: 0.65s;
+  --m-stagger: 70ms;
+  --m-parallax: 80px;
+  --m-hover-lift: 3px;
+  --m-hover-scale: 1;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 32%;
+}
+
+/* Overshoot easing. Physical rather than smooth, and the widest throw. */
+:root[data-motion='kinetic'] {
+  --m-anim: ds-enter-dir;
+  --m-dx: 130px;
+  --m-dy: 84px;
+  --m-rot-max: 2.4deg;
+  --m-scale-from: 0.9;
+  --m-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --m-duration: 0.8s;
+  --m-stagger: 85ms;
+  --m-parallax: 110px;
+  --m-hover-lift: 6px;
+  --m-hover-scale: 1.01;
+  --m-range-start: entry 0%;
+  --m-range-end: cover 38%;
+}
+
+/* 3D tilt and a wipe, scrubbed across more than half the time an element is on
+   screen, so it tracks the scroll rather than playing and finishing. */
+:root[data-motion='maximalist'] {
+  --m-anim: ds-construct;
+  --m-dx: 150px;
+  --m-dy: 130px;
+  --m-rot-max: 0deg;
+  --m-ease: linear;
+  --m-duration: 0.95s;
+  --m-stagger: 110ms;
+  --m-parallax: 170px;
+  --m-hover-lift: 8px;
+  --m-hover-scale: 1.02;
+  --m-range-start: entry 0%;
+  /* cover 40%, not 58%. A long range is what makes this level feel scrubbed,
+     but past roughly 40% elements near the end of the document cannot reach the
+     end of their own range before the page stops scrolling. */
+  --m-range-end: cover 40%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2 · The gestures
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/*
+ * ── One keyframe, direction supplied by custom properties ───────────────────
+ *
+ * Everything previously rose from below, because each level baked its offsets
+ * into its own keyframes. Direction is now `--m-from-x` / `--m-from-y` /
+ * `--m-rot`, so entry direction and motion character are independent: any level
+ * can enter from any side, and a level is defined by HOW it moves (distance,
+ * easing, blur, scale) rather than by WHERE it comes from.
+ *
+ * The direction cycle is set further down and deliberately is not a simple
+ * left/right alternation — a strict A/B pattern becomes predictable by the third
+ * item, which is the thing that made this read as bland.
+ */
+@keyframes ds-enter-dir {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--m-from-x, 0px), var(--m-from-y, 0px), 0)
+      scale(var(--m-scale-from, 1)) rotate(var(--m-rot, 0deg));
+    filter: blur(var(--m-blur-from, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Fade only, for the quietest level. Kept as its own keyframe rather than
+   ds-enter-dir with zero offsets, so `restrained` cannot accidentally inherit a
+   direction from the cycle below. */
+@keyframes ds-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The wipe is the point: content is uncovered rather than faded, so it reads as
+   being built. Paired with a perspective tilt and a blur that clears.
+ *
+ * Every property that can HIDE content — clip-path, opacity, blur — finishes by
+ * 55% of the gesture, leaving only the tilt to settle over the remainder. This
+ * is a correctness requirement, not a taste one. A scroll-driven animation is
+ * not guaranteed to reach 100%: an element near the end of the document runs
+ * out of scroll first. The original version interpolated clip-path linearly to
+ * the end and stranded 27 of 50 elements permanently clipped. Front-loading
+ * means the worst case is an unfinished tilt, never hidden content. */
+@keyframes ds-construct {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(20deg) rotateY(var(--m-rot-y, 0deg))
+      translate3d(var(--m-from-x, 0px), var(--m-from-y, 0px), 0) scale(0.86);
+    filter: blur(10px);
+    clip-path: inset(0 0 92% 0);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(3px);
+  }
+  55% {
+    filter: blur(0);
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes ds-parallax {
+  from {
+    transform: translateY(calc(var(--m-parallax) * -1));
+  }
+  to {
+    transform: translateY(var(--m-parallax));
+  }
+}
+
+@keyframes ds-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3 · Application — all of it behind the motion preference
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Page-load entrance ─────────────────────────────────────────────────
+     A normal timeline, because the hero is already in view on load. */
+  :root:not([data-motion='still']) .ds-enter,
+  :root:not([data-motion='still']) .ds-enter-group > * {
+    animation: var(--m-anim) var(--m-duration) var(--m-ease) both;
+  }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(2) { animation-delay: calc(var(--m-stagger) * 1); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(3) { animation-delay: calc(var(--m-stagger) * 2); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(4) { animation-delay: calc(var(--m-stagger) * 3); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(5) { animation-delay: calc(var(--m-stagger) * 4); }
+  :root:not([data-motion='still']) .ds-enter-group > :nth-child(6) { animation-delay: calc(var(--m-stagger) * 5); }
+
+  /* ── Hover feedback ─────────────────────────────────────────────────────
+     `translate` and `scale`, not `transform`: reveal and parallax animations
+     run with `both` fill, which pins `transform` to its end state and would
+     swallow a hover transform entirely. These are independent properties that
+     compose with it. */
+  :root:not([data-motion='still']) .ds-plane {
+    transition:
+      border-color var(--dur-mid) var(--m-ease),
+      translate var(--dur-mid) var(--m-ease),
+      scale var(--dur-mid) var(--m-ease);
+  }
+  :root:not([data-motion='still']) .ds-plane:hover {
+    border-color: var(--rule-strong);
+    translate: 0 calc(var(--m-hover-lift) * -1);
+    scale: var(--m-hover-scale);
+  }
+
+  @supports (animation-timeline: view()) {
+    :root:not([data-motion='still']) .ds-reveal,
+    :root:not([data-motion='still']) .ds-reveal-group > * {
+      animation: var(--m-anim) var(--m-ease) both;
+      animation-timeline: view();
+      animation-range: var(--m-range-start) var(--m-range-end);
+    }
+
+    /* Entry direction cycles on a five-beat pattern (see the block below), so
+       it does not resolve into an obvious left/right/left rhythm. */
+
+    /* Stagger the START only, never the end. Delays are meaningless on a scroll
+       timeline, so children have to be offset by range — but these previously
+       set the whole `animation-range` shorthand with hard-coded ends, which
+       overrode each level's own range. Restrained intends to finish by
+       `cover 18%` and its children were running to `cover 48%`, still in flight
+       long after the level says they should have settled. Shifting only the
+       start keeps every child inside the level's range. */
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(2) { animation-range-start: entry 6%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(3) { animation-range-start: entry 12%; }
+    :root:not([data-motion='still']) .ds-reveal-group > :nth-child(4) { animation-range-start: entry 18%; }
+
+    /* Parallax. --m-parallax is 0 at still and restrained, so the rule is inert
+       there rather than needing a guard. */
+    :root:not([data-motion='still']) .ds-parallax {
+      animation: ds-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+      will-change: transform;
+    }
+
+    /* Read-position rule. The one piece of chrome that earns continuous
+       scroll-linking: on a page this long it answers "how much is left". */
+    :root[data-motion='pronounced'] .ds-scroll-progress,
+    :root[data-motion='kinetic'] .ds-scroll-progress,
+    :root[data-motion='maximalist'] .ds-scroll-progress {
+      animation: ds-progress linear both;
+      animation-timeline: scroll(root block);
+      transform-origin: 0 50%;
+    }
+  }
+
+  /* ── Bit Plane's substrate ──────────────────────────────────────────────
+     The one direction-specific flourish, kept because the grid is the concept
+     rather than decoration: a payload resolving out of its cover. Runs once on
+     load, not looped — ambient motion behind text makes long pages tiring.
+
+     Targets #home::before, never #home. The grid lives on that pseudo-element
+     precisely so neither its mask nor this animation touches the section's
+     content; an earlier version animated opacity on #home and dimmed the stat
+     row, the chart and the research tiles along with the grid. */
+  :root[data-variant='bitplane']:not([data-motion='still']):not([data-motion='restrained']) #home::before {
+    animation: ds-substrate-settle 1.8s var(--m-ease) both;
+  }
+
+  @keyframes ds-substrate-settle {
+    from {
+      background-size: 112px 112px;
+      opacity: 0;
+    }
+    to {
+      background-size: 28px 28px;
+      opacity: 1;
+    }
+  }
+}
+
+/* The count-up's resting state. The final value is always what the DOM
+   contains; JavaScript only animates toward it. Tabular figures stop the width
+   jittering as digits change. */
+.ds-countup {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4 · Marquee
+   Static and horizontally scrollable by default; it only animates once motion
+   is wanted. That ordering matters — the band carries real content (the venues
+   he publishes in), so it has to stay readable when motion is switched off
+   rather than depending on the animation to be legible.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-marquee {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ds-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+/* The duplicate track is only needed to make an animated loop seamless. With no
+   animation it is redundant, so hide it rather than printing the list twice. */
+.ds-marquee > .ds-marquee-track + .ds-marquee-track {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='still']):not([data-motion='restrained']) .ds-marquee {
+    overflow-x: hidden;
+  }
+  :root:not([data-motion='still']):not([data-motion='restrained'])
+    .ds-marquee
+    > .ds-marquee-track
+    + .ds-marquee-track {
+    display: flex;
+  }
+  :root:not([data-motion='still']):not([data-motion='restrained']) .ds-marquee-track {
+    animation: ds-marquee var(--marquee-duration, 42s) linear infinite;
+  }
+  /* These need the same :not() chain as the rule above, not a shorter selector.
+     `:not()` takes the specificity of its argument, so the base rule scores
+     higher than a plain [data-motion='kinetic'] and the speed-up was silently
+     losing the cascade — measured as 46s when it should have been 27.6s. */
+  :root:not([data-motion='still']):not([data-motion='restrained'])[data-motion='kinetic'] .ds-marquee-track,
+  :root:not([data-motion='still']):not([data-motion='restrained'])[data-motion='maximalist'] .ds-marquee-track {
+    animation-duration: calc(var(--marquee-duration, 42s) * 0.55);
+  }
+  .ds-marquee[data-reverse='true'] .ds-marquee-track {
+    animation-direction: reverse;
+  }
+
+  /* Pause so it can be read, and so a link inside stays clickable. */
+  .ds-marquee:hover .ds-marquee-track,
+  .ds-marquee:focus-within .ds-marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* -50% exactly, because the track is rendered twice. Any other value shows a
+     jump at the wrap. */
+  @keyframes ds-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3b · Entry directions
+   Elements used to rise from below without exception, which is the single most
+   generic reveal there is. Direction is now assigned from a cycle.
+
+   FIVE beats, not two or four. An A/B alternation is legible by the third item
+   and a four-beat cycle lines up with the four-column grids used on this page,
+   so both resolve into an obvious pattern. Five is coprime with the 2, 3 and 4
+   column counts here, so a row of tiles and the rows above and below it never
+   repeat the same arrangement.
+
+   Applied at two scopes: within a reveal group, so neighbouring tiles differ;
+   and by section parity, so a standalone element in one section leans opposite
+   to the same element in the next.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Horizontal entry means an element starts up to 150px outside its own
+   * column. Measured before this rule: document scrollWidth 1594 against a
+   * 1521 viewport — a horizontal scrollbar, which is precisely the defect this
+   * whole redesign started by fixing.
+   *
+   * `clip` rather than `hidden`: `hidden` would make each section a scroll
+   * container, which silently breaks `position: sticky` on any descendant and
+   * changes what scrollIntoView does. `clip` just clips.
+   */
+  :root:not([data-motion='still']) section {
+    overflow-x: clip;
+  }
+
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 1) {
+    --m-from-x: calc(var(--m-dx) * -1);
+    --m-from-y: calc(var(--m-dy) * 0.25);
+    --m-rot: calc(var(--m-rot-max) * -1);
+    --m-rot-y: -14deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 2) {
+    --m-from-x: var(--m-dx);
+    --m-from-y: calc(var(--m-dy) * -0.5); /* from above right */
+    --m-rot: var(--m-rot-max);
+    --m-rot-y: 14deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 3) {
+    --m-from-x: calc(var(--m-dx) * 0.35);
+    --m-from-y: var(--m-dy);
+    --m-rot: calc(var(--m-rot-max) * 0.4);
+    --m-rot-y: 6deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 4) {
+    --m-from-x: calc(var(--m-dx) * -0.6);
+    --m-from-y: calc(var(--m-dy) * -0.8); /* from above left */
+    --m-rot: calc(var(--m-rot-max) * -0.6);
+    --m-rot-y: -8deg;
+  }
+  :root:not([data-motion='still']) .ds-reveal-group > :nth-child(5n + 5) {
+    --m-from-x: var(--m-dx);
+    --m-from-y: calc(var(--m-dy) * 0.6);
+    --m-rot: calc(var(--m-rot-max) * 1.2);
+    --m-rot-y: 18deg;
+  }
+
+  /* Standalone reveals lean by section parity, so consecutive sections do not
+     all arrive from the same side. */
+  :root:not([data-motion='still']) section:nth-of-type(odd) .ds-reveal:not(.ds-reveal-group > *) {
+    --m-from-x: calc(var(--m-dx) * -0.7);
+    --m-from-y: calc(var(--m-dy) * 0.5);
+    --m-rot: calc(var(--m-rot-max) * -0.5);
+    --m-rot-y: -10deg;
+  }
+  :root:not([data-motion='still']) section:nth-of-type(even) .ds-reveal:not(.ds-reveal-group > *) {
+    --m-from-x: calc(var(--m-dx) * 0.7);
+    --m-from-y: calc(var(--m-dy) * 0.5);
+    --m-rot: calc(var(--m-rot-max) * 0.5);
+    --m-rot-y: 10deg;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4b · Ambient field strength
+   The field now runs behind the whole page rather than only the masthead, so it
+   sits under body text everywhere. At full strength that competes with reading.
+   Tying its opacity to the motion axis keeps the default legible and lets the
+   louder levels actually be louder — the same control that governs everything
+   else about how alive the page feels.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-field {
+  opacity: 0;
+  transition: opacity var(--dur-mid) ease;
+}
+:root[data-motion='pronounced'] .ds-field {
+  opacity: 0.5;
+}
+:root[data-motion='kinetic'] .ds-field {
+  opacity: 0.72;
+}
+:root[data-motion='maximalist'] .ds-field {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-field {
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5 · Grain
+   A tiling noise overlay. Cheap, and it is most of the difference between a
+   page that looks rendered and one that looks printed. Fixed so it does not
+   travel with the scroll, which is what makes it read as a property of the
+   surface rather than of the content.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ds-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-mid) ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+:root[data-motion='pronounced'] .ds-grain::after {
+  opacity: 0.035;
+}
+:root[data-motion='kinetic'] .ds-grain::after {
+  opacity: 0.055;
+}
+:root[data-motion='maximalist'] .ds-grain::after {
+  opacity: 0.075;
+}

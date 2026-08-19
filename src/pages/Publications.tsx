@@ -2,359 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { ExternalLink, BookOpen, FileText, Award, Search } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
+import { journalPublications } from "@/data/publications";
 
 const Publications = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const journalPublications = [
-    // {
-    //   title: "I-ROD: An Ensemble CNNs for Object Detection in Unconstrained Road Scenarios",
-    //   authors: "Abhishek Mukhopadhyay, Harshitha BR, Prashant T Gaikwad, Imon Mukherjee, Pradipta Biswas",
-    //   journal: "Signal, Image and Video Processing",
-    //   year: "2024",
-    //   doi: "10.1016/j.jisa.2024.103908",
-    //   impactFactor: "2.0",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "SteriCNN: Cloud Native Stego content Sterilization",
-    //   authors: "Abhisek Banerjee, Sreeparna Ganguly, Imon Mukherjee, Nabanita Ganguly",
-    //   journal: "Journal of Information Security and Applications",
-    //   year: "2024",
-    //   doi: "10.1016/j.jisa.2024.103908",
-    //   impactFactor: "5.6",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "Robust Deep Convolutional Solutions for Identifying Biotic Crop Stress in Wild Environments",
-    //   authors: "Chiranjit Pal, Imon Mukherjee, Sanjay Chatterji, Sanjoy Pratihar, Pabitra Mitra, Partha Pratim Chakraborti",
-    //   journal: "IEEE Transactions on AgriFood Electronics",
-    //   year: "2024",
-    //   doi: "10.1109/TAFE.2024.3422187",
-    //   impactFactor: "N/A",
-    //   indexed: "IEEE"
-    // },
-    // {
-    //   title: "Utilizing attention mechanism with exemplar memory for improving domain adaptive person re-identification",
-    //   authors: "Sugam Bhunia, Sambit K. Bakshi, and Imon Mukherjee",
-    //   journal: "Multimedia Tools Applications",
-    //   year: "2024",
-    //   doi: "10.1007/s11042-024-19270-0",
-    //   impactFactor: "3.6",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "A complex network analysis approach to compare the performance of batsmen across different formats",
-    //   authors: "Nayan Ranjan Das, Ankur Konar, Imon Mukherjee, Goutam Paul",
-    //   journal: "Knowledge-Based Systems",
-    //   year: "2024",
-    //   doi: "10.1016/j.knosys.2023.111269",
-    //   impactFactor: "8.8",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "Integer Wavelet Transform based High Performance Secure Steganography Scheme QVD-LSB",
-    //   authors: "Pratap Chandra Mandal, Imon Mukherjee, BN Chatterji",
-    //   journal: "Multimedia Tools & Applications",
-    //   year: "2024",
-    //   doi: "10.1007/s11042-023-17927-w",
-    //   impactFactor: "3.6",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "High capacity secure dynamic multi-bit data hiding using Fibonacci Energetic pixels",
-    //   authors: "Imon Mukherjee, Goutam Paul",
-    //   journal: "Multimedia Tools & Applications",
-    //   year: "2024",
-    //   doi: "10.1007/s11042-023-15504-9",
-    //   impactFactor: "3.6",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "Stegano-Purge: An integer wavelet transformation based adaptive universal image sterilizer for steganography removal",
-    //   authors: "Sreeparna Ganguly, Imon Mukherjee, Ashutosh Pati",
-    //   journal: "Journal of Information Security and Applications",
-    //   year: "2023",
-    //   doi: "10.1016/j.jisa.2023.103586",
-    //   impactFactor: "5.6",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "Efficient Seizure Prediction and EEG Channel Selection Based on Multi-Objective Optimization",
-    //   authors: "Ranjan Jana and Imon Mukherjee",
-    //   journal: "IEEE Access",
-    //   year: "2023",
-    //   doi: "10.1109/ACCESS.2023.3281450",
-    //   impactFactor: "3.9",
-    //   indexed: "SCI/SCI(E)"
-    // },
-    // {
-    //   title: "An intelligent clustering framework for substitute recommendation and player selection",
-    //   authors: "Nayan Ranjan Das, Imon Mukherjee, Anubhab D. Patel, Goutam Paul",
-    //   journal: "Journal of Super Computing",
-    //   year: "2023",
-    //   doi: "10.1007/s11227-023-05314-z",
-    //   impactFactor: "3.3",
-    //   indexed: "SCI/SCI(E)"
-    // }
-    ,
-    {
-      title: "Quantized Contour based Intelligent Stego-malware Sterilizer for Smart Consumer Electronics Network",
-      authors: "Sreeparna Ganguly, Abhisek Banerjee, Arpan Bairagi and Imon Mukherjee",
-      journal: "IEEE Transactions on Consumer Electronics",
-      year: "Accepted",
-      doi: "",
-      impactFactor: "10.9",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Design and analysis of an unbiased intelligent recommendation system for all-rounders in cricket based on multiple criteria decision making",
-      authors: "Nayan Ranjan Das, Imon Mukherjee, Goutam Paul",
-      journal: "Engineering Applications of Artificial Intelligence",
-      year: "2025",
-      doi: "https://doi.org/10.1016/j.engappai.2025.112197",
-      impactFactor: "8",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Fine-tuned encoder models with data augmentation beat ChatGPT in agricultural named entity recognition and relation extraction",
-      authors: "Sayan De, Debarshi Kumar Sanyal, Imon Mukherjee",
-      journal: "Expert Systems with Applications",
-      year: "2025",
-      doi: "https://doi.org/10.1016/j.eswa.2025.127126",
-      impactFactor: "7.5",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "A lightweight and explainable CNN model for empowering plant disease diagnosis",
-      authors: "Chiranjit Pal, Swastik Karmakar, Imon Mukherjee, Partha Pratim Chakrabarti",
-      journal: "Nature Scientific Reports",
-      year: "2025",
-      doi: "https://doi.org/10.1038/s41598-025-94083-1",
-      impactFactor: "3.8",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "I-ROD: An Ensemble CNNs for Object Detection in Unconstrained Road Scenarios",
-      authors: "Abhishek Mukhopadhyay, Harshitha BR, Prashant T Gaikwad, Imon Mukherjee, Pradipta Biswas",
-      journal: "Signal, Image and Video Processing",
-      year: "2024",
-      doi: "10.1016/j.jisa.2024.103908",
-      impactFactor: "2.0",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "SteriCNN: Cloud Native Stego content Sterilization",
-      authors: "Abhisek Banerjee, Sreeparna Ganguly, Imon Mukherjee, Nabanita Ganguly",
-      journal: "Journal of Information Security and Applications",
-      year: "2024",
-      doi: "10.1016/j.jisa.2024.103908",
-      impactFactor: "5.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Robust Deep Convolutional Solutions for Identifying Biotic Crop Stress in Wild Environments",
-      authors: "Chiranjit Pal, Imon Mukherjee, Sanjay Chatterji, Sanjoy Pratihar, Pabitra Mitra, Partha Pratim Chakraborti",
-      journal: "IEEE Transactions on AgriFood Electronics",
-      year: "2024",
-      doi: "10.1109/TAFE.2024.3422187",
-      impactFactor: "N/A",
-      indexed: "IEEE"
-    },
-    {
-      title: "Utilizing attention mechanism with exemplar memory for improving domain adaptive person re-identification",
-      authors: "Sugam Bhunia, Sambit K. Bakshi, and Imon Mukherjee",
-      journal: "Multimedia Tools Applications",
-      year: "2024",
-      doi: "10.1007/s11042-024-19270-0",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "A complex network analysis approach to compare the performance of batsmen across different formats",
-      authors: "Nayan Ranjan Das, Imon Mukherjee, Ankur Konar, Goutam Paul",
-      journal: "Knowledge-Based Systems",
-      year: "2024",
-      doi: "10.1016/j.knosys.2023.111269",
-      impactFactor: "8.8",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Integer Wavelet Transform based High Performance Secure Steganography Scheme QVD-LSB",
-      authors: "Pratap Chandra Mandal, Imon Mukherjee, BN Chatterji",
-      journal: "Multimedia Tools & Applications",
-      year: "2024",
-      doi: "10.1007/s11042-023-17927-w",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "High capacity secure dynamic multi-bit data hiding using Fibonacci Energetic pixels",
-      authors: "Imon Mukherjee, Goutam Paul",
-      journal: "Multimedia Tools & Applications",
-      year: "2024",
-      doi: "10.1007/s11042-023-15504-9",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Stegano-Purge: An integer wavelet transformation based adaptive universal image sterilizer for steganography removal",
-      authors: "Sreeparna Ganguly, Imon Mukherjee, Ashutosh Pati",
-      journal: "Journal of Information Security and Applications",
-      year: "2023",
-      doi: "10.1016/j.jisa.2023.103586",
-      impactFactor: "5.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Efficient Seizure Prediction and EEG Channel Selection Based on Multi-Objective Optimization",
-      authors: "Ranjan Jana and Imon Mukherjee",
-      journal: "IEEE Access",
-      year: "2023",
-      doi: "10.1109/ACCESS.2023.3281450",
-      impactFactor: "3.9",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "An intelligent clustering framework for substitute recommendation and player selection",
-      authors: "Nayan Ranjan Das, Imon Mukherjee, Anubhab D. Patel, Goutam Paul",
-      journal: "Journal of Super Computing",
-      year: "2023",
-      doi: "10.1007/s11227-023-05314-z",
-      impactFactor: "3.3",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Adoption of a ranking based indexing method for the cricket teams",
-      authors: "Nayan Ranjan Das, Subhrojit Ghosh, Imon Mukherjee, Goutam Paul",
-      journal: "Expert Systems with Applications",
-      year: "2023",
-      doi: "10.1016/j.eswa.2022.118796",
-      impactFactor: "8.5",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "A Hybrid Lane Detection Model for Wild Road Conditions",
-      authors: "Abhishek Mukhopadhyay, LRD Murthy, Imon Mukherjee and Pradipta Biswas",
-      journal: "IEEE Transactions on Artificial Intelligence",
-      year: "2022",
-      doi: "10.1109/TAI.2022.3212347",
-      impactFactor: "N/A",
-      indexed: "IEEE"
-    },
-    {
-      title: "Digital image steganography: A literature survey",
-      authors: "Pratap Chandra Mandal, Imon Mukherjee, Goutam Paul, B.N. Chatterji",
-      journal: "Information Sciences",
-      year: "2022",
-      doi: "10.1016/j.ins.2022.07.120",
-      impactFactor: "8.1",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "High capacity data hiding based on multi-directional pixel value differencing and decreased difference expansion",
-      authors: "Pratap Chandra Mandal, Imon Mukherjee",
-      journal: "Multimedia Tools & Applications",
-      year: "2022",
-      doi: "10.1007/s11042-021-11605-5",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "High capacity steganography based on IWT using eight-way CVD and n-LSB ensuring secure communication",
-      authors: "Pratap Chandra Mandal, Imon Mukherjee, B.N. Chatterji",
-      journal: "Optik",
-      year: "2021",
-      doi: "",
-      impactFactor: "3.1",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Deep learning based efficient epileptic seizure prediction with EEG channel optimization",
-      authors: "Ranjan Jana, Imon Mukherjee",
-      journal: "Biomedical Signal Processing and Control",
-      year: "2021",
-      doi: "10.1016/j.bspc.2021.102767",
-      impactFactor: "5.1",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "High Capacity Reversible and Secured Data Hiding in Images using Interpolation and Difference Expansion Technique",
-      authors: "Pratap Chandra Mandal, Imon Mukherjee, and BN Chatterji",
-      journal: "Multimedia Tools & Applications",
-      year: "2021",
-      doi: "10.1007/s11042-020-09341-3",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Comparing Shape Descriptor Methods for Different Color Space and Lighting Conditions",
-      authors: "Abhishek Mukhopadhyay, Imon Mukherjee, and Pradipta Biswas",
-      journal: "Artificial Intelligence in Engineering Design and Manufacturing",
-      year: "2019",
-      doi: "10.1017/S0890060419000398",
-      impactFactor: "2.1",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Lip Biometric Template Security Framework Using Spatial Steganography",
-      authors: "Srijan Das, Muhammad Khan, Sambit Bakshi, Imon Mukherjee, Pankaj K. Sa, A.K. Sangaiah, A. Bruno",
-      journal: "Pattern Recognition Letters",
-      year: "2018",
-      doi: "10.1016/j.patrec.2018.06.026",
-      impactFactor: "5.1",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Image Feature Based High Capacity Steganographic Algorithm",
-      authors: "Rajib Biswas, Imon Mukherjee, Samir Bandopadhyay",
-      journal: "Multimedia Tools and Applications",
-      year: "2019",
-      doi: "10.1007/s11042-019-7369-y",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Multiple video clips preservation using folded back audio-visual cryptography scheme",
-      authors: "Imon Mukherjee, Ritam Ganguly",
-      journal: "Multimedia Tools and Applications",
-      year: "2018",
-      doi: "10.1007/s11042-016-3319-0",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Keyless Dynamic Optimal Steganography using Energetic Pixels",
-      authors: "Goutam Paul, Ian Davidson, Imon Mukherjee and S.S. Ravi",
-      journal: "Multimedia Tools and Applications",
-      year: "2017",
-      doi: "10.1007/s11042-016-3319-0",
-      impactFactor: "3.6",
-      indexed: "SCI/SCI(E)"
-    },
-    {
-      title: "Defeating Steganography with Multi-bit Sterilization using Pixel Eccentricity",
-      authors: "Imon Mukherjee and Goutam Paul, Jarvis Altrin",
-      journal: "IPSI BgD Transactions on Advance Research",
-      year: "2015",
-      doi: "",
-      impactFactor: "N/A",
-      indexed: ""
-    },
-    {
-      title: "Image sterilization to prevent LSB-based steganographic transmission",
-      authors: "Goutam Paul, G., and Imon Mukherjee",
-      journal: "arXiv preprint",
-      year: "2010",
-      doi: "arXiv:1012.5573",
-      impactFactor: "N/A",
-      indexed: ""
-    }
-  ];
 
   const conferencePublications = [
     // {
@@ -402,7 +59,6 @@ const Publications = () => {
     //   publisher: "ACM",
     //   doi: "10.1145/3632754.3632772"
     // }
-    ,
     {
       title: "Information Hiding Framework for Secure Communication of Consumer Data in Smartgrids",
       authors: "Sreeparna Ganguly, Abhisek Banerjee, and Imon Mukherjee",
@@ -825,96 +481,106 @@ const Publications = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-              ← Back to Portfolio
-            </Link>
-            <h1 className="text-xl font-bold text-slate-800">Publications</h1>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen">
+      <PageHeader title="Publications" />
 
       {/* Header */}
-      <section className="pt-24 pb-16 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+      <section className="pt-24 pb-10 sm:pb-16">
+        <div className="container text-center">
+          <h1 className="text-display-lg font-bold ds-display mb-6">
             Publications
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Comprehensive collection of Dr. Imon Mukherjee's research contributions in 
+          <p className="text-base sm:text-lg lg:text-xl text-ink-2 max-w-3xl mx-auto">
+            Comprehensive collection of Dr. Imon Mukherjee's research contributions in
             Quantum Computing, Steganography, and Information Security
           </p>
         </div>
       </section>
 
       {/* Search */}
-      <section className="px-6 pb-8">
-        <div className="container mx-auto max-w-2xl">
+      <section className="pb-8">
+        <div className="container max-w-2xl">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" size={20} />
             <Input
-              placeholder="Search publications by title, authors, or journal..."
+              placeholder="Search publications…"
+              aria-label="Search publications by title, authors, or journal"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-3 text-lg"
+              className="pl-10 pr-4 py-3 text-base sm:text-lg min-h-[44px]"
             />
           </div>
         </div>
       </section>
 
       {/* Publications Tabs */}
-      <section className="px-6 pb-16">
-        <div className="container mx-auto">
+      <section className="pb-16">
+        <div className="container">
           <Tabs defaultValue="journals" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
-              <TabsTrigger value="journals" className="flex items-center gap-2">
-                <FileText size={16} />
+            <ScrollableTabsList cols="md:grid-cols-4" className="mb-8">
+              <TabsTrigger value="journals" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <FileText size={16} className="shrink-0" />
                 Journals ({filteredJournals.length})
               </TabsTrigger>
-              <TabsTrigger value="conferences" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="conferences" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 Conferences ({filteredConferences.length})
               </TabsTrigger>
-              <TabsTrigger value="chapters" className="flex items-center gap-2">
-                <BookOpen size={16} />
+              <TabsTrigger value="chapters" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <BookOpen size={16} className="shrink-0" />
                 Book Chapters ({bookChapters.length})
               </TabsTrigger>
-              <TabsTrigger value="patents" className="flex items-center gap-2">
-                <Award size={16} />
+              <TabsTrigger value="patents" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Award size={16} className="shrink-0" />
                 Patents ({patents.length})
               </TabsTrigger>
-            </TabsList>
+            </ScrollableTabsList>
 
             {/* Journals Tab */}
             <TabsContent value="journals" className="space-y-6">
               {filteredJournals.map((pub, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                <Card key={index} className="transition-colors ds-plane">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-800 mb-3 text-lg">{pub.title}</h3>
-                        <p className="text-slate-600 mb-2 italic">{pub.authors}</p>
-                        <p className="text-slate-700 mb-3 font-medium">{pub.journal}</p>
+                      <div className="min-w-0 flex-1 break-words">
+                        <h3 className="font-semibold text-ink-1 mb-3 text-lg">{pub.title}</h3>
+                        <p className="text-ink-2 mb-2 italic">{pub.authors}</p>
+                        <p className="text-ink-1 mb-1 font-medium">{pub.journal}</p>
+                        {/* Volume / issue / pages, assembled only from the parts a
+                            given citation actually carries — journals that number
+                            articles instead of paginating supply articleNo. */}
+                        {(pub.volume || pub.issue || pub.pages || pub.articleNo || pub.month) && (
+                          <p className="text-ink-2 mb-3 text-sm">
+                            {[
+                              pub.volume && `Vol. ${pub.volume}`,
+                              pub.issue && `No. ${pub.issue}`,
+                              pub.articleNo && `Article ${pub.articleNo}`,
+                              pub.pages && (pub.pages.includes("page") ? pub.pages : `pp. ${pub.pages}`),
+                              pub.month,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </p>
+                        )}
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge variant="outline" className="bg-slate-50">
+                          <Badge variant="outline" className="bg-surface-2">
                             {pub.year}
                           </Badge>
-                          <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                          <Badge className="bg-cat-1 text-white">
                             {pub.indexed}
                           </Badge>
-                          {pub.impactFactor !== "N/A" && (
-                            <Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
+                          {/* Also skip when empty, not just "N/A". The three most
+                              recent papers have no impact factor supplied, and the
+                              previous check rendered a bare "IF:" badge for them. */}
+                          {pub.impactFactor && pub.impactFactor !== "N/A" && (
+                            <Badge className="bg-cat-3 text-white">
                               IF: {pub.impactFactor}
                             </Badge>
                           )}
                         </div>
                         {pub.doi && (
-                          <p className="text-sm text-slate-500 mt-2">
-                            DOI: <span className="font-mono">{pub.doi}</span>
+                          <p className="text-sm text-ink-3 mt-2">
+                            DOI: <span className="font-mono break-all">{pub.doi}</span>
                           </p>
                         )}
                       </div>
@@ -924,7 +590,7 @@ const Publications = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                          <Button variant="ghost" size="sm" className="hover:bg-surface-2">
                             <ExternalLink size={16} />
                           </Button>
                         </a>
@@ -938,30 +604,30 @@ const Publications = () => {
             {/* Conferences Tab */}
             <TabsContent value="conferences" className="space-y-6">
               {filteredConferences.map((pub, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                <Card key={index} className="transition-colors ds-plane">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-800 mb-3 text-lg">{pub.title}</h3>
-                        <p className="text-slate-600 mb-2 italic">{pub.authors}</p>
-                        <p className="text-slate-700 mb-2 font-medium">{pub.conference}</p>
-                        <p className="text-slate-600 mb-3">{pub.venue}</p>
+                      <div className="min-w-0 flex-1 break-words">
+                        <h3 className="font-semibold text-ink-1 mb-3 text-lg">{pub.title}</h3>
+                        <p className="text-ink-2 mb-2 italic">{pub.authors}</p>
+                        <p className="text-ink-1 mb-2 font-medium">{pub.conference}</p>
+                        <p className="text-ink-2 mb-3">{pub.venue}</p>
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge variant="outline" className="bg-slate-50">
+                          <Badge variant="outline" className="bg-surface-2">
                             {pub.date}
                           </Badge>
-                          <Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
+                          <Badge className="bg-cat-3 text-white">
                             {pub.publisher}
                           </Badge>
                           {pub.award && (
-                            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                            <Badge className="bg-cat-4 text-white">
                               {pub.award}
                             </Badge>
                           )}
                         </div>
                         {pub.doi && (
-                          <p className="text-sm text-slate-500 mt-2">
-                            DOI: <span className="font-mono">{pub.doi}</span>
+                          <p className="text-sm text-ink-3 mt-2">
+                            DOI: <span className="font-mono break-all">{pub.doi}</span>
                           </p>
                         )}
                       </div>
@@ -971,7 +637,7 @@ const Publications = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                          <Button variant="ghost" size="sm" className="hover:bg-surface-2">
                             <ExternalLink size={16} />
                           </Button>
                         </a>
@@ -985,19 +651,19 @@ const Publications = () => {
             {/* Book Chapters Tab */}
             <TabsContent value="chapters" className="space-y-6">
               {bookChapters.map((chapter, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                <Card key={index} className="transition-colors ds-plane">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-800 mb-3 text-lg">{chapter.title}</h3>
-                        <p className="text-slate-600 mb-2 italic">{chapter.authors}</p>
-                        <p className="text-slate-700 mb-2 font-medium">{chapter.book}</p>
-                        <p className="text-slate-600 mb-3">{chapter.publisher}</p>
+                      <div className="min-w-0 flex-1 break-words">
+                        <h3 className="font-semibold text-ink-1 mb-3 text-lg">{chapter.title}</h3>
+                        <p className="text-ink-2 mb-2 italic">{chapter.authors}</p>
+                        <p className="text-ink-1 mb-2 font-medium">{chapter.book}</p>
+                        <p className="text-ink-2 mb-3">{chapter.publisher}</p>
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge variant="outline" className="bg-slate-50">
+                          <Badge variant="outline" className="bg-surface-2">
                             {chapter.year}
                           </Badge>
-                          <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                          <Badge className="bg-cat-1 text-white">
                             ISBN: {chapter.isbn}
                           </Badge>
                         </div>
@@ -1007,7 +673,7 @@ const Publications = () => {
                         target="_blank" 
                         rel="noopener noreferrer"
                       >
-                        <Button variant="ghost" size="sm" className="hover:bg-blue-50">
+                        <Button variant="ghost" size="sm" className="hover:bg-surface-2">
                           <ExternalLink size={16} />
                         </Button>
                       </a>
@@ -1020,17 +686,17 @@ const Publications = () => {
             {/* Patents Tab */}
             <TabsContent value="patents" className="space-y-6">
               {patents.map((patent, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-6">
+                <Card key={index} className="transition-colors ds-plane">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-800 mb-3 text-lg">{patent.title}</h3>
-                        <p className="text-slate-600 mb-2 italic">{patent.inventors}</p>
+                      <div className="min-w-0 flex-1 break-words">
+                        <h3 className="font-semibold text-ink-1 mb-3 text-lg">{patent.title}</h3>
+                        <p className="text-ink-2 mb-2 italic">{patent.inventors}</p>
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge variant="outline" className="bg-slate-50">
+                          <Badge variant="outline" className="bg-surface-2">
                             {patent.publishedDate}
                           </Badge>
-                          <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+                          <Badge className="bg-cat-2 text-white">
                             {patent.applicationNumber}
                           </Badge>
                         </div>
@@ -1045,12 +711,12 @@ const Publications = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
-          <p className="text-slate-300">
+      <footer className="bg-surface-2 text-ink-2 border-t border-rule py-8">
+        <div className="container text-center">
+          <p className="text-ink-3">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
-          <p className="text-slate-400 text-sm mt-2">
+          <p className="text-ink-3 text-sm mt-2">
             Distinguished Professor, Department of CSE, IIIT Kalyani
           </p>
         </div>

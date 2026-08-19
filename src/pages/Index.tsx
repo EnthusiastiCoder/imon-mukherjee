@@ -5,175 +5,154 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 // removed: import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, ChevronDown, Cpu, Lock, Brain, Atom, GraduationCap, Users, FileText } from "lucide-react";
+import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, Cpu, Lock, Brain, Atom, GraduationCap, Users, FileText } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
+import SiteNav from "@/components/SiteNav";
+import SectionHeader from "@/components/SectionHeader";
+import Img from "@/components/Img";
+import { featuredJournals, journalPublications } from "@/data/publications";
+import {
+	fundedProjects,
+	parseLakhs,
+	totalFundingLakhs,
+	maxFundingLakhs,
+} from "@/data/funding";
 import { motion } from "framer-motion";
+
 
 const Index = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
 
+	/**
+	 * Research interests.
+	 *
+	 * The `logo` field previously hotlinked two Wikimedia PNGs. Both returned
+	 * ERR_BLOCKED_BY_ORB in the browser, so all three cards rendered a broken
+	 * image — Wikimedia blocks cross-origin hotlinking of thumbnails. They are
+	 * gone; the lucide icons already bundled with the app carry the same job with
+	 * no network request and no third-party dependency.
+	 *
+	 * The icons were also all `Lock`, including on "Data Analytics", so the mark
+	 * said nothing about the content. Each now matches what it labels.
+	 */
 	const researchInterests = [
-		{ 
-			name: "Steganography", 
+		{
+			name: "Steganography & Steganalysis",
 			description: "Advanced data hiding, secure communication, and image sterilization",
 			icon: Lock,
-			color: "bg-purple-100 text-purple-800 border-purple-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Steganography_logo.svg/1200px-Steganography_logo.svg.png"
 		},
-		{ 
-			name: "Quantum Cryptography", 
+		{
+			name: "Quantum Cryptography",
 			description: "Quantum cryptographic protocols and network security",
-			icon: Lock,
-			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/1200px-Cryptography_logo.svg.png"
+			icon: Atom,
 		},
-		{ 
-			name: "Data Analytics and Natural Language Processing", 
+		{
+			name: "Data Analytics & Natural Language Processing",
 			description: "AI applications in agriculture, computer vision",
-			icon: Lock,
-			color: "bg-red-100 text-red-800 border-red-200",
-			logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Cryptography_logo.svg/1200px-Cryptography_logo.svg.png"
+			icon: Brain,
 		}
 	];
 
-	const fundedProjects = [
-		{
-			title: "Study of Quantum Attacks on Stream Ciphers and Its Counter-Measures",
-			funding: "DRDO, Govt. of India",
-			duration: "Sept, 2022 – Sept, 2024",
-			amount: "₹42.25 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "Extraction, Organization and Query of Scholarly Information",
-			funding: "SERB (CRG), Govt. of India",
-			duration: "March, 2022 to March, 2025",
-			amount: "₹45.61 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "AI in Agriculture & Food Sustainability",
-			funding: "MeitY, Govt. of India",
-			duration: "March, 2020 to March, 2023",
-			amount: "₹16.18 Lakhs",
-			role: "PI"
-		},
-		{
-			title: "Implementation of Security in eGovernance through Steganography",
-			funding: "DST, Govt. of West Bengal",
-			duration: "July, 2013, to June, 2016",
-			amount: "₹1.85 Lakhs",
-			role: "PI"
-		}
-	];
 
-	const publications = [
-		{
-			title: "Quantized Contour based Intelligent Stego-malware Sterilizer for Smart Consumer Electronics Network",
-      		// authors: "Sreeparna Ganguly, Abhisek Banerjee, Arpan Bairagi and Imon Mukherjee",
-      		journal: "IEEE Transactions on Consumer Electronics",
-      		year: "Accepted",
-			type: "journal",
-      		doi: "",
-      		impactFactor: "10.9",
-      		indexed: "SCI/SCI(E)"
-		},
-		{
-			title: "SteriCNN: Cloud Native Stego content Sterilization",
-			journal: "Journal of Information Security and Applications",
-			year: "2024",
-			type: "journal",
-			impactFactor: "5.6"
-		},
-		{
-			title: "A complex network analysis approach to compare the performance of batsmen across different formats",
-			journal: "Knowledge-Based Systems",
-			year: "2024",
-			type: "journal",
-			impactFactor: "8.8"
-		},
-		{
-			title: "Design and analysis of an unbiased intelligent recommendation system for all-rounders in cricket based on multiple criteria decision making",
-      		// authors: "Nayan Ranjan Das, Imon Mukherjee, Goutam Paul",
-      		journal: "Engineering Applications of Artificial Intelligence",
-      		year: "2025",
-			type: "journal",
-      		doi: "https://doi.org/10.1016/j.engappai.2025.112197",
-      		impactFactor: "8",
-      		indexed: "SCI/SCI(E)"
-		},
-		{
-			title: "A Hybrid Lane Detection Model for Wild Road Conditions",
-      		// authors: "Abhishek Mukhopadhyay, LRD Murthy, Imon Mukherjee and Pradipta Biswas",
-      		journal: "IEEE Transactions on Artificial Intelligence",
-      		year: "2022",
-			type: "journal",
-      		doi: "10.1109/TAI.2022.3212347",
-      		impactFactor: "N/A",
-      		indexed: "IEEE"
-		},
-		{
-			title: "Robust Deep Convolutional Solutions for Identifying Biotic Crop Stress in Wild Environments",
-      		// authors: "Chiranjit Pal, Imon Mukherjee, Sanjay Chatterji, Sanjoy Pratihar, Pabitra Mitra, Partha Pratim Chakraborti",
-      		journal: "IEEE Transactions on AgriFood Electronics",
-      		year: "2024",
-			type: "journal",
-      		doi: "10.1109/TAFE.2024.3422187",
-      		impactFactor: "N/A",
-      		indexed: "IEEE"
-		},
+
+	// Derived from the array rather than written into the copy, for the same
+	// reason the funding total is — a number typed into a heading drifts from
+	// the list beneath it the moment a paper is added.
+	/**
+	 * Featured publications.
+	 *
+	 * Journals come from src/data/publications.ts rather than being restated
+	 * here. This page used to carry its own copy, and it drifted: it described
+	 * the IEEE Transactions on Consumer Electronics paper as "Accepted" long
+	 * after it had been published as volume 71, issue 4. Taking the leading
+	 * entries from the shared list means featuring a new paper is just adding it
+	 * there.
+	 *
+	 * The conference entries stay local — a hand-picked sample in a different
+	 * shape, not part of the journal list.
+	 */
+	/**
+	 * One shape covering both kinds of featured entry. Without it TypeScript
+	 * infers a union of the journal and conference literals, and every field that
+	 * only one of them carries — impactFactor, award — fails to resolve.
+	 */
+	type FeaturedPublication = {
+		title: string;
+		journal: string;
+		year: string;
+		type: "journal" | "conference";
+		authors?: string;
+		doi?: string;
+		impactFactor?: string;
+		indexed?: string;
+		venue?: string;
+		publisher?: string;
+		note?: string;
+		award?: string;
+		volume?: string;
+		issue?: string;
+		pages?: string;
+		articleNo?: string;
+		month?: string;
+	};
+
+	const featuredConferences: FeaturedPublication[] = [
 		{
 			title: "K-Span Select and Multi-Dimensional Judging for Reliable Scholarly Question Answering",
-	      	// authors: "Preetam Pati, Sayan De, Saurabh Tiwari, Debarshi Kumar Sanyal and Imon Mukherjee",
-      		journal: "ACM/IEEE Joint Conference on Digital Libraries (JCDL 2025)",
-      		year: "Accepted",
+			journal: "ACM/IEEE Joint Conference on Digital Libraries (JCDL 2025)",
+			year: "Accepted",
 			type: "conference",
-      		// doi: "10.1109/TAFE.2024.3422187",
-      		// impactFactor: "N/A",
-      		indexed: "IEEE"
+			indexed: "IEEE",
 		},
-		 {
-      		title: "Few-TK: A Dataset for Few-shot Scientific Typed Keyphrase Recognition",
-      		// authors: "Avishek Lahiri, Imon Mukherjee, Debarshi",
-      		journal: "Findings of the Association for Computational Linguistics: NAACL 2024",
-      		venue: "Mexico",
-			type: "conference",
-      		year: "2024",
-      		publisher: "ACL",
-      		doi: "10.18653/v1/2024.findings-naacl.253"
-    	},
-
 		{
-      		title: "AgriNER: An NER Dataset of Agricultural Entities for the Semantic Web",
-      		// authors: "Sayan De, Debarshi K. Sanyal, Imon Mukherjee",
-      		journal: "ESWC 2023",
+			title: "Few-TK: A Dataset for Few-shot Scientific Typed Keyphrase Recognition",
+			journal: "Findings of the Association for Computational Linguistics: NAACL 2024",
+			venue: "Mexico",
 			type: "conference",
-      		venue: "Hersonissos, Greece",
-      		year: "2023",
-      		note: "Scopus Indexed, Tier-I Conference"
-    	},
- 		{
-      		title: "CitePrompt: Using Prompts to Identify Citation Intent in Scientific Papers",
-      		// authors: "Avishek Lahiri, Debarshi Kumar Sanyal and Imon Mukherjee",
-      		journal: "JCDL 2023",
-			type: "conference",
-      		venue: "Santa Fe, New Mexico, USA",
-      		year: "2023"
-    	},
+			year: "2024",
+			publisher: "ACL",
+			doi: "10.18653/v1/2024.findings-naacl.253",
+		},
 		{
-      		title: "Disjunctive Edge Map based Image Sterilization for Destruction of Steganograms in Spatial Domain",
-      		// authors: "Sreeparna Ganguly, Srijanjeet Singh Sehra, Imon Mukherjee",
-      		journal: "2023 IEEE Silchar Subsection Conference (SILCON 2023)",
-      		venue: "National Institute of Technology Silchar",
+			title: "AgriNER: An NER Dataset of Agricultural Entities for the Semantic Web",
+			journal: "ESWC 2023",
 			type: "conference",
-      		year: "2023",
-      		publisher: "IEEE",
-      		award: "Best Paper Award"
-    	}
+			venue: "Hersonissos, Greece",
+			year: "2023",
+			note: "Scopus Indexed, Tier-I Conference",
+		},
+		{
+			title: "CitePrompt: Using Prompts to Identify Citation Intent in Scientific Papers",
+			journal: "JCDL 2023",
+			type: "conference",
+			venue: "Santa Fe, New Mexico, USA",
+			year: "2023",
+		},
+		{
+			title: "Disjunctive Edge Map based Image Sterilization for Destruction of Steganograms in Spatial Domain",
+			journal: "2023 IEEE Silchar Subsection Conference (SILCON 2023)",
+			venue: "National Institute of Technology Silchar",
+			type: "conference",
+			year: "2023",
+			publisher: "IEEE",
+			award: "Best Paper Award",
+		}
 	];
+
+	const publications: FeaturedPublication[] = [
+		...featuredJournals.map((p) => ({ ...p, type: "journal" as const })),
+		...featuredConferences,
+	];
+
+	// Counted over the whole journal list, not the seven featured below. A
+	// heading that said "7 journal" would describe this section's contents rather
+	// than his output, and understate it by a factor of four.
+	const journalCount = journalPublications.length;
+	const peakImpactFactor = Math.max(
+		...journalPublications.map((p) => Number.parseFloat(p.impactFactor ?? "") || 0)
+	).toFixed(1);
 
 	const phdSupervision = {
 		awarded: [
@@ -320,114 +299,73 @@ const Index = () => {
 		? publications 
 		: publications.filter(pub => pub.type === activeFilter);
 
-	const scrollToSection = (sectionId: string) => {
-		const element = document.getElementById(sectionId);
-		element?.scrollIntoView({ behavior: 'smooth' });
-	};
-
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-			{/* Navigation with Dropdowns */}
-			<nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-				<div className="container mx-auto px-6 py-4">
-					<div className="flex justify-between items-center">
-						<h1 className="text-xl font-bold text-slate-800"></h1>
-						<div className="hidden md:flex space-x-6">
-							<button onClick={() => scrollToSection('home')} className="text-slate-600 hover:text-blue-600 transition-colors">Home</button>
-							<button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-blue-600 transition-colors">About</button>
-							
-							{/* Research Dropdown */}
-							<DropdownMenu>
-								<DropdownMenuTrigger className="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1">
-									Research <ChevronDown size={16} />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="bg-white border shadow-lg">
-									<DropdownMenuItem onClick={() => scrollToSection('research')}>Research Interests</DropdownMenuItem>
-									<Link to="/funded-projects">
-										<DropdownMenuItem>Funded Projects</DropdownMenuItem>
-									</Link>
-									<Link to="/publications">
-										<DropdownMenuItem>Publications</DropdownMenuItem>
-									</Link>
-								</DropdownMenuContent>
-							</DropdownMenu>
-							
-							{/* Academic Dropdown */}
-							<DropdownMenu>
-								<DropdownMenuTrigger className="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1">
-									Academic <ChevronDown size={16} />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="bg-white border shadow-lg">
-									<Link to="/academic-supervision">
-										<DropdownMenuItem>Academic Supervision</DropdownMenuItem>
-									</Link>
-									<Link to="/lectures">
-										<DropdownMenuItem>Lectures</DropdownMenuItem>
-									</Link>
-									<DropdownMenuItem onClick={() => scrollToSection('talks')}>Talks & Conferences</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-							
-							<Link to="/gallery">
-								<button className="text-slate-600 hover:text-blue-600 transition-colors">Gallery</button>
-							</Link>
+		// ds-grain moved here from the hero: the field now runs the whole page,
+		// so its texture should too.
+		<div className="ds-grain min-h-screen">
+			<SiteNav />
 
-							<button onClick={() => scrollToSection('contact')} className="text-slate-600 hover:text-blue-600 transition-colors">Contact</button>
-						</div>
-					</div>
-				</div>
-			</nav>
-
-			<Hero />
+			<Hero
+				doctoratesAwarded={phdSupervision.awarded.length}
+				doctoratesOngoing={phdSupervision.ongoing.length}
+			/>
 
 			{/* About Section */}
-			<section id="about" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">About</h2>
-					<div className="grid md:grid-cols-2 gap-12">
+			<section id="about" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">About</h2>
+					<div className="ds-reveal-group grid md:grid-cols-2 gap-8 md:gap-12">
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-4">Academic Background</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-4">Academic Background</h3>
 							<div className="space-y-4">
-								<div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-									<h4 className="font-semibold text-slate-700">Current Position</h4>
-									<p className="text-slate-600">Assistant Professor (Grade I), Department of Computer Science & Engineering</p>
-									<p className="text-slate-600">Indian Institute of Information Technology (IIIT) Kalyani</p>
+								<div className="ds-inset p-4">
+									<h4 className="font-semibold text-ink-1">Current Position</h4>
+									<p className="text-ink-2">Assistant Professor (Grade I), Department of Computer Science & Engineering</p>
+									<p className="text-ink-2">Indian Institute of Information Technology (IIIT) Kalyani</p>
 								</div>
-								<div className="p-4 bg-gradient-to-r from-purple-50 to-teal-50 rounded-lg">
-									<h4 className="font-semibold text-slate-700">Education</h4>
-									<p className="text-slate-600">Ph.D. in Computer Science and Engineering from Jadavpur University (JU)</p>
-									<p className="text-slate-600">Specialization: Steganography</p>
+								<div className="ds-inset p-4">
+									<h4 className="font-semibold text-ink-1">Education</h4>
+									<p className="text-ink-2">Ph.D. in Computer Science and Engineering from Jadavpur University (JU)</p>
+									<p className="text-ink-2">Specialization: Steganography</p>
 								</div>
 							</div>
 						</div>
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-4">Contact Information</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-4">Contact Information</h3>
 							<div className="space-y-3">
-								<div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-									<Mail size={20} className="text-blue-600" />
-									<span className="text-slate-600">imon@iiitkalyani.ac.in</span>
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<Mail size={20} className="text-signal" />
+									<span className="text-ink-2">imon@iiitkalyani.ac.in</span>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-									<MapPin size={20} className="text-purple-600" />
-									<span className="text-slate-600">IIIT Kalyani, West Bengal, India</span>
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<MapPin size={20} className="text-signal" />
+									<span className="text-ink-2">IIIT Kalyani, West Bengal, India</span>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-									<img 
-										src="https://scholar.google.com/favicon.ico" 
-										alt="Google Scholar" 
-										className="w-5 h-5"
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<img
+										src="https://scholar.google.com/favicon.ico"
+										alt=""
+										width={20}
+										height={20}
+										loading="lazy"
+										decoding="async"
+										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-green-600">
+									<a href="https://scholar.google.com/citations?user=3xcXNz0AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-ink-2 hover:text-status-good">
 										Google Scholar Profile
 									</a>
 								</div>
-								<div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-									<img 
-										src="https://orcid.org/sites/default/files/images/orcid_16x16.png" 
-										alt="ORCID" 
-										className="w-5 h-5"
+								<div className="flex items-center gap-3 ds-inset p-3">
+									<img
+										src="https://orcid.org/sites/default/files/images/orcid_16x16.png"
+										alt=""
+										width={20}
+										height={20}
+										loading="lazy"
+										decoding="async"
+										className="w-5 h-5 shrink-0"
 									/>
-									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-orange-600">
+									<a href="https://orcid.org/0000-0002-8598-148X" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-ink-2 hover:text-signal">
 										ORCID Profile
 									</a>
 								</div>
@@ -438,71 +376,29 @@ const Index = () => {
 			</section>
 
 			{/* Research Interests */}
-			{/* <section id="research" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Research Interests</h2>
-					<div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
-						{researchInterests.map((interest, index) => {
-							const IconComponent = interest.icon;
-							return (
-								<Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm">
-									<CardContent className="p-6">
-										<div className="flex items-center gap-3 mb-4">
-											<div className={`w-12 h-12 rounded-full ${interest.color} flex items-center justify-center`}>
-												<IconComponent size={24} />
-											</div>
-											<img 
-												src={interest.logo} 
-												alt={`${interest.name} logo`}
-												className="w-8 h-8 object-contain"
-												onError={(e) => {
-													e.currentTarget.style.display = 'none';
-												}}
-											/>
-										</div>
-										<h3 className="font-semibold text-slate-800 mb-2">{interest.name}</h3>
-										<p className="text-sm text-slate-600">{interest.description}</p>
-									</CardContent>
-								</Card>
-							);
-						})}
-					</div>
-				</div>
-			</section> */}
 
 			{/* Research Interests */}
-			<section id="research" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-			  <div className="container mx-auto">
-			    <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">
+			<section id="research" className="py-[var(--space-section)] border-t border-rule">
+			  <div className="container">
+			    <h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">
 			      Research Interests
 			    </h2>
 			
-			    <div className="flex flex-wrap justify-center gap-6">
-				  {researchInterests.map((interest, index) => {
+			    {/* A flush grid rather than centred floating cards with a coloured
+			        left rail — that rail on a translucent rounded card is the exact
+			        template look this redesign is replacing. The 2px gap lets the
+			        page ground read as a hairline between planes. */}
+			    <div className="ds-reveal-group grid gap-[2px] sm:grid-cols-3">
+				  {researchInterests.map((interest) => {
 				    const IconComponent = interest.icon;
 				    return (
-				      <Card
-				        key={index}
-				        className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-l-4 border-l-blue-600 bg-white/80 backdrop-blur-sm w-72"
-				      >
-				        <CardContent className="p-6">
-				          <div className="flex items-center gap-3 mb-4">
-				            <div className={`w-12 h-12 rounded-full ${interest.color} flex items-center justify-center`}>
-				              <IconComponent size={24} />
-				            </div>
-				            <img
-				              src={interest.logo}
-				              alt={`${interest.name} logo`}
-				              className="w-8 h-8 object-contain"
-				              onError={(e) => {
-				                e.currentTarget.style.display = 'none';
-				              }}
-				            />
-				          </div>
-				          <h3 className="font-semibold text-slate-800 mb-2">{interest.name}</h3>
-				          <p className="text-sm text-slate-600">{interest.description}</p>
-				        </CardContent>
-				      </Card>
+				      <article key={interest.name} className="ds-plane p-6">
+				        <IconComponent size={20} className="text-signal" aria-hidden="true" />
+				        <h3 className="ds-display mt-4 text-lg">{interest.name}</h3>
+				        <p className="mt-2 text-sm leading-relaxed text-ink-2">
+				          {interest.description}
+				        </p>
+				      </article>
 				    );
 				  })}
 				</div>
@@ -510,218 +406,369 @@ const Index = () => {
 			</section>
 
 
-			{/* Funded Projects */}
-			<section id="projects" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Funded Projects</h2>
-						<Link to="/funded-projects">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-								View All Projects
-								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
-					</div>
-					<div className="grid md:grid-cols-2 gap-8">
-						{fundedProjects.slice(0, 4).map((project, index) => (
-							<Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-blue-50/50">
-								<CardHeader>
-									<CardTitle className="text-slate-800 text-lg">{project.title}</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div className="space-y-3">
-										<div className="flex items-center gap-2">
-											<Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-												{project.funding}
-											</Badge>
-											<Badge className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
-												{project.role}
-											</Badge>
-										</div>
-										<div className="flex items-center gap-2 text-slate-600">
-											<Calendar size={16} />
-											<span>{project.duration}</span>
-										</div>
-										<div className="flex items-center gap-2 text-slate-600">
-											<DollarSign size={16} />
-											<span className="font-semibold text-green-600">{project.amount}</span>
+			{/* Funded Projects
+			    Was four identical cards, each repeating an agency badge, a calendar
+			    icon and a dollar icon. But these four grants are directly comparable
+			    quantities spanning ₹1.85L to ₹45.61L — a 25x range that four equal
+			    cards actively hid. Magnitude over a set of items is a bar chart, so
+			    it is one now, and the bar doubles as the row's structure. */}
+			<section id="projects" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<SectionHeader
+						eyebrow="Grants"
+						title="Funded Projects"
+						summary={`₹${totalFundingLakhs.toFixed(2)}L as Principal Investigator across ${fundedProjects.length} projects`}
+						to="/funded-projects"
+						actionLabel="All projects"
+					/>
+
+					<ol className="ds-reveal-group">
+						{fundedProjects.map((project) => {
+							const lakhs = parseLakhs(project.amount);
+							const pct = Math.max(2, (lakhs / maxFundingLakhs) * 100);
+							return (
+								<li
+									key={project.title}
+									className="ds-reveal group grid gap-x-6 gap-y-2 border-t border-rule py-5 last:border-b sm:grid-cols-[minmax(0,1fr)_auto]"
+								>
+									<div className="min-w-0">
+										<h3 className="text-base font-semibold leading-snug text-ink-1">
+											{project.title}
+										</h3>
+										<p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
+											<span>{project.funding}</span>
+											<span aria-hidden="true">·</span>
+											<span className="ds-data">{project.duration}</span>
+											<span aria-hidden="true">·</span>
+											<span>{project.role}</span>
+										</p>
+									</div>
+
+									{/* Amount and its bar. Right-aligned and tabular so the figures
+									    form a scannable column rather than floating in prose. */}
+									<div className="sm:w-56 sm:text-right">
+										<span className="ds-data text-lg text-ink-1">{project.amount}</span>
+										<div
+											className="mt-2 h-[6px] w-full overflow-hidden bg-surface-2"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											role="img"
+											aria-label={`${project.amount}, ${Math.round(pct)} percent of the largest grant`}
+										>
+											<div
+												className="h-full bg-signal transition-[width] duration-500"
+												style={{ width: `${pct}%`, borderRadius: 'var(--ds-radius-sm)' }}
+											/>
 										</div>
 									</div>
-								</CardContent>
-							</Card>
-						))}
-					</div>
+								</li>
+							);
+						})}
+					</ol>
 				</div>
 			</section>
 
 			{/* Publications */}
-			<section id="publications" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-purple-50">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-8">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Publications</h2>
-						<Link to="/publications">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-								View All Publications
-								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
-					</div>
-					
-					{/* Filter Buttons */}
-					<div className="flex justify-center gap-4 mb-8">
+			<section id="publications" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<SectionHeader
+						eyebrow="Selected work"
+						title="Publications"
+						summary={`${journalCount} journal papers · peak impact factor ${peakImpactFactor} · ${featuredJournals.length} selected here`}
+						to="/publications"
+						actionLabel="All publications"
+					/>
+
+					{/* Filter. Left-aligned with the content rather than centred: a
+					    centred control row under a left-aligned heading reads as a
+					    separate widget. */}
+					<div className="mb-2 flex flex-wrap gap-3">
 						<Button 
 							onClick={() => setActiveFilter("all")}
 							variant={activeFilter === "all" ? "default" : "outline"}
-							className={activeFilter === "all" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "all" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							All
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("journal")}
 							variant={activeFilter === "journal" ? "default" : "outline"}
-							className={activeFilter === "journal" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "journal" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							Journals
 						</Button>
 						<Button 
 							onClick={() => setActiveFilter("conference")}
 							variant={activeFilter === "conference" ? "default" : "outline"}
-							className={activeFilter === "conference" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : ""}
+							className={activeFilter === "conference" ? "min-h-[44px] bg-signal text-signal-ink" : "min-h-[44px]"}
 						>
 							Conferences
 						</Button>
 					</div>
 
-					<div className="space-y-6">
-						{filteredPublications.slice(0, 4).map((pub, index) => (
-							<Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-								<CardContent className="p-6">
-									<div className="flex justify-between items-start gap-4">
-										<div className="flex-1">
-											<h3 className="font-semibold text-slate-800 mb-2">{pub.title}</h3>
-											<p className="text-slate-600 mb-2">{pub.journal}</p>
-											<div className="flex items-center gap-3">
-												<Badge variant="outline" className="bg-slate-50">
-													{pub.year}
-												</Badge>
-												<Badge className={pub.type === "journal" ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white" : "bg-gradient-to-r from-green-500 to-teal-500 text-white"}>
-													{pub.type === "journal" ? "Journal" : "Conference"}
-												</Badge>
-												{pub.impactFactor && (
-													<Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
-														IF: {pub.impactFactor}
-													</Badge>
-												)}
-											</div>
-										</div>
-										<Button variant="ghost" size="sm" className="hover:bg-blue-50">
-											<ExternalLink size={16} />
-										</Button>
+				{/* The impact factor is the strongest single credential on each row —
+					    10.9 in IEEE TCE is the headline, not a footnote — so it is set
+					    at display size on the left and everything else reads against it.
+					    Previously it was a small pill indistinguishable from the year. */}
+					<ol className="ds-reveal-group">
+						{/* All seven of the curated selection, not a further slice of it —
+						    truncating a list someone deliberately curated to seven would
+						    hide three of their choices. The Conferences tab is a sample, so
+						    it keeps a cap. */}
+						{(activeFilter === "conference"
+							? filteredPublications.slice(0, 4)
+							: filteredPublications
+						).map((pub) => {
+							const isJournal = pub.type === "journal";
+							const hasIF = pub.impactFactor && pub.impactFactor !== "N/A";
+							return (
+								<li
+									key={pub.title}
+									className="ds-reveal group relative grid gap-x-6 gap-y-3 border-t border-rule py-6 last:border-b sm:grid-cols-[7rem_minmax(0,1fr)_auto]"
+								>
+									{/* Impact factor, or the type when there is none to show. */}
+									<div className="sm:pt-1">
+										{hasIF ? (
+											<>
+												<span className="ds-data block text-[2.25rem] leading-none text-signal">
+													{pub.impactFactor}
+												</span>
+												<span className="ds-label mt-1 block">Impact factor</span>
+											</>
+										) : (
+											<span className="ds-label block sm:pt-2">
+												{isJournal ? "Journal" : "Conference"}
+											</span>
+										)}
 									</div>
-								</CardContent>
-							</Card>
-						))}
-					</div>
+
+									<div className="min-w-0">
+										<h3 className="text-base font-semibold leading-snug text-ink-1 sm:text-lg">
+											{pub.title}
+										</h3>
+										<p className="ds-display mt-1.5 text-[15px] text-ink-2">{pub.journal}</p>
+										<p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
+											{/* A 2px rule in the categorical colour instead of a filled
+											    pill: type is a category and keeps its hue, but it no
+											    longer shouts over the title beside it. */}
+											<span className="inline-flex items-center gap-2">
+												<span
+													className="inline-block h-[2px] w-5"
+													style={{ backgroundColor: isJournal ? "var(--cat-1)" : "var(--cat-3)" }}
+													aria-hidden="true"
+												/>
+												{isJournal ? "Journal" : "Conference"}
+											</span>
+											<span aria-hidden="true">·</span>
+											<span className="ds-data">{pub.year}</span>
+											{pub.indexed && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span>{pub.indexed}</span>
+												</>
+											)}
+											{pub.award && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span className="text-status-warn">{pub.award}</span>
+												</>
+											)}
+										</p>
+									</div>
+
+									{/* Was a <Button> with no onClick, no href and no accessible
+									    name: a control that looked interactive, did nothing when
+									    clicked, and announced itself as an unlabelled button. The
+									    data already carries `doi`, so it links there when one exists
+									    and renders nothing when it does not. */}
+									{pub.doi ? (
+										<a
+											href={pub.doi.startsWith("http") ? pub.doi : `https://doi.org/${pub.doi}`}
+											target="_blank"
+											rel="noopener noreferrer"
+											aria-label={`Open "${pub.title}" at the publisher`}
+											className="inline-flex h-11 w-11 shrink-0 items-center justify-center self-start text-ink-3 transition-colors hover:bg-surface-2 hover:text-signal"
+										>
+											<ExternalLink size={16} aria-hidden="true" />
+										</a>
+									) : (
+										<span aria-hidden="true" />
+									)}
+								</li>
+							);
+						})}
+					</ol>
 				</div>
 			</section>
 
-			{/* Ph.D. Supervision */}
-			<section id="supervision" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ph.D. Supervision</h2>
-						<Link to="/academic-supervision">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-								View All Supervision
-								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
-					</div>
-					
-					<div className="grid md:grid-cols-2 gap-12">
-						{/* Awarded */}
-						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-								<Award className="text-green-600" size={24} />
-								Awarded ({phdSupervision.awarded.length})
-							</h3>
-							<div className="space-y-4">
-								{phdSupervision.awarded.slice(0, 2).map((student, index) => (
-									<Card key={index} className="bg-gradient-to-r from-green-50 to-teal-50">
-										<CardContent className="p-6">
-											<h4 className="font-semibold text-slate-800">{student.name}</h4>
-											<p className="text-slate-600 text-sm mb-2">{student.thesis}</p>
-											<div className="flex items-center justify-between text-sm">
-												<span className="text-green-600 font-medium">{student.year}</span>
-												<span className="text-slate-500">{student.position}</span>
-											</div>
-										</CardContent>
-									</Card>
-								))}
-							</div>
-						</div>
+			{/* Ph.D. Supervision
+			    Was two columns showing 2 of 5 awarded and 2 of 7 ongoing behind a
+			    "View All" button — hiding the record it exists to present. All of
+			    them are here now.
 
-						{/* Ongoing */}
-						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-								<BookOpen className="text-blue-600" size={24} />
-								Ongoing ({phdSupervision.ongoing.length})
-							</h3>
-							<div className="space-y-4">
-								{phdSupervision.ongoing.slice(0, 2).map((student, index) => (
-									<Card key={index} className="bg-gradient-to-r from-blue-50 to-purple-50">
-										<CardContent className="p-6">
-											<h4 className="font-semibold text-slate-800">{student.name}</h4>
-											<p className="text-slate-600 text-sm mb-2">{student.thesis}</p>
-											<span className="text-blue-600 font-medium text-sm">Started: {student.startYear}</span>
-										</CardContent>
-									</Card>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
+			    The important change is what is emphasised. Where his doctorates
+			    ended up (IISc, IIT BHU, assistant professorships) was set in small
+			    grey text at the bottom of a card; for anyone weighing whether to do
+			    a PhD with him, that placement record IS the credential, so it now
+			    sits directly under the name. */}
+			<section id="supervision" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<SectionHeader
+						eyebrow="Doctoral supervision"
+						title="Ph.D. Supervision"
+						to="/academic-supervision"
+						actionLabel="All supervision"
+					>
+						<span className="ds-data text-sm text-ink-2">
+							<span className="text-[1.75rem] leading-none text-signal">
+								{phdSupervision.awarded.length}
+							</span>{' '}
+							awarded
+						</span>
+						<span className="ds-data text-sm text-ink-2">
+							<span className="text-[1.75rem] leading-none text-ink-1">
+								{phdSupervision.ongoing.length}
+							</span>{' '}
+							in progress
+						</span>
+					</SectionHeader>
 
-			{/* Talks & Outreach */}
-			<section id="talks" className="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Recent Invited Talks</h2>
-					<div className="max-w-4xl mx-auto">
-						<div className="space-y-6">
-							{talks.map((talk, index) => (
-								<Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-									<CardContent className="p-6">
-										<div className="flex items-start justify-between gap-4">
-											<div className="flex-1">
-												<h3 className="font-semibold text-slate-800 mb-2">{talk.title}</h3>
-												<p className="text-slate-600">{talk.venue}</p>
+					<div className="grid gap-x-12 gap-y-10 lg:grid-cols-2">
+						<div className="ds-reveal-group">
+							<h3 className="ds-label mb-3 border-b border-rule pb-3">Awarded</h3>
+							<ol>
+								{phdSupervision.awarded.map((student) => (
+									<li
+										key={student.name}
+										className="ds-reveal flex gap-4 border-b border-rule py-4"
+									>
+										{/* Status encoded in form as well as colour: awarded is a
+										    filled node, in-progress an outline one. */}
+										<span
+											className="mt-[7px] h-[9px] w-[9px] shrink-0 bg-signal"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											aria-hidden="true"
+										/>
+										<div className="min-w-0 flex-1">
+											<div className="flex flex-wrap items-baseline justify-between gap-x-4">
+												<h4 className="font-semibold text-ink-1">{student.name}</h4>
+												<time className="ds-data shrink-0 text-xs text-ink-3">
+													{student.year ?? student.startYear}
+												</time>
 											</div>
-											<Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-												{talk.date}
-											</Badge>
+											{student.position && (
+												<p className="mt-0.5 text-[13px] text-signal">{student.position}</p>
+											)}
+											<p className="mt-1 text-[13px] leading-snug text-ink-3">
+												{student.thesis}
+											</p>
 										</div>
-									</CardContent>
-								</Card>
-							))}
+									</li>
+								))}
+							</ol>
+						</div>
+
+						<div className="ds-reveal-group">
+							<h3 className="ds-label mb-3 border-b border-rule pb-3">In progress</h3>
+							<ol>
+								{phdSupervision.ongoing.map((student) => (
+									<li
+										key={student.name}
+										className="ds-reveal flex gap-4 border-b border-rule py-4"
+									>
+										<span
+											className="mt-[7px] h-[9px] w-[9px] shrink-0 border-2 border-rule-strong"
+											style={{ borderRadius: 'var(--ds-radius-sm)' }}
+											aria-hidden="true"
+										/>
+										<div className="min-w-0 flex-1">
+											<div className="flex flex-wrap items-baseline justify-between gap-x-4">
+												<h4 className="font-semibold text-ink-1">{student.name}</h4>
+												<time className="ds-data shrink-0 text-xs text-ink-3">
+													from {student.startYear}
+												</time>
+											</div>
+											<p className="mt-1 text-[13px] leading-snug text-ink-3">
+												{student.thesis}
+											</p>
+										</div>
+									</li>
+								))}
+							</ol>
 						</div>
 					</div>
+				</div>
+			</section>
+
+			{/* Talks & Outreach
+			    Eleven identical bordered cards stacked vertically was the most
+			    monotonous block on the page, and it threw away the one thing the
+			    data has: order. These are a chronology, so this is a timeline —
+			    a spine with the date in the margin and a node per talk. The
+			    numbering here is honest in a way section numbering would not be:
+			    these genuinely are a sequence. */}
+			<section id="talks" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<SectionHeader
+						eyebrow="Speaking"
+						title="Recent Invited Talks"
+						summary={`${talks.length} invited lectures and keynotes`}
+					/>
+
+					<ol className="ds-reveal-group relative mx-auto max-w-4xl">
+						{/* The spine. Sits behind the nodes and stops at the last one
+						    rather than running past it into whitespace. */}
+						<span
+							className="absolute bottom-4 left-[7px] top-3 w-px bg-rule sm:left-[calc(9rem+1.5rem+7px)]"
+							aria-hidden="true"
+						/>
+
+						{talks.map((talk) => (
+							<li
+								key={talk.title}
+								className="ds-reveal group relative flex gap-4 pb-8 last:pb-0 sm:gap-6"
+							>
+								{/* Date in the margin at sm+, above the title on a phone.
+								    w-36 plus nowrap: "September 29, 2024" needs ~130px in the
+								    mono face, so at w-28 and even w-32 it broke after the
+								    comma and read as two separate entries. */}
+								<time className="ds-data hidden w-36 shrink-0 whitespace-nowrap pt-2 text-right text-xs text-ink-3 sm:block">
+									{talk.date}
+								</time>
+
+								<span
+									className="relative z-[1] mt-3 h-[15px] w-[15px] shrink-0 border-2 border-rule-strong bg-surface-0 transition-colors group-hover:border-signal group-hover:bg-signal"
+									style={{ borderRadius: 'var(--ds-radius-sm)' }}
+									aria-hidden="true"
+								/>
+
+								<div className="min-w-0 pt-1">
+									<time className="ds-data mb-1 block text-xs text-ink-3 sm:hidden">
+										{talk.date}
+									</time>
+									<h3 className="text-base font-semibold leading-snug text-ink-1">
+										{talk.title}
+									</h3>
+									<p className="mt-1 text-sm text-ink-2">{talk.venue}</p>
+								</div>
+							</li>
+						))}
+					</ol>
 				</div>
 			</section>
 
 			{/* Gallery Section */}
-			<section id="gallery" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<div className="flex justify-between items-center mb-12">
-						<h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Gallery</h2>
-						<Link to="/gallery">
-							<Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+			<section id="gallery" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<div className="ds-reveal flex flex-col items-start gap-4 mb-10 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
+						<h2 className="ds-display text-display-md">Gallery</h2>
+						<Button asChild variant="outline" className="border-signal text-signal hover:bg-surface-2 min-h-[44px]">
+							<Link to="/gallery">
 								View All Images
 								<ExternalLink size={16} className="ml-2" />
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+					<div className="ds-reveal-group grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
 						{[
 							{
 								// url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",
@@ -750,20 +797,19 @@ const Index = () => {
 						].map((image, index) => (
 							<motion.div
 								key={index}
-								className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+								className="group relative overflow-hidden transition-colors"
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: index * 0.1 }}
 							>
-								<img
+								<Img
 									src={image.url}
 									alt={image.alt}
-									className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+									sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 92vw"
+									className="w-full aspect-[4/3] object-cover transition-transform duration-300 md:group-hover:scale-110"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-									<div className="absolute bottom-0 left-0 right-0 p-4">
-										<h3 className="text-white font-semibold text-sm">{image.title}</h3>
-									</div>
+								<div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+									<h3 className="text-white font-semibold text-sm">{image.title}</h3>
 								</div>
 							</motion.div>
 						))}
@@ -772,43 +818,43 @@ const Index = () => {
 			</section>
 
 			{/* Contact Section */}
-			<section id="contact" className="py-16 px-6 bg-white">
-				<div className="container mx-auto">
-					<h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">Contact</h2>
-					<div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+			<section id="contact" className="py-[var(--space-section)] border-t border-rule">
+				<div className="container">
+					<h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">Contact</h2>
+					<div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6">Get in Touch</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6">Get in Touch</h3>
 							<div className="space-y-4 mb-8">
-								<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-									<Mail size={20} className="text-blue-600" />
-									<span className="text-slate-600">imon@iiitkalyani.ac.in</span>
+								<div className="flex items-center gap-3 ds-inset p-4">
+									<Mail size={20} className="text-signal" />
+									<span className="text-ink-2">imon@iiitkalyani.ac.in</span>
 								</div>
-								<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-teal-50 rounded-lg">
-									<MapPin size={20} className="text-purple-600" />
-									<span className="text-slate-600">IIIT Kalyani, West Bengal, India</span>
+								<div className="flex items-center gap-3 ds-inset p-4">
+									<MapPin size={20} className="text-signal" />
+									<span className="text-ink-2">IIIT Kalyani, West Bengal, India</span>
 								</div>
 							</div>
 							
-							<div className="bg-gradient-to-r from-slate-100 to-blue-100 p-6 rounded-lg">
-								<h4 className="font-semibold text-slate-800 mb-2">Office Hours</h4>
-								<p className="text-slate-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
-								<p className="text-slate-600">Or by appointment</p>
+							<div className="ds-inset p-6">
+								<h4 className="font-semibold text-ink-1 mb-2">Office Hours</h4>
+								<p className="text-ink-2">Monday - Friday: 9:00 AM - 5:00 PM</p>
+								<p className="text-ink-2">Or by appointment</p>
 							</div>
 						</div>
 						
 						<div>
-							<h3 className="text-2xl font-semibold text-slate-800 mb-6">Send a Message</h3>
+							<h3 className="text-display-sm font-semibold text-ink-1 mb-6">Send a Message</h3>
 							<form className="space-y-4">
 								<div>
-									<Input placeholder="Your Name" className="w-full" />
+									<Input placeholder="Your Name" aria-label="Your name" autoComplete="name" className="w-full min-h-[44px]" />
 								</div>
 								<div>
-									<Input type="email" placeholder="Your Email" className="w-full" />
+									<Input type="email" placeholder="Your Email" aria-label="Your email address" autoComplete="email" className="w-full min-h-[44px]" />
 								</div>
 								<div>
-									<Textarea placeholder="Your Message" rows={5} className="w-full" />
+									<Textarea placeholder="Your Message" aria-label="Your message" rows={5} className="w-full" />
 								</div>
-								<Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
+								<Button className="w-full min-h-[44px] bg-signal text-signal-ink hover:opacity-90">
 									<MessageSquare size={16} className="mr-2" />
 									Send Message
 								</Button>
@@ -819,12 +865,12 @@ const Index = () => {
 			</section>
 
 			{/* Footer */}
-			<footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-				<div className="container mx-auto text-center">
-					<p className="text-slate-300">
+			<footer className="bg-surface-2 text-ink-2 border-t border-rule py-10">
+				<div className="container text-center">
+					<p className="text-ink-3">
 						© 2025 Dr. Imon Mukherjee. All rights reserved.
 					</p>
-					<p className="text-slate-400 text-sm mt-2">
+					<p className="text-ink-3 text-sm mt-2">
 						Assistant Professor (Grade I), Department of CSE, IIIT Kalyani
 					</p>
 				</div>

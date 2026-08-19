@@ -2,7 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+/* The redesign's token layer lives in ./styles/design-system.css and is imported
+   from main.tsx, deliberately NOT with an @import here: `@import` is only legal
+   before any other rule, and the @tailwind directives above compile to rules, so
+   an @import placed after them is silently dropped. Importing it through the JS
+   module graph after this file also gives it the later position in the cascade,
+   which is what lets its body/element styling win over Tailwind's preflight.
+
+   Below: the original shadcn token block. Retained because the ~50 components in
+   src/components/ui are wired to it; the redesign's own surfaces come from the
+   design-system tokens. */
 
 @layer base {
   :root {
@@ -97,7 +106,37 @@
     @apply border-border;
   }
 
+  html {
+    /* Anchor navigation is used throughout the site and the header is fixed;
+       without this the target section lands underneath it. */
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
   body {
+    /* NOTE: the design system re-declares body's background from --surface-0 in
+       styles/design-system.css, which loads after this file and wins. This rule
+       stays only for the shadcn components that still reference these tokens. */
     @apply bg-background text-foreground;
+    /* Safety net only — a stray absolutely-positioned element should still be
+       fixed at the source. `clip` rather than `hidden` so it does not silently
+       break position: sticky on descendants. */
+    overflow-x: clip;
+  }
+
+  /* The typing headline and the carousel both animate continuously. Respect the
+     OS-level reduced-motion preference instead of animating regardless. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

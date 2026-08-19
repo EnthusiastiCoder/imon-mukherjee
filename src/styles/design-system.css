@@ -1,0 +1,351 @@
+/**
+ * Design system — six directions, two themes.
+ *
+ * Selected via two independent attributes on <html>:
+ *
+ *   <html data-variant="bitplane" data-theme="dark">
+ *
+ * `data-variant` picks the visual direction; `data-theme` picks light/dark. They
+ * are orthogonal — every direction resolves in both themes.
+ *
+ * ── Rules this file obeys ───────────────────────────────────────────────────
+ *
+ * 1. The bare `:root` block defines the COMPLETE light palette. Dark values are
+ *    redefined in two places: a `prefers-color-scheme` media query guarded with
+ *    `:not([data-theme="light"])` so an explicit light choice beats an OS-dark
+ *    setting, and a `[data-theme="dark"]` block so the toggle wins the other way.
+ *
+ * 2. No component colour is ever declared only inside a media or [data-theme]
+ *    block. Components read tokens; tokens carry the theming. A colour whose only
+ *    definition sits behind a theme selector renders one theme's text on the
+ *    other theme's ground — the classic unreadable page.
+ *
+ * 3. Directions differ in STRUCTURE as well as colour: radius, rule weight,
+ *    spacing rhythm, shadow presence, letter-spacing and type scale are all
+ *    tokens. Six directions that varied only in hue and font would read as six
+ *    skins of one design, which is the problem this redesign exists to fix.
+ *
+ * Colour values come from scripts/validate-design-palettes.mjs and are machine
+ * checked for CVD separation and contrast. Do not hand-tune them here without
+ * re-running that script.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1 · Shared tokens — identical in every direction
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Categorical data colours. Fixed slot order = fixed entity order; slot 1 is
+     always journals, 2 conferences, 3 book chapters, 4 patents. These do NOT
+     vary by direction: a hue here encodes which entity a datum belongs to, not
+     the page's mood. */
+  --cat-1: #2a78d6;
+  --cat-2: #eb6834;
+  --cat-3: #1baf7a;
+  --cat-4: #eda100;
+
+  /* Status. Reserved — never reused as a categorical slot. Always shipped with
+     an icon or label so state is never colour-alone. */
+  --status-good: #1a7f4b;
+  --status-warn: #a86a08;
+  --status-info: #2a6ea8;
+
+  /* Spacing rhythm. Section padding is fluid so it compresses on a phone
+     instead of eating the viewport. */
+  --space-section: clamp(3rem, 2rem + 5vw, 6rem);
+  --space-block: clamp(1.5rem, 1.1rem + 1.8vw, 2.5rem);
+  --space-gutter: clamp(1rem, 0.7rem + 1.4vw, 2rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 260ms;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2 · Direction: INTERFEROMETER — cool instrument panel
+   Optical-bench precision. Tightest spacing, hairline rules, square corners,
+   letter-spaced small-caps panel headers, condensed display face.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root,
+/* ═══════════════════════════════════════════════════════════════════════════
+   3 · Direction: BIT PLANE — steganography made structural
+   Content sits flush in hairline-delineated planes over a faint grid
+   substrate. No floating cards, no shadows. Editorial serif display against
+   technical structure. Amber signal.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root,
+:root[data-variant='bitplane'] {
+  --surface-0: #f7f7f4;
+  --surface-1: #fffffd;
+  --surface-2: #eeeee8;
+  --ink-1: #14170f;
+  --ink-2: #444a3a;
+  --ink-3: #74796a;
+  --signal: #a35f00;
+  --signal-ink: #ffffff;
+  --signal-wash: #f4ead8;
+  --rule: #dcdcd2;
+  --rule-strong: #b4b4a6;
+
+  --ds-radius: 0px;
+  --ds-radius-sm: 0px;
+  --rule-w: 1px;
+  --shadow: none;
+  --shadow-raised: none;
+
+  --font-display: 'Newsreader Variable', Georgia, serif;
+  --font-body: 'IBM Plex Sans Variable', system-ui, sans-serif;
+  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --display-weight: 400;
+  --display-tracking: -0.02em;
+  --display-leading: 1.02;
+  --label-tracking: 0.12em;
+  --label-weight: 600;
+  --density: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8 · Dark themes
+   Each direction's dark values are SELECTED for the dark ground, not inverted.
+   Declared twice: once for OS preference (guarded so an explicit light choice
+   wins) and once for the explicit toggle.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Bit Plane's dark palette. Declared twice on purpose: the media query covers
+   the OS preference, the [data-theme='dark'] block covers the explicit toggle,
+   and the :not([data-theme='light']) guard lets an explicit light choice beat an
+   OS set to dark. Values are selected for the dark ground, not inverted from the
+   light ones, and are machine-checked by scripts/validate-design-palettes.mjs. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --cat-1: #3987e5;
+    --cat-2: #d95926;
+    --cat-3: #199e70;
+    --cat-4: #c98500;
+    --status-good: #34a869;
+    --status-warn: #c98500;
+    --status-info: #4f97d8;
+
+    --surface-0: #11150f;
+    --surface-1: #191e16;
+    --surface-2: #222820;
+    --ink-1: #eceee4;
+    --ink-2: #b6bbaa;
+    --ink-3: #878d7c;
+    --signal: #e8a33d;
+    --signal-ink: #241800;
+    --signal-wash: #33280f;
+    --rule: #3b4331;
+    --rule-strong: #566047;
+    --substrate: #333b2c;
+  }
+}
+
+:root[data-theme='dark'] {
+  --cat-1: #3987e5;
+  --cat-2: #d95926;
+  --cat-3: #199e70;
+  --cat-4: #c98500;
+  --status-good: #34a869;
+  --status-warn: #c98500;
+  --status-info: #4f97d8;
+
+  --surface-0: #11150f;
+  --surface-1: #191e16;
+  --surface-2: #222820;
+  --ink-1: #eceee4;
+  --ink-2: #b6bbaa;
+  --ink-3: #878d7c;
+  --signal: #e8a33d;
+  --signal-ink: #241800;
+  --signal-wash: #33280f;
+  --rule: #3b4331;
+  --rule-strong: #566047;
+  --substrate: #333b2c;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9 · Base element styling, driven entirely by tokens
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  /* Explicit token background — a transparent body borrows the host ground. */
+  background-color: var(--surface-0);
+  color: var(--ink-1);
+  font-family: var(--font-body);
+  font-synthesis-weight: none;
+}
+
+/* Digits line up wherever they are compared: years, citation counts, grant
+   amounts, impact factors. The single cheapest change that makes a data-dense
+   page read as precise rather than approximate. */
+.tnum,
+table,
+time,
+[data-numeric] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Type roles ─────────────────────────────────────────────────────────── */
+
+.ds-display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+  text-wrap: balance;
+  color: var(--ink-1);
+}
+
+/* Uppercase eyebrow / panel header. Structural, not decorative: it names the
+   section it sits above. */
+.ds-label {
+  font-family: var(--font-label, var(--font-data));
+  font-weight: var(--label-weight);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.ds-data {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Running text held near 65 characters. */
+.ds-prose {
+  max-width: 65ch;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+/**
+ * Text sitting on top of a photograph.
+ *
+ * The one place in this system where colour correctly ignores the palette: the
+ * ground is an image, not a themed surface, so theme ink would put dark text on
+ * a dark photo in light mode. Light text over a scrim, in both themes.
+ *
+ * It must also come AFTER .ds-display in this file. Tailwind's `text-white`
+ * cannot do this job — these element classes load after Tailwind's utilities, so
+ * `.ds-display { color: var(--ink-1) }` wins at equal specificity and the
+ * caption renders dark-on-dark. That was measured, not guessed.
+ */
+.ds-on-media,
+.ds-on-media .ds-display {
+  color: #ffffff;
+}
+
+.ds-on-media-muted {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ── Surfaces ───────────────────────────────────────────────────────────── */
+
+/* A "plane": content sitting flush, delimited by a rule rather than floating on
+   a shadow. Directions that want raised cards set --shadow-raised. */
+.ds-plane {
+  background-color: var(--surface-1);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--ds-radius);
+  box-shadow: var(--shadow-raised);
+}
+
+.ds-inset {
+  background-color: var(--surface-2);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ds-rule {
+  border-color: var(--rule);
+}
+
+/* ── Focus ──────────────────────────────────────────────────────────────── */
+
+:where(a, button, [role='button'], input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: var(--ds-radius-sm);
+}
+
+/* ── Bit Plane's grid substrate ─────────────────────────────────────────
+   A pixel matrix referencing the least-significant-bit plane steganography
+   operates in. The one place the concept becomes literal.
+
+   Two corrections from the first attempt, both found by measuring rather than
+   looking. It was drawn in `--rule` on `--surface-0`, which is a contrast ratio
+   of 1.29:1 — painting correctly and completely invisible. Hence a dedicated
+   `--substrate` token stepped for the job.
+
+   And it was on `body`, where every opaque section covers it, so it could only
+   ever have shown in the gaps. It now sits on the masthead and dissolves
+   downward, which is the honest version of the idea: texture where the page
+   opens, gone before it becomes wallpaper. */
+:root[data-variant='bitplane'] {
+  --substrate: #d4d4c4;
+}
+
+/*
+ * The grid lives on a pseudo-element, NOT on #home itself.
+ *
+ * Putting the mask on the section masked its CONTENT as well as its background:
+ * the stat row, the citation chart and the four research tiles all faded toward
+ * transparent down the hero, which is why they measured at full opacity while
+ * rendering washed out. A mask applies to the element's entire rendered
+ * subtree — it cannot be scoped to the background.
+ *
+ * `isolation: isolate` keeps the z-index: -1 layer inside the section instead of
+ * dropping it behind the page background.
+ */
+:root[data-variant='bitplane'] #home {
+  position: relative;
+  isolation: isolate;
+}
+
+:root[data-variant='bitplane'] #home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(to right, var(--substrate) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--substrate) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: center top;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 88%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light'])[data-variant='bitplane'] {
+    --substrate: #333b2c;
+  }
+}
+:root[data-theme='dark'][data-variant='bitplane'] {
+  --substrate: #333b2c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-mid: 0ms;
+  }
+}

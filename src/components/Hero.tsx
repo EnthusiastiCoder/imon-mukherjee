@@ -1,301 +1,384 @@
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
-import { Image } from "lucide-react";
+import { useEffect, useState } from "react";
+import Img from "@/components/Img";
+import CitationChart, { type CitationYear } from "@/components/CitationChart";
+import Marquee from "@/components/Marquee";
+import { useCountUp } from "@/hooks/useCountUp";
+import { totalFundingLakhs } from "@/data/funding";
+
+/**
+ * Venues he actually publishes in, for the marquee band.
+ *
+ * Real content rather than decoration: this list is precisely what a
+ * collaborator or a prospective doctoral student is trying to establish, and a
+ * band carries it better than a paragraph of comma-separated names.
+ */
+const venues = [
+	"IEEE Transactions on Computational Social Systems",
+	"ACM Transactions on Information Systems",
+	"IEEE Transactions on Consumer Electronics",
+	"Knowledge-Based Systems",
+	"Engineering Applications of Artificial Intelligence",
+	"IEEE Transactions on Artificial Intelligence",
+	"Journal of Information Security and Applications",
+	"IEEE Transactions on AgriFood Electronics",
+	"ACM/IEEE Joint Conference on Digital Libraries",
+	"Findings of the ACL: NAACL",
+	"ESWC",
+];
 
 interface ScholarMetrics {
-	citations: {
-		total: number;
-		since2020: number;
-	};
-	hIndex: {
-		total: number;
-		since2020: number;
-	};
-	i10Index: {
-		total: number;
-		since2020: number;
-	};
-	citationsByYear: Array<{
-		year: number;
-		count: number;
-	}>;
+	citations: { total: number; since2020: number };
+	hIndex: { total: number; since2020: number };
+	i10Index: { total: number; since2020: number };
+	citationsByYear: CitationYear[];
 	profileUrl: string;
 }
 
-const carouselImages = [
+/**
+ * Research areas.
+ *
+ * Previously a 4-second auto-rotating carousel showing one at a time. Now all
+ * four are visible at once: a visitor deciding whether to email him about a PhD
+ * should not have to wait 12 seconds to learn what he works on, and a slideshow
+ * hides three quarters of the answer at any moment.
+ */
+const researchAreas = [
 	{
-		// url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=560&fit=crop",
-		url: "images/quantum-computer.webp",
-		alt: "Quantum Computing Circuit",
-		title: "Quantum Computing Research",
+		src: "images/steganography.jpg",
+		alt: "An illuminated circuit board schematic",
+		title: "Steganography",
+		note: "Embedding data where no data appears to be",
 	},
 	{
-		// url: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=1200&h=560&fit=crop",
-		url: "images/cryptography.jpg",
-		alt: "Digital Network",
-		title: "Advanced Cryptography",
+		src: "images/cryptography.jpg",
+		alt: "A padlock resting on a backlit keyboard",
+		title: "Steganalysis",
+		note: "Detecting what embedding leaves behind",
 	},
 	{
-		// url: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=1200&h=560&fit=crop",
-		url: "images/QML.jpg",
-		alt: "Machine Learning Code",
+		src: "images/quantum-computer.jpg",
+		alt: "Handwritten physics and mathematics equations on a blackboard",
+		title: "Quantum Computing",
+		note: "Post-quantum ciphers and quantum attacks",
+	},
+	{
+		src: "images/QML.jpg",
+		alt: "Syntax-highlighted source code on a display",
 		title: "Quantum Machine Learning",
-	},
-	{
-		// url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=560&fit=crop",
-		url: "images/steganography.jpg",
-		alt: "Computer Technology",
-		title: "Steganography and Steganalysis",
+		note: "Learning on quantum representations",
 	},
 ];
 
-export default function Hero() {
-	const [currentText, setCurrentText] = useState(0);
-	const [displayText, setDisplayText] = useState("");
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [currentSlide, setCurrentSlide] = useState(0);
-	const [scholarMetrics, setScholarMetrics] = useState<ScholarMetrics | null>(null);
-	const [loading, setLoading] = useState(true);
-	
-	const titles = [
-		"Assistant Professor (Grade I) | Computer Science and Engineering",
-		"IIIT Kalyani | An Institute of National Importance under Govt. of India",
-		"Researcher | Steganography, Steganalysis & Quantum Computing"		
-	];
+/** Metadata lines. Replaces a character-by-character typing animation — a
+ *  gimmick that made the same three facts take nine seconds to read and left a
+ *  fixed-height box that clipped when the strings wrapped on a phone. */
+const affiliation = [
+	"Assistant Professor (Grade I), Computer Science & Engineering",
+	"Indian Institute of Information Technology, Kalyani",
+	"An Institute of National Importance under the Govt. of India",
+];
 
-	const maxCitations = useMemo(() => {
-		if (!scholarMetrics?.citationsByYear?.length) return 1;
-		return Math.max(...scholarMetrics.citationsByYear.map(item => item.count));
-	}, [scholarMetrics]);
-
-	useEffect(() => {
-		async function fetchData() {
-			try {
-				const response = await fetch('/api/scholar');
-				const data = await response.json();
-				setScholarMetrics(data);
-			} catch (error) {
-				console.error('Error fetching scholar data:', error);
-			} finally {
-				setLoading(false);
-			}
-		}
-		fetchData();
-	}, []);
-
-	// Auto-play carousel
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-		}, 4000);
-
-		return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-		const currentTitle = titles[currentText];
-		const typingSpeed = isDeleting ? 50 : 100;
-		const deletingSpeed = 50;
-
-		if (!isDeleting && displayText === currentTitle) {
-			// Wait before starting to delete
-			setTimeout(() => setIsDeleting(true), 2000);
-			return;
-		}
-
-		if (isDeleting && displayText === "") {
-			setIsDeleting(false);
-			setCurrentText((prev) => (prev + 1) % titles.length);
-			return;
-		}
-
-		const timer = setTimeout(() => {
-			if (isDeleting) {
-				setDisplayText(currentTitle.slice(0, displayText.length - 1));
-			} else {
-				setDisplayText(currentTitle.slice(0, displayText.length + 1));
-			}
-		}, isDeleting ? deletingSpeed : typingSpeed);
-
-		return () => clearTimeout(timer);
-	}, [displayText, isDeleting, currentText, titles]);
-
-	const scrollToSection = (sectionId: string) => {
-		const element = document.getElementById(sectionId);
-		element?.scrollIntoView({ behavior: "smooth" });
-	};
+/**
+ * One cell of the instrument readout.
+ *
+ * `count` animates from zero when the row scrolls into view; `value` is for
+ * anything that is not a number to count. The counted value always exists in the
+ * DOM regardless of whether the animation runs — see useCountUp.
+ */
+function StatCell({
+	label,
+	count,
+	value,
+	sub,
+	format,
+}: {
+	label: string;
+	count?: number | null;
+	value?: string;
+	sub?: string;
+	format?: (n: number) => string;
+}) {
+	const { ref, display } = useCountUp(count ?? null);
+	const shown =
+		count !== undefined
+			? display === null
+				? "—"
+				: (format ?? ((n: number) => n.toLocaleString("en-IN")))(display)
+			: (value ?? "—");
 
 	return (
-		<section id="home" className="pt-20 pb-16 px-6">
-			<div className="container mx-auto">
-				{/* Top row: Animated profile image on the left, text on the right */}
-				<div className="flex flex-col lg:flex-row items-center gap-12 relative">
-					{/* Profile Image (animated with jumping effect) */}
-					<motion.img
-						src="/images/profile_image.jpg"
-						alt="Profile"
-						className="w-60 h-60 rounded-full object-cover shadow-xl"
-						initial={{ opacity: 0, x: -50 }}
-						animate={{ 
-							opacity: 1, 
-							x: 0,
-							y: [0, -10, 0]
-						}}
-						transition={{ 
-							duration: 0.6,
-							y: {
-								duration: 2,
-								repeat: Infinity,
-								ease: "easeInOut"
-							}
-						}}
-					/>
+		<div className="flex flex-col gap-1 px-[var(--space-gutter)] py-4 first:pl-0">
+			<span className="ds-label">{label}</span>
+			<span
+				ref={ref as React.Ref<HTMLSpanElement>}
+				className="ds-countup ds-data text-2xl leading-none text-ink-1 sm:text-3xl"
+				style={{ fontWeight: 500 }}
+			>
+				{shown}
+			</span>
+			{sub && <span className="text-[11px] text-ink-3">{sub}</span>}
+		</div>
+	);
+}
 
-					{/* Headings and CTAs */}
-					<div className="flex-1 text-center lg:text-left">
-						<div className="mb-6">
-							<h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-4 leading-tight">
-								Dr. Imon Mukherjee
-							</h1>
-							<div className="text-xl mb-6 h-8 flex items-center justify-center lg:justify-start">
-								<span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold">
-									{displayText}
-								</span>
-								<span className="animate-pulse text-purple-600 font-bold">|</span>
-							</div>
-							<p className="text-lg text-slate-700 mb-8 max-w-2xl mx-auto lg:mx-0">
-								Honesty, Eternity and Love.
-							</p>
+/**
+ * Counts come from the page that owns the supervision data rather than being
+ * written here. The hero previously hard-coded "7 in progress" and "Supervising
+ * seven doctoral candidates" while the array held six — the same drift as the
+ * hard-coded funding total. Numbers quoted in copy have to be derived from the
+ * list they summarise or they eventually contradict it.
+ */
+export default function Hero({
+	doctoratesAwarded,
+	doctoratesOngoing,
+}: {
+	doctoratesAwarded: number;
+	doctoratesOngoing: number;
+}) {
+	const [metrics, setMetrics] = useState<ScholarMetrics | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		let live = true;
+		(async () => {
+			try {
+				const res = await fetch("/api/scholar");
+				const data = await res.json();
+				if (live) setMetrics(data);
+			} catch (err) {
+				console.error("Error fetching scholar data:", err);
+			} finally {
+				if (live) setLoading(false);
+			}
+		})();
+		return () => {
+			live = false;
+		};
+	}, []);
+
+	return (
+		<section id="home" className="relative pt-24">
+			<div className="container">
+				{/* ── Masthead ─────────────────────────────────────────────────────
+				    Motion comes from the shared system in styles/motion.css, driven by
+				    data-motion. `ds-enter-group` cascades its direct children on load;
+				    `ds-reveal` plays on scroll. Both are written so the settled state
+				    is what plain CSS produces, which is why no wrapper here sets an
+				    initial hidden state of its own. */}
+				<div className="ds-enter-group grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
+					<div>
+						<p className="ds-label">
+							IIIT Kalyani &middot; Dept. of Computer Science &amp; Engineering
+						</p>
+
+						<h1 className="ds-display mt-3 text-[clamp(2.5rem,1.6rem+4.2vw,4.5rem)]">
+							Imon Mukherjee
+						</h1>
+
+						{/* Affiliation as structured metadata, hairline-delimited. */}
+						<div className="mt-5 max-w-[52ch] border-l-2 border-signal pl-4">
+							{affiliation.map((line) => (
+								<p key={line} className="text-sm leading-relaxed text-ink-2 sm:text-[0.9375rem]">
+									{line}
+								</p>
+							))}
 						</div>
-						<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-							<Button 
-								onClick={() => scrollToSection('research')} 
-								className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg shadow-lg"
+
+						<p className="ds-prose mt-6 text-base sm:text-lg">
+							Twenty years of research on hiding information inside ordinary files
+							&mdash; and on finding it again. Lately, on what quantum machines do
+							to both problems.
+						</p>
+
+						<div className="mt-7 flex flex-wrap items-center gap-3">
+							<Link
+								to="/publications"
+								className="inline-flex min-h-[44px] items-center bg-signal px-5 text-sm font-medium text-signal-ink transition-opacity hover:opacity-90"
+								style={{ borderRadius: "var(--ds-radius)" }}
 							>
-								Explore Research
-							</Button>
-							<Link to="/publications">
-								<Button 
-									variant="outline" 
-									className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg"
-								>
-									View Publications
-								</Button>
+								Publications
+							</Link>
+							<a
+								href="#research"
+								className="inline-flex min-h-[44px] items-center border border-rule-strong px-5 text-sm font-medium text-ink-1 transition-colors hover:bg-surface-2"
+								style={{ borderRadius: "var(--ds-radius)" }}
+							>
+								Research
+							</a>
+							<Link
+								to="/academic-supervision"
+								className="inline-flex min-h-[44px] items-center px-1 text-sm font-medium text-signal underline-offset-4 hover:underline"
+							>
+								Supervision &rarr;
 							</Link>
 						</div>
 					</div>
 
-					{loading && (
-						<div className="hidden lg:block lg:absolute lg:top-0 lg:-right-20">
-							<div className="p-4 bg-white/90 border border-slate-200 rounded-2xl shadow-lg w-[340px] h-[280px] flex items-center justify-center">
-								<div className="text-slate-500">Loading scholar data...</div>
-							</div>
-						</div>
-					)}
-
-					{scholarMetrics && (
-						
-						<div className="hidden lg:block lg:absolute lg:top-0 lg:-right-20">
-							<div className="p-4 bg-white/90 border border-slate-200 rounded-2xl shadow-lg w-[340px]">
-								<div className="flex items-center gap-3 mb-4">
-									<img src="https://scholar.google.com/favicon.ico" alt="GS" className="w-5 h-5" />
-									<div className="flex-1">
-										<div className="text-sm font-medium text-slate-700">Google Scholar</div>
-										<a href={scholarMetrics.profileUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View profile</a>
-									</div>
-									<div className="text-right">
-										<div className="text-sm text-slate-500">Citations</div>
-										<div className="text-lg font-semibold text-slate-800">{scholarMetrics.citations.total}</div>
-									</div>
-								</div>
-								
-								<div className="mb-4">
-									<div className="flex justify-between text-sm mb-2">
-										<div className="space-x-4">
-											<span className="text-slate-600">h-index: <span className="font-semibold text-slate-800">{scholarMetrics.hIndex.total}</span></span>
-											<span className="text-slate-600">i10-index: <span className="font-semibold text-slate-800">{scholarMetrics.i10Index.total}</span></span>
-										</div>
-									</div>
-								</div>
-
-								<div className="relative h-[140px] w-full flex">
-									<div className="w-10 flex flex-col-reverse justify-between text-xs text-slate-500 pr-2">
-										<span>0</span>
-										<span>100</span>
-										<span>200</span>
-										<span>300</span>
-									</div>
-									<div className="flex-1 relative">
-										<div className="absolute bottom-0 left-0 right-0 flex justify-between gap-1">
-										{scholarMetrics.citationsByYear.map((item, index) => {
-											const blueShades = [
-												'bg-blue-100 hover:bg-blue-200',
-												'bg-blue-200 hover:bg-blue-300',
-												'bg-blue-300 hover:bg-blue-400',
-												'bg-blue-400 hover:bg-blue-500',
-												'bg-blue-500 hover:bg-blue-600',
-												'bg-blue-600 hover:bg-blue-700',
-												'bg-blue-700 hover:bg-blue-800',
-												'bg-blue-800 hover:bg-blue-900'
-											];
-											return (
-												<div key={item.year} className="flex-1 flex flex-col-reverse items-center" style={{ height: '120px' }}>
-													<div className="text-xs text-slate-600 text-center mb-1">{item.year}</div>
-													<div 
-														className={`w-full ${blueShades[index % blueShades.length]} transition-colors rounded-t cursor-pointer relative group`}
-														style={{ height: `${Math.min((item.count / 300) * 100, 100)}%` }}
-														title={`${item.count} citations`}
-													>
-														<div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-															{item.count}
-														</div>
-													</div>
-												</div>
-											);
-										})}
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
+					{/* Portrait. A photograph, not a floating circle bouncing on an
+					    infinite loop. `ds-parallax` gives it a slow drift against the
+					    scroll at the higher motion levels and nothing at the lower ones,
+					    since --m-parallax is 0 there. */}
+					<div className="order-first lg:order-none">
+						<Img
+							src="profile_image.jpg"
+							alt="Dr. Imon Mukherjee"
+							priority
+							sizes="(min-width: 1024px) 20rem, (min-width: 640px) 16rem, 12rem"
+							wrapperClassName="w-40 sm:w-56 lg:w-full overflow-hidden"
+							className="ds-parallax w-full object-cover ds-plane"
+							style={{ aspectRatio: "4 / 5" }}
+						/>
+					</div>
 				</div>
 
-				<div className="mt-12">
-					<div className="w-full max-w-6xl mx-auto">
-						<div className="relative">
-							<motion.img 
-								key={currentSlide}
-								src={carouselImages[currentSlide].url}
-								alt={carouselImages[currentSlide].alt}
-								className="w-full h-[28rem] object-cover rounded-3xl shadow-2xl opacity-10"
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								transition={{ duration: 0.5 }}
-							/>
-							<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 rounded-b-3xl">
-								<h3 className="text-white font-semibold text-lg">{carouselImages[currentSlide].title}</h3>
-							</div>
-							
-							{/* Navigation dots */}
-							<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-								{carouselImages.map((_, index) => (
-									<button
-										key={index}
-										onClick={() => setCurrentSlide(index)}
-										className={`w-3 h-3 rounded-full transition-colors ${
-											index === currentSlide ? 'bg-white' : 'bg-white/50'
-										}`}
-									/>
-								))}
-							</div>
+				{/* ── Instrument readout ───────────────────────────────────────────
+				    Hero numbers before any chart: these four are what a collaborator
+				    or funding body scans for first. Each counts up from zero when the
+				    row first scrolls into view. */}
+				<div className="ds-reveal mt-[var(--space-block)] grid grid-cols-2 border-y border-rule sm:grid-cols-4 [&>*+*]:border-l [&>*+*]:border-rule [&>:nth-child(3)]:border-l-0 sm:[&>:nth-child(3)]:border-l">
+					<StatCell label="Citations" count={metrics?.citations.total ?? null} sub="Google Scholar" />
+					<StatCell label="h-index" count={metrics?.hIndex.total ?? null} />
+					<StatCell label="i10-index" count={metrics?.i10Index.total ?? null} />
+					<StatCell
+						label="PhD awarded"
+						count={doctoratesAwarded}
+						sub={`${doctoratesOngoing} in progress`}
+					/>
+				</div>
+
+				{/* ── Citations over time ──────────────────────────────────────── */}
+				<div className="ds-reveal mt-[var(--space-block)] grid gap-[var(--space-block)] lg:grid-cols-[minmax(0,1fr)_20rem]">
+					<div className="ds-plane p-5">
+						<div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+							<h2 className="ds-label">Citations by year</h2>
+							{metrics && (
+								<a
+									href={metrics.profileUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-xs text-signal underline-offset-4 hover:underline"
+								>
+									Google Scholar profile &rarr;
+								</a>
+							)}
 						</div>
+						{loading ? (
+							<div className="flex h-36 items-center text-sm text-ink-3">Loading&hellip;</div>
+						) : metrics?.citationsByYear?.length ? (
+							<CitationChart data={metrics.citationsByYear} />
+						) : (
+							<div className="flex h-36 items-center text-sm text-ink-3">
+								Citation data unavailable.
+							</div>
+						)}
+					</div>
+
+					<div className="ds-plane flex flex-col justify-center gap-3 p-5">
+						<p className="ds-label">Currently</p>
+						<p className="text-sm leading-relaxed text-ink-2">
+							Supervising {doctoratesOngoing} doctoral candidates across steganography,
+							quantum machine learning and post-quantum cryptography.
+						</p>
+						{/* Was ₹87.86L, which is the sum of only the first two grants.
+						    The four listed on this page total ₹105.89L. The figure is
+						    now derived in Index.tsx from the same array the Funded
+						    Projects section renders, so the two cannot disagree. */}
+						<p className="ds-data text-sm text-ink-1">
+							&#8377;{totalFundingLakhs.toFixed(2)}L{' '}
+							<span className="text-ink-3">in funded projects, as PI</span>
+						</p>
+						<p className="text-[11px] text-ink-3">DRDO &middot; SERB &middot; MeitY</p>
+					</div>
+				</div>
+
+			</div>
+
+			{/* ── Published in ──────────────────────────────────────────────────
+			    Full-bleed, outside the container, so the band runs edge to edge —
+			    a contained marquee reads as a widget rather than as a masthead. */}
+			<div className="mt-[var(--space-block)] border-y border-rule bg-surface-1 py-3">
+				<p className="sr-only">Selected publication venues</p>
+				<Marquee speed={46} className="ds-data text-[13px] text-ink-2">
+					{venues.map((v) => (
+						<span key={v} className="whitespace-nowrap">
+							{v}
+						</span>
+					))}
+				</Marquee>
+			</div>
+
+			<div className="container">
+				{/* ── Research areas ──────────────────────────────────────────── */}
+				<div id="research" className="scroll-mt-24 pt-[var(--space-section)]">
+					<h2 className="ds-label">Research</h2>
+					{/* ds-reveal-group staggers the four tiles by shifting each one's
+					    scroll range rather than by delay, which is meaningless on a
+					    scroll timeline. Where scroll-driven animation is unsupported the
+					    whole rule drops out and the tiles are simply already in place —
+					    an earlier version faded these in from opacity 0 through an
+					    observer, which made them vanish entirely when it did not fire. */}
+					<div className="ds-reveal-group mt-4 grid gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
+						{researchAreas.map((area) => (
+							// figure/figcaption rather than a div: the text genuinely is a
+							// caption for the image it sits on.
+							<figure
+								key={area.title}
+								className="group relative ds-plane overflow-hidden"
+							>
+								<Img
+									src={area.src}
+									alt={area.alt}
+									sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+									// Portrait from sm up, landscape on a single-column phone.
+									// At four across a tile is ~300px wide, so 16:10 would be
+									// 187px tall and the caption would eat over half of it; 4:5
+									// gives the photograph room. On mobile the tile is full
+									// width, so landscape is the right shape there.
+									className="aspect-[16/10] w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.05] sm:aspect-[4/5]"
+								/>
+
+								{/*
+									The caption returns to the image, which is what gave the old
+									hero its weight.
+
+									This scrim and its text stay dark-and-light in BOTH themes,
+									and that is deliberate rather than an oversight: the ground
+									here is a photograph, not a themed surface, so taking these
+									colours from the theme tokens would put dark text on a dark
+									photo in light mode. It is the one place in this design where
+									a colour correctly ignores the palette.
+
+									The gradient covers only the lower part of the frame so the
+									photograph is not flattened, and the title carries a text
+									shadow because these are documentary photos with
+									unpredictable bright areas near the bottom edge.
+								*/}
+								<figcaption
+									className="ds-on-media pointer-events-none absolute inset-x-0 bottom-0 p-4 pt-10"
+									style={{
+										background:
+											"linear-gradient(to top, rgba(8,8,10,.88) 0%, rgba(8,8,10,.62) 45%, rgba(8,8,10,0) 100%)",
+									}}
+								>
+									<h3
+										className="ds-display text-lg"
+										style={{ letterSpacing: "-0.01em", textShadow: "0 1px 3px rgba(0,0,0,.5)" }}
+									>
+										{area.title}
+									</h3>
+									<p
+										className="ds-on-media-muted mt-1 text-[13px] leading-snug"
+										style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}
+									>
+										{area.note}
+									</p>
+								</figcaption>
+							</figure>
+						))}
 					</div>
 				</div>
 			</div>
 		</section>
 	);
-} 
+}

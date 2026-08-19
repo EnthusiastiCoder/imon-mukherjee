@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, DollarSign, Users, Building, ExternalLink, Award } from "lucide-react";
-import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
 import { useState } from "react";
 
 const FundedProjects = () => {
@@ -69,11 +69,11 @@ const FundedProjects = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Completed":
-        return "bg-green-500 text-white";
+        return "bg-status-good text-white";
       case "Ongoing":
-        return "bg-blue-500 text-white";
+        return "bg-cat-1 text-white";
       case "Proposed":
-        return "bg-yellow-500 text-white";
+        return "bg-cat-4 text-white";
       default:
         return "bg-gray-500 text-white";
     }
@@ -81,61 +81,51 @@ const FundedProjects = () => {
 
   const getFundingColor = (amount: string) => {
     const value = parseFloat(amount.replace('L', ''));
-    if (value >= 40) return "text-green-600";
-    if (value >= 20) return "text-blue-600";
-    if (value >= 10) return "text-purple-600";
-    return "text-orange-600";
+    if (value >= 40) return "text-status-good";
+    if (value >= 20) return "text-signal";
+    if (value >= 10) return "text-signal";
+    return "text-status-warn";
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-              ← Back to Portfolio
-            </Link>
-            <h1 className="text-xl font-bold text-slate-800">Funded Projects</h1>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen">
+      <PageHeader title="Funded Projects" />
 
       {/* Header */}
-      <section className="pt-24 pb-16 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+      <section className="pt-24 pb-10 sm:pb-16">
+        <div className="container text-center">
+          <h1 className="text-display-lg font-bold ds-display mb-6">
             Funded Research Projects
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-ink-2 max-w-3xl mx-auto mb-8">
             Comprehensive portfolio of research projects funded by prestigious government agencies 
             and organizations, demonstrating Dr. Imon Mukherjee's leadership in cutting-edge research
           </p>
           
           {/* Summary Cards */}
-          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-l-blue-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{fundedProjects.length}</div>
-                <div className="text-slate-600">Total Projects</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
+            <Card className="bg-surface-2 border-l-4 border-l-blue-600">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-signal mb-2">{fundedProjects.length}</div>
+                <div className="text-sm sm:text-base text-ink-2">Total Projects</div>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-r from-green-50 to-teal-50 border-l-4 border-l-green-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">₹{totalFunding.toFixed(2)}L</div>
-                <div className="text-slate-600">Total Funding</div>
+            <Card className="bg-surface-2 border-l-4 border-l-green-600">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-status-good mb-2">₹{totalFunding.toFixed(2)}L</div>
+                <div className="text-sm sm:text-base text-ink-2">Total Funding</div>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-l-purple-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">{fundedProjects.filter(p => p.status === "Ongoing").length}</div>
-                <div className="text-slate-600">Active Projects</div>
+            <Card className="bg-surface-2 border-l-4 border-l-signal">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-signal mb-2">{fundedProjects.filter(p => p.status === "Ongoing").length}</div>
+                <div className="text-sm sm:text-base text-ink-2">Active Projects</div>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-l-orange-600">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-orange-600 mb-2">{fundedProjects.filter(p => p.status === "Completed").length}</div>
-                <div className="text-slate-600">Completed</div>
+            <Card className="bg-surface-2 border-l-4 border-l-signal">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-status-warn mb-2">{fundedProjects.filter(p => p.status === "Completed").length}</div>
+                <div className="text-sm sm:text-base text-ink-2">Completed</div>
               </CardContent>
             </Card>
           </div>
@@ -143,23 +133,23 @@ const FundedProjects = () => {
       </section>
 
       {/* Project Categories */}
-      <section className="px-6 pb-16">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">Projects by Category</h2>
+      <section className="pb-16">
+        <div className="container">
+          <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Projects by Category</h2>
           
           {Object.entries(projectCategories).map(([category, projects]) => (
             projects.length > 0 && (
               <div key={category} className="mb-12">
-                <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                  <Award className="text-blue-600" size={24} />
+                <h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
+                  <Award className="text-signal" size={24} />
                   {category}
                 </h3>
                 <div className="grid md:grid-cols-2 gap-8">
                   {projects.map((project, index) => (
-                    <Card key={index} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white/80 backdrop-blur-sm">
+                    <Card key={index} className="transition-colors ds-plane">
                       <CardHeader>
                         <div className="flex justify-between items-start gap-4">
-                          <CardTitle className="text-slate-800 text-lg leading-tight">{project.title}</CardTitle>
+                          <CardTitle className="text-ink-1 text-lg leading-tight">{project.title}</CardTitle>
                           <Badge className={getStatusColor(project.status)}>
                             {project.status}
                           </Badge>
@@ -168,15 +158,15 @@ const FundedProjects = () => {
                       <CardContent className="space-y-4">
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
-                            <Building size={16} className="text-blue-600" />
-                            <Badge variant="outline" className="bg-blue-50">
+                            <Building size={16} className="text-signal" />
+                            <Badge variant="outline" className="bg-surface-2">
                               {project.funding}
                             </Badge>
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <Users size={16} className="text-purple-600" />
-                            <div className="text-sm text-slate-600">
+                            <Users size={16} className="text-signal" />
+                            <div className="text-sm text-ink-2">
                               <span className="font-medium">Investigators:</span>
                               <ul className="mt-1 space-y-1">
                                 {project.investigators.map((investigator, idx) => (
@@ -187,26 +177,26 @@ const FundedProjects = () => {
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <Calendar size={16} className="text-green-600" />
-                            <span className="text-slate-600 text-sm">{project.duration}</span>
+                            <Calendar size={16} className="text-status-good" />
+                            <span className="text-ink-2 text-sm">{project.duration}</span>
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <DollarSign size={16} className="text-orange-600" />
+                            <DollarSign size={16} className="text-status-warn" />
                             <span className={`font-semibold text-lg ${getFundingColor(project.totalCost)}`}>
                               ₹{project.totalCost}
                             </span>
                           </div>
                         </div>
                         
-                        <div className="pt-3 border-t border-slate-200">
-                          <p className="text-slate-700 text-sm mb-3">{project.description}</p>
+                        <div className="pt-3 border-t border-rule">
+                          <p className="text-ink-1 text-sm mb-3">{project.description}</p>
                           
                           <div className="mb-3">
-                            <p className="text-slate-600 text-sm font-medium mb-2">Key Outcomes:</p>
+                            <p className="text-ink-2 text-sm font-medium mb-2">Key Outcomes:</p>
                             <div className="flex flex-wrap gap-1">
                               {project.outcomes.map((outcome, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs bg-slate-50">
+                                <Badge key={idx} variant="outline" className="text-xs bg-surface-2">
                                   {outcome}
                                 </Badge>
                               ))}
@@ -214,8 +204,8 @@ const FundedProjects = () => {
                           </div>
                           
                           {project.note && (
-                            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                              <p className="text-yellow-800 text-xs italic">{project.note}</p>
+                            <div className="p-3 bg-surface-2 border border-rule rounded-lg">
+                              <p className="text-status-warn text-xs italic">{project.note}</p>
                             </div>
                           )}
                         </div>
@@ -224,7 +214,7 @@ const FundedProjects = () => {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="hover:bg-blue-50"
+                            className="hover:bg-surface-2"
                             onClick={() => {
                               setSelectedProject(project);
                               setIsModalOpen(true);
@@ -245,51 +235,51 @@ const FundedProjects = () => {
       </section>
 
       {/* Funding Agencies */}
-      <section className="px-6 pb-16 bg-white">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">Funding Agencies</h2>
-          <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building size={32} className="text-blue-600" />
+      <section className="pb-16 bg-surface-1">
+        <div className="container">
+          <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Funding Agencies</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto">
+            <Card className="text-center transition-colors">
+              <CardContent className="p-4 sm:p-6">
+                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Building size={32} className="text-signal" />
                 </div>
-                <h3 className="font-semibold text-slate-800 mb-2">DRDO</h3>
-                <p className="text-sm text-slate-600">Defence Research & Development Organisation</p>
-                <p className="text-lg font-bold text-blue-600 mt-2">₹42.25L</p>
+                <h3 className="font-semibold text-ink-1 mb-2">DRDO</h3>
+                <p className="text-sm text-ink-2">Defence Research & Development Organisation</p>
+                <p className="text-lg font-bold text-signal mt-2">₹42.25L</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award size={32} className="text-green-600" />
+            <Card className="text-center transition-colors">
+              <CardContent className="p-4 sm:p-6">
+                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Award size={32} className="text-status-good" />
                 </div>
-                <h3 className="font-semibold text-slate-800 mb-2">SERB</h3>
-                <p className="text-sm text-slate-600">Science & Engineering Research Board</p>
-                <p className="text-lg font-bold text-green-600 mt-2">₹45.61L</p>
+                <h3 className="font-semibold text-ink-1 mb-2">SERB</h3>
+                <p className="text-sm text-ink-2">Science & Engineering Research Board</p>
+                <p className="text-lg font-bold text-status-good mt-2">₹45.61L</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users size={32} className="text-purple-600" />
+            <Card className="text-center transition-colors">
+              <CardContent className="p-4 sm:p-6">
+                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users size={32} className="text-signal" />
                 </div>
-                <h3 className="font-semibold text-slate-800 mb-2">MeitY</h3>
-                <p className="text-sm text-slate-600">Ministry of Electronics & IT</p>
-                <p className="text-lg font-bold text-purple-600 mt-2">₹16.18L</p>
+                <h3 className="font-semibold text-ink-1 mb-2">MeitY</h3>
+                <p className="text-sm text-ink-2">Ministry of Electronics & IT</p>
+                <p className="text-lg font-bold text-signal mt-2">₹16.18L</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar size={32} className="text-orange-600" />
+            <Card className="text-center transition-colors">
+              <CardContent className="p-4 sm:p-6">
+                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar size={32} className="text-status-warn" />
                 </div>
-                <h3 className="font-semibold text-slate-800 mb-2">DST-WB</h3>
-                <p className="text-sm text-slate-600">DST, Govt. of West Bengal</p>
-                <p className="text-lg font-bold text-orange-600 mt-2">₹1.85L</p>
+                <h3 className="font-semibold text-ink-1 mb-2">DST-WB</h3>
+                <p className="text-sm text-ink-2">DST, Govt. of West Bengal</p>
+                <p className="text-lg font-bold text-status-warn mt-2">₹1.85L</p>
               </CardContent>
             </Card>
           </div>
@@ -297,12 +287,12 @@ const FundedProjects = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
-          <p className="text-slate-300">
+      <footer className="bg-surface-2 text-ink-2 border-t border-rule py-8">
+        <div className="container text-center">
+          <p className="text-ink-3">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
-          <p className="text-slate-400 text-sm mt-2">
+          <p className="text-ink-3 text-sm mt-2">
             Distinguished Professor, Department of CSE, IIIT Kalyani
           </p>
         </div>
