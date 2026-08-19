@@ -346,16 +346,16 @@ const AcademicSupervision = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen">
       <PageHeader title="Academic Supervision" />
 
       {/* Header */}
       <section className="pt-24 pb-10 sm:pb-16">
         <div className="container text-center">
-          <h1 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-6">
+          <h1 className="text-display-lg font-bold ds-display mb-6">
             Academic Supervision
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-ink-2 max-w-3xl mx-auto">
             Comprehensive record of Dr. Imon Mukherjee's academic supervision across
             Ph.D., M.Tech., MS/M.Sc., and B.Tech. levels
           </p>
@@ -393,26 +393,26 @@ const AcademicSupervision = () => {
             <TabsContent value="phd" className="space-y-8">
               {/* Awarded Ph.D.s */}
               <div>
-                <h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                  <Award className="text-green-600" size={24} />
+                <h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
+                  <Award className="text-status-good" size={24} />
                   Awarded Ph.D.s ({phdAwarded.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   {phdAwarded.map((student, index) => (
-                    <Card key={index} className="bg-gradient-to-r from-green-50 to-teal-50 hover:shadow-lg transition-shadow duration-300">
+                    <Card key={index} className="bg-surface-2 transition-colors">
                       <CardContent className="p-4 sm:p-6">
-                        <h4 className="font-semibold text-slate-800 text-lg mb-2">{student.name}</h4>
-                        <p className="text-slate-600 text-sm mb-3 italic">{student.thesis}</p>
+                        <h4 className="font-semibold text-ink-1 text-lg mb-2">{student.name}</h4>
+                        <p className="text-ink-2 text-sm mb-3 italic">{student.thesis}</p>
                         <div className="flex items-center gap-2 mb-3">
-                          <Calendar size={16} className="text-green-600" />
-                          <span className="text-green-600 font-medium">{student.year}</span>
+                          <Calendar size={16} className="text-status-good" />
+                          <span className="text-status-good font-medium">{student.year}</span>
                         </div>
                         <div className="flex items-center gap-2 mb-2">
-                          <MapPin size={16} className="text-slate-600" />
-                          <span className="text-slate-700 font-medium">{student.position}</span>
+                          <MapPin size={16} className="text-ink-2" />
+                          <span className="text-ink-1 font-medium">{student.position}</span>
                         </div>
                         {student.coSupervisor && (
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-ink-2">
                             <span className="font-medium">Co-supervisor:</span> {student.coSupervisor}
                           </p>
                         )}
@@ -424,36 +424,36 @@ const AcademicSupervision = () => {
 
               {/* Ongoing Ph.D.s */}
               <div>
-                <h3 className="text-display-sm font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                  <BookOpen className="text-blue-600" size={24} />
+                <h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
+                  <BookOpen className="text-signal" size={24} />
                   Ongoing Ph.D.s ({phdOngoing.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   {phdOngoing.map((student, index) => (
-                    <Card key={index} className="bg-gradient-to-r from-blue-50 to-purple-50 hover:shadow-lg transition-shadow duration-300">
+                    <Card key={index} className="bg-surface-2 transition-colors">
                       <CardContent className="p-4 sm:p-6">
-                        <h4 className="font-semibold text-slate-800 text-lg mb-2">{student.name}</h4>
+                        <h4 className="font-semibold text-ink-1 text-lg mb-2">{student.name}</h4>
                         <div className="space-y-2 mb-3">
                           <div className="flex items-center gap-2">
-                            <Calendar size={16} className="text-blue-600" />
-                            <span className="text-slate-600 text-sm">
+                            <Calendar size={16} className="text-signal" />
+                            <span className="text-ink-2 text-sm">
                               <span className="font-medium">Enrolled:</span> {student.enrollment}
                             </span>
                           </div>
                           {student.registration && (
                             <div className="flex items-center gap-2">
-                              <Calendar size={16} className="text-purple-600" />
-                              <span className="text-slate-600 text-sm">
+                              <Calendar size={16} className="text-signal" />
+                              <span className="text-ink-2 text-sm">
                                 <span className="font-medium">Registered:</span> {student.registration}
                               </span>
                             </div>
                           )}
                         </div>
-                        <p className="text-slate-700 text-sm font-medium">{student.project}</p>
+                        <p className="text-ink-1 text-sm font-medium">{student.project}</p>
                         <Badge className={`mt-2 ${
                           student.status === "Thesis Submitted" 
-                            ? "bg-yellow-500 text-white" 
-                            : "bg-blue-500 text-white"
+                            ? "bg-cat-4 text-white" 
+                            : "bg-cat-1 text-white"
                         }`}>
                           {student.status}
                         </Badge>
@@ -467,17 +467,17 @@ const AcademicSupervision = () => {
             {/* M.Tech Tab */}
             <TabsContent value="mtech" className="space-y-6">
               {mtechStudents.map((student, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+                <Card key={index} className="transition-colors ds-plane">
                   <CardContent className="p-4 sm:p-6">
-                    <h3 className="font-semibold text-slate-800 text-lg mb-3">{student.name}</h3>
-                    <p className="text-slate-600 mb-3 italic">{student.thesis}</p>
+                    <h3 className="font-semibold text-ink-1 text-lg mb-3">{student.name}</h3>
+                    <p className="text-ink-2 mb-3 italic">{student.thesis}</p>
                     <div className="flex items-center gap-2 mb-2">
-                      <MapPin size={16} className="text-slate-600" />
-                      <span className="text-slate-700">{student.institution}</span>
+                      <MapPin size={16} className="text-ink-2" />
+                      <span className="text-ink-1">{student.institution}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar size={16} className="text-slate-600" />
-                      <span className="text-slate-600">{student.year}</span>
+                      <Calendar size={16} className="text-ink-2" />
+                      <span className="text-ink-2">{student.year}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -487,17 +487,17 @@ const AcademicSupervision = () => {
             {/* M.Sc Tab */}
             <TabsContent value="msc" className="space-y-6">
               {mscStudents.map((student, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+                <Card key={index} className="transition-colors ds-plane">
                   <CardContent className="p-4 sm:p-6">
-                    <h3 className="font-semibold text-slate-800 text-lg mb-3">{student.name}</h3>
-                    <p className="text-slate-600 mb-3 italic">{student.thesis}</p>
+                    <h3 className="font-semibold text-ink-1 text-lg mb-3">{student.name}</h3>
+                    <p className="text-ink-2 mb-3 italic">{student.thesis}</p>
                     <div className="flex items-center gap-2 mb-2">
-                      <MapPin size={16} className="text-slate-600" />
-                      <span className="text-slate-700">{student.institution}</span>
+                      <MapPin size={16} className="text-ink-2" />
+                      <span className="text-ink-1">{student.institution}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar size={16} className="text-slate-600" />
-                      <span className="text-slate-600">{student.year}</span>
+                      <Calendar size={16} className="text-ink-2" />
+                      <span className="text-ink-2">{student.year}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -508,11 +508,11 @@ const AcademicSupervision = () => {
             <TabsContent value="btech" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 {btechProjects.map((project, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+                  <Card key={index} className="transition-colors ds-plane">
                     <CardContent className="p-4 sm:p-6">
-                      <h3 className="font-semibold text-slate-800 text-lg mb-3">{project.title}</h3>
+                      <h3 className="font-semibold text-ink-1 text-lg mb-3">{project.title}</h3>
                       <div className="mb-3">
-                        <p className="text-slate-600 text-sm font-medium mb-1">Students:</p>
+                        <p className="text-ink-2 text-sm font-medium mb-1">Students:</p>
                         <div className="flex flex-wrap gap-1">
                           {project.students.map((student, idx) => (
                             <Badge key={idx} variant="outline" className="text-xs">
@@ -522,12 +522,12 @@ const AcademicSupervision = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <MapPin size={16} className="text-slate-600" />
-                        <span className="text-slate-700 text-sm">{project.institution}</span>
+                        <MapPin size={16} className="text-ink-2" />
+                        <span className="text-ink-1 text-sm">{project.institution}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Calendar size={16} className="text-slate-600" />
-                        <span className="text-slate-600 text-sm">{project.year}</span>
+                        <Calendar size={16} className="text-ink-2" />
+                        <span className="text-ink-2 text-sm">{project.year}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -539,11 +539,11 @@ const AcademicSupervision = () => {
             <TabsContent value="other" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 {otherInstitutions.map((project, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
+                  <Card key={index} className="transition-colors ds-plane">
                     <CardContent className="p-4 sm:p-6">
-                      <h3 className="font-semibold text-slate-800 text-lg mb-3">{project.title}</h3>
+                      <h3 className="font-semibold text-ink-1 text-lg mb-3">{project.title}</h3>
                       <div className="mb-3">
-                        <p className="text-slate-600 text-sm font-medium mb-1">Students:</p>
+                        <p className="text-ink-2 text-sm font-medium mb-1">Students:</p>
                         <div className="flex flex-wrap gap-1">
                           {project.students.map((student, idx) => (
                             <Badge key={idx} variant="outline" className="text-xs">
@@ -553,15 +553,15 @@ const AcademicSupervision = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <MapPin size={16} className="text-slate-600" />
-                        <span className="text-slate-700 text-sm">{project.institution}</span>
+                        <MapPin size={16} className="text-ink-2" />
+                        <span className="text-ink-1 text-sm">{project.institution}</span>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Calendar size={16} className="text-slate-600" />
-                        <span className="text-slate-600 text-sm">{project.year}</span>
+                        <Calendar size={16} className="text-ink-2" />
+                        <span className="text-ink-2 text-sm">{project.year}</span>
                       </div>
                       {project.coSupervisor && (
-                        <p className="text-sm text-slate-600">
+                        <p className="text-sm text-ink-2">
                           <span className="font-medium">Co-supervisor:</span> {project.coSupervisor}
                         </p>
                       )}
@@ -575,12 +575,12 @@ const AcademicSupervision = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-8">
+      <footer className="bg-surface-2 text-ink-2 border-t border-rule py-8">
         <div className="container text-center">
-          <p className="text-slate-300">
+          <p className="text-ink-3">
             © 2024 Dr. Imon Mukherjee. All rights reserved.
           </p>
-          <p className="text-slate-400 text-sm mt-2">
+          <p className="text-ink-3 text-sm mt-2">
             Distinguished Professor, Department of CSE, IIIT Kalyani
           </p>
         </div>

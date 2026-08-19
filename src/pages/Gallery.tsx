@@ -57,9 +57,9 @@ const galleryImages = [
 
 const Gallery = () => {
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+		<div className="min-h-screen">
 			{/* Header */}
-			<div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
+			<div className="bg-surface-0 border-b border-rule">
 				<div className="container py-3 sm:py-4">
 					<div className="flex justify-between items-center gap-4">
 						<Button asChild variant="ghost" className="flex items-center gap-2 min-h-[44px] shrink-0">
@@ -69,7 +69,7 @@ const Gallery = () => {
 								<span className="sm:hidden">Back</span>
 							</Link>
 						</Button>
-						<span className="text-base sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
+						<span className="text-base sm:text-xl lg:text-2xl font-bold ds-display truncate">
 							Dr. Imon Mukherjee
 						</span>
 					</div>
@@ -84,10 +84,10 @@ const Gallery = () => {
 					transition={{ duration: 0.6 }}
 					className="text-center mb-10 sm:mb-12"
 				>
-					<h1 className="text-display-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mb-4">
+					<h1 className="text-display-lg font-bold ds-display mb-4">
 						Research Gallery
 					</h1>
-					<p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
+					<p className="text-base sm:text-lg lg:text-xl text-ink-2 max-w-3xl mx-auto">
 						Explore the visual journey of our research activities, academic presentations, and collaborative endeavors in quantum computing, cryptography, and information security.
 					</p>
 				</motion.div>
@@ -97,7 +97,7 @@ const Gallery = () => {
 					{galleryImages.map((image, index) => (
 						<motion.figure
 							key={image.url}
-							className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 md:hover:-translate-y-2"
+							className="group relative overflow-hidden rounded-xl hover: transition-all duration-300 md:hover:-translate-y-2"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.5, delay: Math.min(index, 6) * 0.08 }}
@@ -116,7 +116,7 @@ const Gallery = () => {
 								reveals on hover only where a pointer is available.
 							*/}
 							<figcaption className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition-opacity duration-300">
-								<span className="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1 mb-2 inline-block self-start text-white text-xs font-medium">
+								<span className="bg-surface-2 rounded-lg px-2 py-1 mb-2 inline-block self-start text-white text-xs font-medium">
 									{image.category}
 								</span>
 								<h2 className="text-white font-semibold text-base sm:text-lg">{image.title}</h2>
@@ -132,10 +132,10 @@ const Gallery = () => {
 					transition={{ duration: 0.6, delay: 0.8 }}
 					className="text-center mt-12 sm:mt-16"
 				>
-					<p className="text-slate-600 mb-4">
+					<p className="text-ink-2 mb-4">
 						Capturing moments from our research journey in quantum computing and information security
 					</p>
-					<Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white min-h-[44px]">
+					<Button asChild className="bg-signal text-signal-ink hover:opacity-90 min-h-[44px]">
 						<Link to="/">Return to Homepage</Link>
 					</Button>
 				</motion.div>

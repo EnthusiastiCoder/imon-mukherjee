@@ -14,17 +14,17 @@ import { ArrowLeft } from "lucide-react";
  */
 export default function PageHeader({ title }: { title: string }) {
   return (
-    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 shadow-sm">
+    <nav className="fixed top-0 w-full bg-surface-0 border-b border-rule z-50">
       <div className="container flex items-center justify-between gap-3 py-3">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 min-h-[44px] rounded-md px-2 -ml-2 font-semibold text-slate-800 hover:text-blue-600 transition-colors"
+          className="flex shrink-0 items-center gap-2 min-h-[44px] rounded-md px-2 -ml-2 font-semibold text-ink-1 hover:text-signal transition-colors"
         >
           <ArrowLeft size={18} aria-hidden="true" />
           <span className="hidden sm:inline">Back to Portfolio</span>
           <span className="sm:hidden">Back</span>
         </Link>
-        <span className="truncate text-base sm:text-lg font-bold text-slate-800">
+        <span className="truncate text-base sm:text-lg font-bold text-ink-1">
           {title}
         </span>
       </div>
