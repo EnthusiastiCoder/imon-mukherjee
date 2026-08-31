@@ -41,6 +41,13 @@ const AcademicSupervision = () => {
       year: "Sept., 2025",
       position: "Post-Doctoral Research Fellow, IIT BHU",
       coSupervisor: "Dr. Sanjoy Pratihar and Dr. Sanjay Chatterji"
+    },
+    {
+      name: "Dr. Sreeparna Ganguly",
+      thesis: "Image Sterilization Techniques for Steganographic Malware Removal",
+      // Awarded 12th June 2026. Rendered as month and year to match the five
+      // above; the exact day is recorded here rather than shown.
+      year: "June, 2026"
     }
   ];
 
@@ -52,13 +59,6 @@ const AcademicSupervision = () => {
     //   project: "Project JRF, MeitY, Govt. of India",
     //   status: "Thesis Submitted"
     // },
-    {
-      name: "Sreeparna Ganguly",
-      enrollment: "January, 2021",
-      registration: "Sept., 2022",
-      project: "SRF, UGC-NET Fellow",
-      status: "Ongoing"
-    },
     {
       name: "Koushik Deb",
       enrollment: "February, 2021",

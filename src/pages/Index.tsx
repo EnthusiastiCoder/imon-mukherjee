@@ -186,14 +186,13 @@ const Index = () => {
 				startYear: "Sept., 2025",
 				position: "Post-Doctoral Research Fellow, IIT BHU"
 			},
+			{
+				name: "Dr. Sreeparna Ganguly",
+				thesis: "Image Sterilization Techniques for Steganographic Malware Removal",
+				year: "June, 2026"
+			},
 		],
 		ongoing: [
-			{
-				name: "Sreeparna Ganguly",
-				thesis: "SRF, UGC-NET Fellow",
-				startYear: "2021",
-				status: "Ongoing"
-			},
 			{
 				name: "Koushik Deb",
 				thesis: "Institute Research Fellow",
