@@ -88,7 +88,7 @@ export const journalPublications: JournalPublication[] = [
 		journal: "Expert Systems with Applications",
 		year: "2025",
 		doi: "https://doi.org/10.1016/j.eswa.2025.127126",
-		impactFactor: "9.4",
+		impactFactor: "7.5",
 		indexed: "SCI/SCI(E)",
 		volume: "277",
 		articleNo: "127126",
@@ -193,7 +193,7 @@ export const journalPublications: JournalPublication[] = [
 		journal: "Expert Systems with Applications",
 		year: "2023",
 		doi: "10.1016/j.eswa.2022.118796",
-		impactFactor: "9.4",
+		impactFactor: "8.5",
 		indexed: "SCI/SCI(E)",
 	},
 	{
