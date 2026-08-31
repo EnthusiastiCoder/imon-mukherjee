@@ -34,7 +34,7 @@ const Index = () => {
 	 * gone; the lucide icons already bundled with the app carry the same job with
 	 * no network request and no third-party dependency.
 	 *
-	 * The icons were also all `Lock`, including on "Data Analytics", so the mark
+	 * The icons were also all `Lock`, including on the AI card, so the mark
 	 * said nothing about the content. Each now matches what it labels.
 	 */
 	const researchInterests = [
@@ -49,7 +49,7 @@ const Index = () => {
 			icon: Atom,
 		},
 		{
-			name: "Data Analytics & Natural Language Processing",
+			name: "AI Applications",
 			description: "AI applications in agriculture, computer vision",
 			icon: Brain,
 		}
