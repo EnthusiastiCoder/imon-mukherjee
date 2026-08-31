@@ -10,7 +10,31 @@ const FundedProjects = () => {
   const [selectedProject, setSelectedProject] = useState<typeof fundedProjects[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fundedProjects = [
+  // NOTE: this list is this page's own copy. src/data/funding.ts holds a second,
+  // leaner one that the homepage hero and its Grants section read. Both must be
+  // updated together or the totals disagree — which has happened before, when
+  // the hero quoted a stale hard-coded figure. Consolidating them is outstanding.
+  const fundedProjects: {
+    title: string;
+    funding: string;
+    investigators?: string[];
+    duration?: string;
+    totalCost: string;
+    status: string;
+    description?: string;
+    outcomes?: string[];
+    note?: string;
+  }[] = [
+    {
+      title:
+        "In-Context Learning and Multimodal Reasoning in Large Language Models: Foundations and Applications in Scholarly Information Access",
+      funding: "ANRF-ARG, Government of India",
+      totalCost: "99.96L",
+      // Assumed Ongoing: the grant was supplied without dates, and the stat row
+      // above counts Ongoing + Completed, so omitting it would leave the tiles
+      // summing to one fewer than the project count.
+      status: "Ongoing",
+    },
     {
       title: "Study of Quantum Attacks on Stream Ciphers and Its Counter-Measures",
       funding: "DRDO, Govt. of India",
@@ -164,22 +188,26 @@ const FundedProjects = () => {
                             </Badge>
                           </div>
                           
-                          <div className="flex items-center gap-2">
-                            <Users size={16} className="text-signal" />
-                            <div className="text-sm text-ink-2">
-                              <span className="font-medium">Investigators:</span>
-                              <ul className="mt-1 space-y-1">
-                                {project.investigators.map((investigator, idx) => (
-                                  <li key={idx} className="text-xs">• {investigator}</li>
-                                ))}
-                              </ul>
+                          {project.investigators && project.investigators.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <Users size={16} className="text-signal" />
+                              <div className="text-sm text-ink-2">
+                                <span className="font-medium">Investigators:</span>
+                                <ul className="mt-1 space-y-1">
+                                  {project.investigators.map((investigator, idx) => (
+                                    <li key={idx} className="text-xs">• {investigator}</li>
+                                  ))}
+                                </ul>
+                              </div>
                             </div>
-                          </div>
+                          )}
                           
-                          <div className="flex items-center gap-2">
-                            <Calendar size={16} className="text-status-good" />
-                            <span className="text-ink-2 text-sm">{project.duration}</span>
-                          </div>
+                          {project.duration && (
+                            <div className="flex items-center gap-2">
+                              <Calendar size={16} className="text-status-good" />
+                              <span className="text-ink-2 text-sm">{project.duration}</span>
+                            </div>
+                          )}
                           
                           <div className="flex items-center gap-2">
                             <DollarSign size={16} className="text-status-warn" />
@@ -190,18 +218,22 @@ const FundedProjects = () => {
                         </div>
                         
                         <div className="pt-3 border-t border-rule">
-                          <p className="text-ink-1 text-sm mb-3">{project.description}</p>
-                          
-                          <div className="mb-3">
-                            <p className="text-ink-2 text-sm font-medium mb-2">Key Outcomes:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {project.outcomes.map((outcome, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs bg-surface-2">
-                                  {outcome}
-                                </Badge>
-                              ))}
+                          {project.description && (
+                            <p className="text-ink-1 text-sm mb-3">{project.description}</p>
+                          )}
+
+                          {project.outcomes && project.outcomes.length > 0 && (
+                            <div className="mb-3">
+                              <p className="text-ink-2 text-sm font-medium mb-2">Key Outcomes:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {project.outcomes.map((outcome, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs bg-surface-2">
+                                    {outcome}
+                                  </Badge>
+                                ))}
+                              </div>
                             </div>
-                          </div>
+                          )}
                           
                           {project.note && (
                             <div className="p-3 bg-surface-2 border border-rule rounded-lg">

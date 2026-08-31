@@ -3,21 +3,30 @@
  *
  * Extracted from Index.tsx because the hero also quotes a total, and the two had
  * already drifted: the hero carried a hard-coded "₹87.86L", which is the sum of
- * the first two grants only. The four below total ₹105.89L. Any figure typed
- * into copy eventually disagrees with the array beside it, so both the hero and
- * the Funded Projects section now derive theirs from here.
+ * the first two grants only. Any figure typed into copy eventually disagrees
+ * with the array beside it, so both the hero and the Funded Projects section
+ * derive theirs from here — which is why adding the ANRF grant moved the total
+ * from ₹105.89L to ₹205.85L with no copy change.
  */
 
 export interface FundedProject {
 	title: string;
 	funding: string;
-	duration: string;
+	/** Optional: the ANRF grant was supplied without one. Callers must guard. */
+	duration?: string;
 	/** As written for display, e.g. "₹42.25 Lakhs". Parsed for totals. */
 	amount: string;
-	role: string;
+	/** Optional, same reason as duration. */
+	role?: string;
 }
 
 export const fundedProjects: FundedProject[] = [
+	{
+		title:
+			"In-Context Learning and Multimodal Reasoning in Large Language Models: Foundations and Applications in Scholarly Information Access",
+		funding: "ANRF-ARG, Government of India",
+		amount: "₹99.96 Lakhs",
+	},
 	{
 		title: "Study of Quantum Attacks on Stream Ciphers and Its Counter-Measures",
 		funding: "DRDO, Govt. of India",

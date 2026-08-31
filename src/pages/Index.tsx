@@ -416,7 +416,7 @@ const Index = () => {
 					<SectionHeader
 						eyebrow="Grants"
 						title="Funded Projects"
-						summary={`₹${totalFundingLakhs.toFixed(2)}L as Principal Investigator across ${fundedProjects.length} projects`}
+						summary={`₹${totalFundingLakhs.toFixed(2)}L across ${fundedProjects.length} projects`}
 						to="/funded-projects"
 						actionLabel="All projects"
 					/>
@@ -436,10 +436,18 @@ const Index = () => {
 										</h3>
 										<p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
 											<span>{project.funding}</span>
-											<span aria-hidden="true">·</span>
-											<span className="ds-data">{project.duration}</span>
-											<span aria-hidden="true">·</span>
-											<span>{project.role}</span>
+											{project.duration && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span className="ds-data">{project.duration}</span>
+												</>
+											)}
+											{project.role && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span>{project.role}</span>
+												</>
+											)}
 										</p>
 									</div>
 
