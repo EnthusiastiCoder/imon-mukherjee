@@ -467,6 +467,11 @@ const AcademicSupervision = () => {
                           )}
                         </div>
                         <p className="text-ink-1 text-sm font-medium">{student.project}</p>
+                        {student.coSupervisor && (
+                          <p className="mt-1 text-sm text-ink-2">
+                            <span className="font-medium">Co-supervisor:</span> {student.coSupervisor}
+                          </p>
+                        )}
                         <Badge className={`mt-2 ${
                           student.status === "Thesis Submitted" 
                             ? "ds-chip border-cat-4" 
