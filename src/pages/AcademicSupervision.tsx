@@ -87,13 +87,6 @@ const AcademicSupervision = () => {
       status: "Ongoing"
     },
     {
-      name: "Sarbani Sen",
-      enrollment: "January, 2023",
-      registration: "May, 2024",
-      project: "JRF, DRDO, Govt. of India",
-      status: "Ongoing"
-    },
-    {
       name: "Sugam Bhuina",
       enrollment: "February, 2019",
       registration: "February, 2024",

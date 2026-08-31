@@ -218,12 +218,6 @@ const Index = () => {
       			status: "Ongoing"
    			},
 		    {
-		      	name: "Sarbani Sen",
-		      	thesis: "JRF, DRDO, Govt. of India",
-				startYear: 2023,
-		      	status: "Ongoing"
-		    },
-		    {
 		      	name: "Sugam Bhuina",
 		      	thesis: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
 				startYear: 2019,
