@@ -218,6 +218,12 @@ const Index = () => {
       			status: "Ongoing"
    			},
 		    {
+		      	name: "Sandip Chandra Das",
+		      	thesis: "JRF, Visvesvaraya PhD Scheme for Electronics & IT, Govt. of India",
+				startYear: 2025,
+		      	status: "Ongoing"
+		    },
+		    {
 		      	name: "Sugam Bhuina",
 		      	thesis: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
 				startYear: 2019,

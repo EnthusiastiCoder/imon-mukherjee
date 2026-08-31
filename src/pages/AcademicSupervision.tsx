@@ -87,6 +87,12 @@ const AcademicSupervision = () => {
       status: "Ongoing"
     },
     {
+      name: "Sandip Chandra Das",
+      enrollment: "2025",
+      project: "JRF, Visvesvaraya PhD Scheme for Electronics & IT, Govt. of India",
+      status: "Ongoing"
+    },
+    {
       name: "Sugam Bhuina",
       enrollment: "February, 2019",
       registration: "February, 2024",
