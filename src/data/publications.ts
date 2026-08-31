@@ -43,7 +43,7 @@ export const journalPublications: JournalPublication[] = [
 		journal: "IEEE Transactions on Computational Social Systems",
 		year: "2026",
 		doi: "10.1109/TCSS.2026.3717681",
-		impactFactor: "",
+		impactFactor: "4.6",
 		indexed: "IEEE",
 	},
 	{
@@ -66,7 +66,7 @@ export const journalPublications: JournalPublication[] = [
 		pages: "39 pages",
 		month: "July 2026",
 		doi: "10.1145/3797887",
-		impactFactor: "",
+		impactFactor: "11.2",
 		indexed: "ACM",
 	},
 	{
@@ -88,7 +88,7 @@ export const journalPublications: JournalPublication[] = [
 		journal: "Expert Systems with Applications",
 		year: "2025",
 		doi: "https://doi.org/10.1016/j.eswa.2025.127126",
-		impactFactor: "7.5",
+		impactFactor: "9.4",
 		indexed: "SCI/SCI(E)",
 		volume: "277",
 		articleNo: "127126",
@@ -193,7 +193,7 @@ export const journalPublications: JournalPublication[] = [
 		journal: "Expert Systems with Applications",
 		year: "2023",
 		doi: "10.1016/j.eswa.2022.118796",
-		impactFactor: "8.5",
+		impactFactor: "9.4",
 		indexed: "SCI/SCI(E)",
 	},
 	{
