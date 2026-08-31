@@ -324,9 +324,6 @@ const FundedProjects = () => {
           <p className="text-ink-3">
             © {new Date().getFullYear()} Dr. Imon Mukherjee. All rights reserved.
           </p>
-          <p className="text-ink-3 text-sm mt-2">
-            Distinguished Professor, Department of CSE, IIIT Kalyani
-          </p>
         </div>
       </footer>
     </div>
