@@ -166,7 +166,7 @@ const Index = () => {
 				name: "Dr. Abhishek Mukhopadhyay",
 				thesis: "Object Detection in the Wild: Novel Techniques and Practical Applications",
 				year: "Sept., 2023",
-				position: "Post Doctoral Research Fellow, IISc Bangalore"
+				position: "Assistant Professor, Amity University, Kolkata"
 			},
 			{
 				name: "Dr. Nayan Ranjan Das",
