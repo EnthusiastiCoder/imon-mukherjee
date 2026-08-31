@@ -195,7 +195,7 @@ const Index = () => {
 		ongoing: [
 			{
 				name: "Koushik Deb",
-				thesis: "Institute Research Fellow",
+				thesis: "Research Fellow",
 				startYear: "2021",
 				status: "Ongoing"
 			},
@@ -207,7 +207,7 @@ const Index = () => {
     		},
    			{
      			name: "Abhisek Banerjee",
-      			thesis: "Institute Research Fellow",
+      			thesis: "Research Fellow",
 				startYear: 2021,
       			status: "Ongoing"
     		},
@@ -225,7 +225,7 @@ const Index = () => {
 		    },
 		    {
 		      	name: "Sugam Bhuina",
-		      	thesis: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
+		      	thesis: "Research Fellow · Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
 				startYear: 2019,
 		      	status: "Ongoing"
 		    }

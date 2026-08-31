@@ -63,7 +63,7 @@ const AcademicSupervision = () => {
       name: "Koushik Deb",
       enrollment: "February, 2021",
       registration: "August, 2022",
-      project: "Institute Research Fellow",
+      project: "Research Fellow",
       status: "Ongoing"
     },
     {
@@ -77,7 +77,7 @@ const AcademicSupervision = () => {
       name: "Abhisek Banerjee",
       enrollment: "January, 2021",
       registration: "June, 2023",
-      project: "Institute Research Fellow",
+      project: "Research Fellow",
       status: "Ongoing"
     },
     {
@@ -96,7 +96,8 @@ const AcademicSupervision = () => {
       name: "Sugam Bhuina",
       enrollment: "February, 2019",
       registration: "February, 2024",
-      project: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
+      project: "Research Fellow",
+      coSupervisor: "Dr. Sambit Bakshi, NIT Rourkela",
       status: "Ongoing"
     }
   ];
