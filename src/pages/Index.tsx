@@ -160,7 +160,7 @@ const Index = () => {
 				name: "Dr. Pratap Chandra Mandal",
 				thesis: "Unseen within Seen : A Steganographic Paradigm and Analysis",
 				year: "Oct., 2021",
-				position: "Asst. Professor, B.P. Poddar Institute of Management and Technology"
+				position: "Associate Professor, B.P. Poddar Institute of Management and Technology"
 			},
 			{
 				name: "Dr. Abhishek Mukhopadhyay",
