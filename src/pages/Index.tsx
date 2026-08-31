@@ -34,7 +34,7 @@ const Index = () => {
 	 * gone; the lucide icons already bundled with the app carry the same job with
 	 * no network request and no third-party dependency.
 	 *
-	 * The icons were also all `Lock`, including on "Data Analytics", so the mark
+	 * The icons were also all `Lock`, including on the AI card, so the mark
 	 * said nothing about the content. Each now matches what it labels.
 	 */
 	const researchInterests = [
@@ -49,7 +49,7 @@ const Index = () => {
 			icon: Atom,
 		},
 		{
-			name: "Data Analytics & Natural Language Processing",
+			name: "AI Applications",
 			description: "AI applications in agriculture, computer vision",
 			icon: Brain,
 		}
@@ -160,13 +160,13 @@ const Index = () => {
 				name: "Dr. Pratap Chandra Mandal",
 				thesis: "Unseen within Seen : A Steganographic Paradigm and Analysis",
 				year: "Oct., 2021",
-				position: "Asst. Professor, B.P. Poddar Institute of Management and Technology"
+				position: "Associate Professor, B.P. Poddar Institute of Management and Technology"
 			},
 			{
 				name: "Dr. Abhishek Mukhopadhyay",
 				thesis: "Object Detection in the Wild: Novel Techniques and Practical Applications",
 				year: "Sept., 2023",
-				position: "Post Doctoral Research Fellow, IISc Bangalore"
+				position: "Assistant Professor, Amity University, Kolkata"
 			},
 			{
 				name: "Dr. Nayan Ranjan Das",
@@ -186,17 +186,16 @@ const Index = () => {
 				startYear: "Sept., 2025",
 				position: "Post-Doctoral Research Fellow, IIT BHU"
 			},
+			{
+				name: "Dr. Sreeparna Ganguly",
+				thesis: "Image Sterilization Techniques for Steganographic Malware Removal",
+				year: "June, 2026"
+			},
 		],
 		ongoing: [
 			{
-				name: "Sreeparna Ganguly",
-				thesis: "SRF, UGC-NET Fellow",
-				startYear: "2021",
-				status: "Ongoing"
-			},
-			{
 				name: "Koushik Deb",
-				thesis: "Institute Research Fellow",
+				thesis: "Research Fellow",
 				startYear: "2021",
 				status: "Ongoing"
 			},
@@ -208,7 +207,7 @@ const Index = () => {
     		},
    			{
      			name: "Abhisek Banerjee",
-      			thesis: "Institute Research Fellow",
+      			thesis: "Research Fellow",
 				startYear: 2021,
       			status: "Ongoing"
     		},
@@ -219,14 +218,14 @@ const Index = () => {
       			status: "Ongoing"
    			},
 		    {
-		      	name: "Sarbani Sen",
-		      	thesis: "JRF, DRDO, Govt. of India",
-				startYear: 2023,
+		      	name: "Sandip Chandra Das",
+		      	thesis: "JRF, Visvesvaraya PhD Scheme for Electronics & IT, Govt. of India",
+				startYear: 2025,
 		      	status: "Ongoing"
 		    },
 		    {
 		      	name: "Sugam Bhuina",
-		      	thesis: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
+		      	thesis: "Research Fellow · Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
 				startYear: 2019,
 		      	status: "Ongoing"
 		    }
@@ -416,7 +415,7 @@ const Index = () => {
 					<SectionHeader
 						eyebrow="Grants"
 						title="Funded Projects"
-						summary={`₹${totalFundingLakhs.toFixed(2)}L as Principal Investigator across ${fundedProjects.length} projects`}
+						summary={`₹${totalFundingLakhs.toFixed(2)}L across ${fundedProjects.length} projects`}
 						to="/funded-projects"
 						actionLabel="All projects"
 					/>
@@ -436,10 +435,18 @@ const Index = () => {
 										</h3>
 										<p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
 											<span>{project.funding}</span>
-											<span aria-hidden="true">·</span>
-											<span className="ds-data">{project.duration}</span>
-											<span aria-hidden="true">·</span>
-											<span>{project.role}</span>
+											{project.duration && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span className="ds-data">{project.duration}</span>
+												</>
+											)}
+											{project.role && (
+												<>
+													<span aria-hidden="true">·</span>
+													<span>{project.role}</span>
+												</>
+											)}
 										</p>
 									</div>
 

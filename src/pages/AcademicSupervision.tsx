@@ -12,7 +12,7 @@ const AcademicSupervision = () => {
       name: "Dr. Pratap Chandra Mandal",
       thesis: "Unseen within Seen : A Steganographic Paradigm and Analysis",
       year: "Oct., 2021",
-      position: "Assistant Professor, B.P. Poddar Institute of Management and Technology"
+      position: "Associate Professor, B.P. Poddar Institute of Management and Technology"
     },
     {
       name: "Dr. Abhishek Mukhopadhyay",
@@ -41,6 +41,13 @@ const AcademicSupervision = () => {
       year: "Sept., 2025",
       position: "Post-Doctoral Research Fellow, IIT BHU",
       coSupervisor: "Dr. Sanjoy Pratihar and Dr. Sanjay Chatterji"
+    },
+    {
+      name: "Dr. Sreeparna Ganguly",
+      thesis: "Image Sterilization Techniques for Steganographic Malware Removal",
+      // Awarded 12th June 2026. Rendered as month and year to match the five
+      // above; the exact day is recorded here rather than shown.
+      year: "June, 2026"
     }
   ];
 
@@ -53,17 +60,10 @@ const AcademicSupervision = () => {
     //   status: "Thesis Submitted"
     // },
     {
-      name: "Sreeparna Ganguly",
-      enrollment: "January, 2021",
-      registration: "Sept., 2022",
-      project: "SRF, UGC-NET Fellow",
-      status: "Ongoing"
-    },
-    {
       name: "Koushik Deb",
       enrollment: "February, 2021",
       registration: "August, 2022",
-      project: "Institute Research Fellow",
+      project: "Research Fellow",
       status: "Ongoing"
     },
     {
@@ -77,7 +77,7 @@ const AcademicSupervision = () => {
       name: "Abhisek Banerjee",
       enrollment: "January, 2021",
       registration: "June, 2023",
-      project: "Institute Research Fellow",
+      project: "Research Fellow",
       status: "Ongoing"
     },
     {
@@ -87,17 +87,17 @@ const AcademicSupervision = () => {
       status: "Ongoing"
     },
     {
-      name: "Sarbani Sen",
-      enrollment: "January, 2023",
-      registration: "May, 2024",
-      project: "JRF, DRDO, Govt. of India",
+      name: "Sandip Chandra Das",
+      enrollment: "2025",
+      project: "JRF, Visvesvaraya PhD Scheme for Electronics & IT, Govt. of India",
       status: "Ongoing"
     },
     {
       name: "Sugam Bhuina",
       enrollment: "February, 2019",
       registration: "February, 2024",
-      project: "Co-supervisor: Dr. Sambit Bakshi, NIT Rourkela",
+      project: "Research Fellow",
+      coSupervisor: "Dr. Sambit Bakshi, NIT Rourkela",
       status: "Ongoing"
     }
   ];
@@ -422,10 +422,12 @@ const AcademicSupervision = () => {
                           <Calendar size={16} className="text-status-good" />
                           <span className="text-status-good font-medium">{student.year}</span>
                         </div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <MapPin size={16} className="text-ink-2" />
-                          <span className="text-ink-1 font-medium">{student.position}</span>
-                        </div>
+                        {student.position && (
+                          <div className="flex items-center gap-2 mb-2">
+                            <MapPin size={16} className="text-ink-2" />
+                            <span className="text-ink-1 font-medium">{student.position}</span>
+                          </div>
+                        )}
                         {student.coSupervisor && (
                           <p className="text-sm text-ink-2">
                             <span className="font-medium">Co-supervisor:</span> {student.coSupervisor}
@@ -596,9 +598,6 @@ const AcademicSupervision = () => {
         <div className="container text-center">
           <p className="text-ink-3">
             © {new Date().getFullYear()} Dr. Imon Mukherjee. All rights reserved.
-          </p>
-          <p className="text-ink-3 text-sm mt-2">
-            Distinguished Professor, Department of CSE, IIIT Kalyani
           </p>
         </div>
       </footer>
