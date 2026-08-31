@@ -12,11 +12,11 @@
 export interface FundedProject {
 	title: string;
 	funding: string;
-	/** Optional: the ANRF grant was supplied without one. Callers must guard. */
+	/** Optional by design — not every grant lists one. Callers must guard. */
 	duration?: string;
 	/** As written for display, e.g. "₹42.25 Lakhs". Parsed for totals. */
 	amount: string;
-	/** Optional, same reason as duration. */
+	/** Optional by design, same as duration. */
 	role?: string;
 }
 

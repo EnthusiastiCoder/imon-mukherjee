@@ -30,9 +30,11 @@ const FundedProjects = () => {
         "In-Context Learning and Multimodal Reasoning in Large Language Models: Foundations and Applications in Scholarly Information Access",
       funding: "ANRF-ARG, Government of India",
       totalCost: "99.96L",
-      // Assumed Ongoing: the grant was supplied without dates, and the stat row
-      // above counts Ongoing + Completed, so omitting it would leave the tiles
-      // summing to one fewer than the project count.
+      // This grant carries no duration, role or investigator list — those are
+      // optional by design, and every read of them is guarded. Status is the one
+      // field that cannot be blank: the stat row above counts Ongoing plus
+      // Completed, so an unset status would leave those tiles summing to one
+      // fewer than the project count.
       status: "Ongoing",
     },
     {
