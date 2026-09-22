@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, DollarSign, Users, Building, ExternalLink, Award } from "lucide-react";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar, DollarSign, Users, Building, ExternalLink, Award, Briefcase } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 import { useState } from "react";
 
 const FundedProjects = () => {
@@ -49,7 +51,7 @@ const FundedProjects = () => {
     },
     {
       title: "Extraction, Organization and Query of Scholarly Information",
-      funding: "SERB (CRG), Govt. of India",
+      funding: "ANRF (CRG), Govt. of India",
       investigators: ["Dr. Imon Mukherjee (IIIT Kalyani)", "Dr. Debarshi Kumar Sanyal (Indian Association for the Cultivation of Science)"],
       duration: "March, 2022 to March, 2025",
       totalCost: "45.61L",
@@ -80,12 +82,22 @@ const FundedProjects = () => {
     }
   ];
 
-  const projectCategories = {
-    "Quantum Computing": fundedProjects.filter(p => p.title.toLowerCase().includes("quantum")),
-    "AI & Machine Learning": fundedProjects.filter(p => p.title.toLowerCase().includes("ai") || p.title.toLowerCase().includes("machine")),
-    "Information Security": fundedProjects.filter(p => p.title.toLowerCase().includes("security") || p.title.toLowerCase().includes("steganography")),
-    "Data Science": fundedProjects.filter(p => p.title.toLowerCase().includes("information") || p.title.toLowerCase().includes("data"))
-  };
+
+  // Agency roll-up, derived rather than written out. The four cards below used
+  // to carry hardcoded names and totals; ANRF's still read ₹45.61L after the
+  // ₹99.96L ARG grant was added, and its description was SERB's expansion. A
+  // figure typed beside the list it summarises drifts from that list.
+  const agencies = [
+    { key: "DRDO",  label: "DRDO",   name: "Defence Research & Development Organisation", tone: "text-signal" },
+    { key: "ANRF",  label: "ANRF",   name: "Anusandhan National Research Foundation",     tone: "text-status-good" },
+    { key: "MeitY", label: "MeitY",  name: "Ministry of Electronics & IT",                tone: "text-signal" },
+    { key: "DST",   label: "DST-WB", name: "DST, Govt. of West Bengal",                   tone: "text-status-warn" },
+  ].map((a) => ({
+    ...a,
+    total: fundedProjects
+      .filter((proj) => proj.funding.startsWith(a.key))
+      .reduce((sum, proj) => sum + (parseFloat(proj.totalCost.replace("L", "")) || 0), 0),
+  }));
 
   const totalFunding = fundedProjects.reduce((sum, project) => {
     const amount = parseFloat(project.totalCost.replace('L', ''));
@@ -158,20 +170,28 @@ const FundedProjects = () => {
         </div>
       </section>
 
-      {/* Project Categories */}
+      {/* Projects.
+          Previously grouped under four headings by substring-matching the title
+          for "quantum", "ai", "security" and so on. Dr. Mukherjee asked for the
+          categories to go: they split five projects across four headings, and a
+          title matching no keyword would have vanished from the page entirely. */}
       <section className="pb-16">
         <div className="container">
-          <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Projects by Category</h2>
-          
-          {Object.entries(projectCategories).map(([category, projects]) => (
-            projects.length > 0 && (
-              <div key={category} className="mb-12">
-                <h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
-                  <Award className="text-signal" size={24} />
-                  {category}
-                </h3>
+          <Tabs defaultValue="funded" className="w-full">
+            <ScrollableTabsList cols="md:grid-cols-2" className="mb-8">
+              <TabsTrigger value="funded" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Award size={16} className="shrink-0" />
+                Funded Projects ({fundedProjects.length})
+              </TabsTrigger>
+              <TabsTrigger value="consultancy" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Briefcase size={16} className="shrink-0" />
+                Consultancy Projects
+              </TabsTrigger>
+            </ScrollableTabsList>
+
+            <TabsContent value="funded">
                 <div className="grid md:grid-cols-2 gap-8">
-                  {projects.map((project, index) => (
+                  {fundedProjects.map((project, index) => (
                     <Card key={index} className="transition-colors ds-plane">
                       <CardHeader>
                         <div className="flex justify-between items-start gap-4">
@@ -262,9 +282,20 @@ const FundedProjects = () => {
                     </Card>
                   ))}
                 </div>
-              </div>
-            )
-          ))}
+            </TabsContent>
+
+            <TabsContent value="consultancy">
+              <Card className="ds-plane">
+                <CardContent className="p-6 sm:p-8">
+                  <p className="ds-label">Total projects offered</p>
+                  <p className="ds-data mt-2 text-4xl leading-none text-ink-1">07</p>
+                  <p className="mt-4 text-sm text-ink-2">
+                    Not allowed as per institute norms.
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
@@ -273,49 +304,18 @@ const FundedProjects = () => {
         <div className="container">
           <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Funding Agencies</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto">
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building size={32} className="text-signal" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">DRDO</h3>
-                <p className="text-sm text-ink-2">Defence Research & Development Organisation</p>
-                <p className="text-lg font-bold text-signal mt-2">₹42.25L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award size={32} className="text-status-good" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">SERB</h3>
-                <p className="text-sm text-ink-2">Science & Engineering Research Board</p>
-                <p className="text-lg font-bold text-status-good mt-2">₹45.61L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users size={32} className="text-signal" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">MeitY</h3>
-                <p className="text-sm text-ink-2">Ministry of Electronics & IT</p>
-                <p className="text-lg font-bold text-signal mt-2">₹16.18L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar size={32} className="text-status-warn" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">DST-WB</h3>
-                <p className="text-sm text-ink-2">DST, Govt. of West Bengal</p>
-                <p className="text-lg font-bold text-status-warn mt-2">₹1.85L</p>
-              </CardContent>
-            </Card>
+            {agencies.map((agency) => (
+              <Card key={agency.key} className="text-center transition-colors">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Building size={32} className={agency.tone} />
+                  </div>
+                  <h3 className="font-semibold text-ink-1 mb-2">{agency.label}</h3>
+                  <p className="text-sm text-ink-2">{agency.name}</p>
+                  <p className={`text-lg font-bold mt-2 ${agency.tone}`}>₹{agency.total.toFixed(2)}L</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

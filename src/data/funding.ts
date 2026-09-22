@@ -36,7 +36,7 @@ export const fundedProjects: FundedProject[] = [
 	},
 	{
 		title: "Extraction, Organization and Query of Scholarly Information",
-		funding: "SERB (CRG), Govt. of India",
+		funding: "ANRF (CRG), Govt. of India",
 		duration: "March 2022 – March 2025",
 		amount: "₹45.61 Lakhs",
 		role: "PI",
