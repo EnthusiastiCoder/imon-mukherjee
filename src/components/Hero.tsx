@@ -40,40 +40,32 @@ interface ScholarMetrics {
 }
 
 /**
- * Research areas.
+ * Research interests.
  *
- * Previously a 4-second auto-rotating carousel showing one at a time. Now all
- * four are visible at once: a visitor deciding whether to email him about a PhD
- * should not have to wait 12 seconds to learn what he works on, and a slideshow
- * hides three quarters of the answer at any moment.
+ * Was four areas under a heading called "Research", while a second section
+ * lower down called "Research Interests" listed three overlapping topics as
+ * icon cards — and both carried id="research", so the nav anchor pointed at
+ * whichever the browser found first. Dr. Mukherjee asked for the two to be
+ * merged into one section named "Research Interests", keeping Information
+ * Security and AI Applications.
+ *
+ * The photographs stay because they are what gives this band its weight; the
+ * heading and the two topics come from the section that was removed.
  */
-const researchAreas = [
-	{
-		src: "images/steganography.jpg",
-		alt: "An illuminated circuit board schematic",
-		title: "Steganography",
-		note: "Embedding data where no data appears to be",
-	},
+const researchInterests = [
 	{
 		src: "images/cryptography.jpg",
 		alt: "A padlock resting on a backlit keyboard",
-		title: "Steganalysis",
-		note: "Detecting what embedding leaves behind",
-	},
-	{
-		src: "images/quantum-computer.jpg",
-		alt: "Handwritten physics and mathematics equations on a blackboard",
-		title: "Quantum Computing",
-		note: "Post-quantum ciphers and quantum attacks",
+		title: "Information Security",
+		note: "Steganography, steganalysis, and quantum cryptographic protocols",
 	},
 	{
 		src: "images/QML.jpg",
 		alt: "Syntax-highlighted source code on a display",
-		title: "Quantum Machine Learning",
-		note: "Learning on quantum representations",
+		title: "AI Applications",
+		note: "Agriculture, computer vision, and scholarly information access",
 	},
 ];
-
 /** Metadata lines. Replaces a character-by-character typing animation — a
  *  gimmick that made the same three facts take nine seconds to read and left a
  *  fixed-height box that clipped when the strings wrapped on a phone. */
@@ -315,15 +307,15 @@ export default function Hero({
 			<div className="container">
 				{/* ── Research areas ──────────────────────────────────────────── */}
 				<div id="research" className="scroll-mt-24 pt-[var(--space-section)]">
-					<h2 className="ds-label">Research</h2>
+					<h2 className="ds-display text-display-md">Research Interests</h2>
 					{/* ds-reveal-group staggers the four tiles by shifting each one's
 					    scroll range rather than by delay, which is meaningless on a
 					    scroll timeline. Where scroll-driven animation is unsupported the
 					    whole rule drops out and the tiles are simply already in place —
 					    an earlier version faded these in from opacity 0 through an
 					    observer, which made them vanish entirely when it did not fire. */}
-					<div className="ds-reveal-group mt-4 grid gap-[2px] sm:grid-cols-2 lg:grid-cols-4">
-						{researchAreas.map((area) => (
+					<div className="ds-reveal-group mt-[var(--space-block)] grid gap-[2px] sm:grid-cols-2">
+						{researchInterests.map((area) => (
 							// figure/figcaption rather than a div: the text genuinely is a
 							// caption for the image it sits on.
 							<figure
@@ -333,13 +325,11 @@ export default function Hero({
 								<Img
 									src={area.src}
 									alt={area.alt}
-									sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-									// Portrait from sm up, landscape on a single-column phone.
-									// At four across a tile is ~300px wide, so 16:10 would be
-									// 187px tall and the caption would eat over half of it; 4:5
-									// gives the photograph room. On mobile the tile is full
-									// width, so landscape is the right shape there.
-									className="aspect-[16/10] w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.05] sm:aspect-[4/5]"
+									sizes="(min-width: 640px) 50vw, 100vw"
+									// Landscape throughout. At two across a tile is ~600px
+									// wide, so the 4:5 portrait this used at four-across would
+									// stand over 700px tall.
+									className="aspect-[16/10] w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.05]"
 								/>
 
 								{/*
