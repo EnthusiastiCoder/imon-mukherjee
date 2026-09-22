@@ -102,9 +102,9 @@ const Index = () => {
 		{
 			title: "K-Span Select and Multi-Dimensional Judging for Reliable Scholarly Question Answering",
 			journal: "ACM/IEEE Joint Conference on Digital Libraries (JCDL 2025)",
-			year: "Accepted",
+			year: "2025",
 			type: "conference",
-			indexed: "IEEE",
+			indexed: "ACM/IEEE",
 		},
 		{
 			title: "Few-TK: A Dataset for Few-shot Scientific Typed Keyphrase Recognition",
