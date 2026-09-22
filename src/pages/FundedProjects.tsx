@@ -83,6 +83,22 @@ const FundedProjects = () => {
   ];
 
 
+  // Agency roll-up, derived rather than written out. The four cards below used
+  // to carry hardcoded names and totals; ANRF's still read ₹45.61L after the
+  // ₹99.96L ARG grant was added, and its description was SERB's expansion. A
+  // figure typed beside the list it summarises drifts from that list.
+  const agencies = [
+    { key: "DRDO",  label: "DRDO",   name: "Defence Research & Development Organisation", tone: "text-signal" },
+    { key: "ANRF",  label: "ANRF",   name: "Anusandhan National Research Foundation",     tone: "text-status-good" },
+    { key: "MeitY", label: "MeitY",  name: "Ministry of Electronics & IT",                tone: "text-signal" },
+    { key: "DST",   label: "DST-WB", name: "DST, Govt. of West Bengal",                   tone: "text-status-warn" },
+  ].map((a) => ({
+    ...a,
+    total: fundedProjects
+      .filter((proj) => proj.funding.startsWith(a.key))
+      .reduce((sum, proj) => sum + (parseFloat(proj.totalCost.replace("L", "")) || 0), 0),
+  }));
+
   const totalFunding = fundedProjects.reduce((sum, project) => {
     const amount = parseFloat(project.totalCost.replace('L', ''));
     return sum + amount;
@@ -288,49 +304,18 @@ const FundedProjects = () => {
         <div className="container">
           <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Funding Agencies</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto">
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building size={32} className="text-signal" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">DRDO</h3>
-                <p className="text-sm text-ink-2">Defence Research & Development Organisation</p>
-                <p className="text-lg font-bold text-signal mt-2">₹42.25L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award size={32} className="text-status-good" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">ANRF</h3>
-                <p className="text-sm text-ink-2">Science & Engineering Research Board</p>
-                <p className="text-lg font-bold text-status-good mt-2">₹45.61L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users size={32} className="text-signal" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">MeitY</h3>
-                <p className="text-sm text-ink-2">Ministry of Electronics & IT</p>
-                <p className="text-lg font-bold text-signal mt-2">₹16.18L</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center transition-colors">
-              <CardContent className="p-4 sm:p-6">
-                <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar size={32} className="text-status-warn" />
-                </div>
-                <h3 className="font-semibold text-ink-1 mb-2">DST-WB</h3>
-                <p className="text-sm text-ink-2">DST, Govt. of West Bengal</p>
-                <p className="text-lg font-bold text-status-warn mt-2">₹1.85L</p>
-              </CardContent>
-            </Card>
+            {agencies.map((agency) => (
+              <Card key={agency.key} className="text-center transition-colors">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Building size={32} className={agency.tone} />
+                  </div>
+                  <h3 className="font-semibold text-ink-1 mb-2">{agency.label}</h3>
+                  <p className="text-sm text-ink-2">{agency.name}</p>
+                  <p className={`text-lg font-bold mt-2 ${agency.tone}`}>₹{agency.total.toFixed(2)}L</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
