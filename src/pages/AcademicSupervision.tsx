@@ -422,16 +422,16 @@ const AcademicSupervision = () => {
                           <Calendar size={16} className="text-status-good" />
                           <span className="text-status-good font-medium">{student.year}</span>
                         </div>
+                        {student.coSupervisor && (
+                          <p className="text-sm text-ink-2 mb-2">
+                            <span className="font-medium">Co-supervisor:</span> {student.coSupervisor}
+                          </p>
+                        )}
                         {student.position && (
                           <div className="flex items-center gap-2 mb-2">
                             <MapPin size={16} className="text-ink-2" />
                             <span className="text-ink-1 font-medium">{student.position}</span>
                           </div>
-                        )}
-                        {student.coSupervisor && (
-                          <p className="text-sm text-ink-2">
-                            <span className="font-medium">Co-supervisor:</span> {student.coSupervisor}
-                          </p>
                         )}
                       </CardContent>
                     </Card>
