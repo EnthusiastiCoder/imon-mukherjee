@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, DollarSign, Users, Building, ExternalLink, Award } from "lucide-react";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar, DollarSign, Users, Building, ExternalLink, Award, Briefcase } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import ScrollableTabsList from "@/components/ScrollableTabsList";
 import { useState } from "react";
 
 const FundedProjects = () => {
@@ -80,12 +82,6 @@ const FundedProjects = () => {
     }
   ];
 
-  const projectCategories = {
-    "Quantum Computing": fundedProjects.filter(p => p.title.toLowerCase().includes("quantum")),
-    "AI & Machine Learning": fundedProjects.filter(p => p.title.toLowerCase().includes("ai") || p.title.toLowerCase().includes("machine")),
-    "Information Security": fundedProjects.filter(p => p.title.toLowerCase().includes("security") || p.title.toLowerCase().includes("steganography")),
-    "Data Science": fundedProjects.filter(p => p.title.toLowerCase().includes("information") || p.title.toLowerCase().includes("data"))
-  };
 
   const totalFunding = fundedProjects.reduce((sum, project) => {
     const amount = parseFloat(project.totalCost.replace('L', ''));
@@ -158,20 +154,28 @@ const FundedProjects = () => {
         </div>
       </section>
 
-      {/* Project Categories */}
+      {/* Projects.
+          Previously grouped under four headings by substring-matching the title
+          for "quantum", "ai", "security" and so on. Dr. Mukherjee asked for the
+          categories to go: they split five projects across four headings, and a
+          title matching no keyword would have vanished from the page entirely. */}
       <section className="pb-16">
         <div className="container">
-          <h2 className="text-display-md font-bold text-center text-ink-1 mb-12">Projects by Category</h2>
-          
-          {Object.entries(projectCategories).map(([category, projects]) => (
-            projects.length > 0 && (
-              <div key={category} className="mb-12">
-                <h3 className="text-display-sm font-semibold text-ink-1 mb-6 flex items-center gap-2">
-                  <Award className="text-signal" size={24} />
-                  {category}
-                </h3>
+          <Tabs defaultValue="funded" className="w-full">
+            <ScrollableTabsList cols="md:grid-cols-2" className="mb-8">
+              <TabsTrigger value="funded" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Award size={16} className="shrink-0" />
+                Funded Projects ({fundedProjects.length})
+              </TabsTrigger>
+              <TabsTrigger value="consultancy" className="flex shrink-0 items-center gap-2 min-h-[40px]">
+                <Briefcase size={16} className="shrink-0" />
+                Consultancy Projects
+              </TabsTrigger>
+            </ScrollableTabsList>
+
+            <TabsContent value="funded">
                 <div className="grid md:grid-cols-2 gap-8">
-                  {projects.map((project, index) => (
+                  {fundedProjects.map((project, index) => (
                     <Card key={index} className="transition-colors ds-plane">
                       <CardHeader>
                         <div className="flex justify-between items-start gap-4">
@@ -262,9 +266,20 @@ const FundedProjects = () => {
                     </Card>
                   ))}
                 </div>
-              </div>
-            )
-          ))}
+            </TabsContent>
+
+            <TabsContent value="consultancy">
+              <Card className="ds-plane">
+                <CardContent className="p-6 sm:p-8">
+                  <p className="ds-label">Total projects offered</p>
+                  <p className="ds-data mt-2 text-4xl leading-none text-ink-1">07</p>
+                  <p className="mt-4 text-sm text-ink-2">
+                    Not allowed as per institute norms.
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
