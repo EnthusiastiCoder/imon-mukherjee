@@ -96,7 +96,10 @@ export const AXES: readonly AxisDef[] = [
     id: 'theme',
     attr: 'theme',
     label: 'Theme',
-    default: 'system',
+    // Light, not 'system'. Dr. Mukherjee asked for a white background by
+    // default; following the OS meant a visitor whose machine is set to dark
+    // landed on the near-black theme. The dark option is still selectable.
+    default: 'light',
     systemValue: 'system',
     compact: true,
     options: [
