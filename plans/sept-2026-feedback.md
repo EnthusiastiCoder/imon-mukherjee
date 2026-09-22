@@ -23,12 +23,19 @@ Branch: `feat/sept-feedback`.
 3. **Default theme white.**
 4. **No categories on funded projects** — flat list.
 5. **SERB → ANRF** in all six places.
-6. **Agency logos** on the funding cards.
+6. **Agency logos** on the funding cards. — **not done**, see below.
 7. **Co-supervisor above current position** on awarded supervision cards.
 8. **JCDL 2025**: year `Accepted` → `2025`, indexed `IEEE` → `ACM/IEEE`.
 9. **Consultancy Projects tab**: "Total projects offered: 07 (Not allowed as per institute norms)".
 
 ## Outstanding — needs Dr. Mukherjee
+
+- **Funding agency logos.** Only DRDO publishes its mark as a plain image
+  (`drdo.gov.in/.../inline-images/logo_0.png`, 190x190). MeitY's header carries the
+  Digital India logo rather than its own, and ANRF's site renders no logo as an
+  `<img>` at all, so there is nothing to scrape. The four cards keep their icon
+  treatment until he supplies files. Worth noting these are government marks, and
+  the cards would also need per-logo handling to sit on the dark theme.
 
 - **Six journal papers.** The publications header derives its count from the array, which
   holds 29; he asked for 35. The count is deliberately *not* hardcoded — a literal would
