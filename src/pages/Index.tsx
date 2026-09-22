@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 // removed: import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, Cpu, Lock, Brain, Atom, GraduationCap, Users, FileText } from "lucide-react";
+import { Mail, MapPin, ExternalLink, Calendar, DollarSign, User, BookOpen, Award, MessageSquare, Cpu, GraduationCap, Users, FileText } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
@@ -25,35 +25,6 @@ import { motion } from "framer-motion";
 const Index = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
 
-	/**
-	 * Research interests.
-	 *
-	 * The `logo` field previously hotlinked two Wikimedia PNGs. Both returned
-	 * ERR_BLOCKED_BY_ORB in the browser, so all three cards rendered a broken
-	 * image — Wikimedia blocks cross-origin hotlinking of thumbnails. They are
-	 * gone; the lucide icons already bundled with the app carry the same job with
-	 * no network request and no third-party dependency.
-	 *
-	 * The icons were also all `Lock`, including on the AI card, so the mark
-	 * said nothing about the content. Each now matches what it labels.
-	 */
-	const researchInterests = [
-		{
-			name: "Steganography & Steganalysis",
-			description: "Advanced data hiding, secure communication, and image sterilization",
-			icon: Lock,
-		},
-		{
-			name: "Quantum Cryptography",
-			description: "Quantum cryptographic protocols and network security",
-			icon: Atom,
-		},
-		{
-			name: "AI Applications",
-			description: "AI applications in agriculture, computer vision",
-			icon: Brain,
-		}
-	];
 
 
 
@@ -372,37 +343,6 @@ const Index = () => {
 					</div>
 				</div>
 			</section>
-
-			{/* Research Interests */}
-
-			{/* Research Interests */}
-			<section id="research" className="py-[var(--space-section)] border-t border-rule">
-			  <div className="container">
-			    <h2 className="ds-reveal ds-display text-display-md mb-[var(--space-block)]">
-			      Research Interests
-			    </h2>
-			
-			    {/* A flush grid rather than centred floating cards with a coloured
-			        left rail — that rail on a translucent rounded card is the exact
-			        template look this redesign is replacing. The 2px gap lets the
-			        page ground read as a hairline between planes. */}
-			    <div className="ds-reveal-group grid gap-[2px] sm:grid-cols-3">
-				  {researchInterests.map((interest) => {
-				    const IconComponent = interest.icon;
-				    return (
-				      <article key={interest.name} className="ds-plane p-6">
-				        <IconComponent size={20} className="text-signal" aria-hidden="true" />
-				        <h3 className="ds-display mt-4 text-lg">{interest.name}</h3>
-				        <p className="mt-2 text-sm leading-relaxed text-ink-2">
-				          {interest.description}
-				        </p>
-				      </article>
-				    );
-				  })}
-				</div>
-			  </div>
-			</section>
-
 
 			{/* Funded Projects
 			    Was four identical cards, each repeating an agency badge, a calendar
