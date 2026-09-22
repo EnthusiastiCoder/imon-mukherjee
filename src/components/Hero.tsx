@@ -292,7 +292,7 @@ export default function Hero({
 							&#8377;{totalFundingLakhs.toFixed(2)}L{' '}
 							<span className="text-ink-3">in funded projects, as PI</span>
 						</p>
-						<p className="text-[11px] text-ink-3">DRDO &middot; SERB &middot; MeitY</p>
+						<p className="text-[11px] text-ink-3">DRDO &middot; ANRF &middot; MeitY</p>
 					</div>
 				</div>
 

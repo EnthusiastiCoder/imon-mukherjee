@@ -49,7 +49,7 @@ const FundedProjects = () => {
     },
     {
       title: "Extraction, Organization and Query of Scholarly Information",
-      funding: "SERB (CRG), Govt. of India",
+      funding: "ANRF (CRG), Govt. of India",
       investigators: ["Dr. Imon Mukherjee (IIIT Kalyani)", "Dr. Debarshi Kumar Sanyal (Indian Association for the Cultivation of Science)"],
       duration: "March, 2022 to March, 2025",
       totalCost: "45.61L",
@@ -289,7 +289,7 @@ const FundedProjects = () => {
                 <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Award size={32} className="text-status-good" />
                 </div>
-                <h3 className="font-semibold text-ink-1 mb-2">SERB</h3>
+                <h3 className="font-semibold text-ink-1 mb-2">ANRF</h3>
                 <p className="text-sm text-ink-2">Science & Engineering Research Board</p>
                 <p className="text-lg font-bold text-status-good mt-2">₹45.61L</p>
               </CardContent>

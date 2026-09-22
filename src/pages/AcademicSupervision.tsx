@@ -83,7 +83,7 @@ const AcademicSupervision = () => {
     {
       name: "Sayan De",
       enrollment: "January, 2023",
-      project: "JRF, SERB-CRG, Govt. of India",
+      project: "JRF, ANRF-CRG, Govt. of India",
       status: "Ongoing"
     },
     {

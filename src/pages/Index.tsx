@@ -213,7 +213,7 @@ const Index = () => {
     		},
     		{
       			name: "Sayan De",
-      			thesis: "JRF, SERB-CRG, Govt. of India",
+      			thesis: "JRF, ANRF-CRG, Govt. of India",
 				startYear: 2023,
       			status: "Ongoing"
    			},
